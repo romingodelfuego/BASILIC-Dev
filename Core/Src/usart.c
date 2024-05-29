@@ -323,7 +323,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		 memcpy(hGNSSCom.DebugBuffer,hGNSSCom.RxBuffer,UART_RX_BUFFER_SIZE);
 		 GNSSCom_ReceiveDebug();
-		 //GNSSCom_Send_SetVal();
 		 GNSSCom_UartActivate(&hGNSSCom);
 	}
 }

@@ -1,0 +1,2 @@
+../Core/Src/traductor.c:11:7:get_UBX_NAV_TIMEUTC	16	static
+../Core/Src/traductor.c:47:7:get_SetVal	16	static

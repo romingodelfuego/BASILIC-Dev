@@ -1,4 +1,4 @@
-../Core/Src/GNSSCom.c:15:6:GNSSCom_Init	24	static
-../Core/Src/GNSSCom.c:28:6:GNSSCom_UartActivate	16	static
-../Core/Src/GNSSCom.c:32:6:GNSSCom_ReceiveDebug	824	static
-../Core/Src/GNSSCom.c:68:6:GNSSCom_Send_SetVal	104	static
+../Core/Src/GNSSCom.c:13:6:GNSSCom_Init	24	static
+../Core/Src/GNSSCom.c:25:6:GNSSCom_UartActivate	16	static
+../Core/Src/GNSSCom.c:29:6:GNSSCom_Send_SetVal	88	static
+../Core/Src/GNSSCom.c:54:6:GNSSCom_ReceiveDebug	1224	static

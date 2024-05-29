@@ -12,8 +12,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "command.h"
 #include "traductor.h"
+#include "UBXParser.h"
 
 #define UART_RX_BUFFER_SIZE 800
 #define UART_TX_BUFFER_SIZE 50

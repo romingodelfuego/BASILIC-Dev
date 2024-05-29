@@ -1,0 +1,4 @@
+../Core/Src/GNSSCom.c:25:6:GNSSCom_UartActivate	1
+../Core/Src/GNSSCom.c:54:6:GNSSCom_ReceiveDebug	11
+../Core/Src/GNSSCom.c:29:6:GNSSCom_Send_SetVal	5
+../Core/Src/GNSSCom.c:13:6:GNSSCom_Init	0
