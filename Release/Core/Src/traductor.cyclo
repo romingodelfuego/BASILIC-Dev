@@ -1,2 +1,3 @@
-../Core/Src/traductor.c:11:7:get_UBX_NAV_TIMEUTC	1
-../Core/Src/traductor.c:47:7:get_SetVal	1
+../Core/Src/traductor.c:91:10:bytes_to_endian	4
+../Core/Src/traductor.c:11:6:get_UBX_NAV_TIMEUTC	1
+../Core/Src/traductor.c:70:6:get_SetVal	1

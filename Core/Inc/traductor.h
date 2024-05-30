@@ -39,7 +39,7 @@ typedef struct {
 extern UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
 
 
-void* get_UBX_NAV_TIMEUTC(UBXMessage_parsed UBXMessage,UBX_NAV_TIMEUTC* structAssociate);
-void* get_SetVal(UBXMessage_parsed UBXMessage,UBX_CFG_SETVAL* structAssociate);
-
+void get_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC*);
+void get_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL*);
+unsigned int bytes_to_endian(uint8_t attr[],char type_endian);
 #endif /* INC_TRADUCTOR_H_ */

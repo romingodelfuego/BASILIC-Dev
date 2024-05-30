@@ -12,23 +12,24 @@
 #include <stdint.h>
 
 #define MAX_SIZE_LOAD 200
+#define MAX_SIZE_DEBUG 500
 
 typedef struct {
 	uint8_t msgClass;
 	uint8_t msgID;
 	uint16_t len;
 	uint8_t load[MAX_SIZE_LOAD]; // Pointeur de tableau
+	char bufferDebug[MAX_SIZE_DEBUG];
 }UBXMessage_parsed ;
 
 typedef struct {
     uint8_t msgClass;
     uint8_t msgID;
-    void *(*get_func)(UBXMessage_parsed, void*);
-    void * structAssociate;
+    void (*get_func)(UBXMessage_parsed*, void*);
+    void* structAssociate;
 } MessageMapping;
 extern MessageMapping message_mappings[];
 
-extern char debugMessage[];
-void* create_message_struct(UBXMessage_parsed);
+void create_message_debug(UBXMessage_parsed*);
 
 #endif /* INC_UBXPARSER_H_ */
