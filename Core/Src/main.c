@@ -103,7 +103,6 @@ int main(void)
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)startMessage, sizeof(startMessage), 10);
 	GNSSCom_Init(&huart3,&huart1);
-
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 
 

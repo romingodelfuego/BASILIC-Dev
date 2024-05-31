@@ -30,12 +30,13 @@ void GNSSCom_Send_SetVal(void){
 	const char message1[] = "\r\t\t\n...Message1...\r\n";
 	const char message2[] = "\r\t\t\n...Message2...\r\n";
 	const char message3[] = "\r\t\t...Message3...\r\n";
+	const char message4[] = "\r\t\t...Message4...\r\n";
 	const char messagetest[] = "\r\t\t...Message TEST...\r\n";
 	//const char messageEnd[] = "\r\t\t...END...\r\n";
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message1,sizeof(message1),HAL_MAX_DELAY);
 
-	HAL_UART_Transmit(hGNSSCom.huart, commandSetTP,sizeof(commandSetTP),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.DebugBuffer,commandSetTP,sizeof(commandSetTP));
+	HAL_UART_Transmit(hGNSSCom.huart, commandSetGNSS_Config,sizeof(commandSetGNSS_Config),HAL_MAX_DELAY);
+	memcpy(hGNSSCom.DebugBuffer,commandSetGNSS_Config,sizeof(commandSetGNSS_Config));
 	GNSSCom_ReceiveDebug();
 
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message2,sizeof(message2),HAL_MAX_DELAY);
@@ -50,6 +51,12 @@ void GNSSCom_Send_SetVal(void){
 	memcpy(hGNSSCom.DebugBuffer,commandUBXTimeUTC,sizeof(commandUBXTimeUTC));
 	GNSSCom_ReceiveDebug();
 
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message3,sizeof(message3),HAL_MAX_DELAY);
+
+	HAL_UART_Transmit(hGNSSCom.huart, commandSetTP,sizeof(commandSetTP),HAL_MAX_DELAY);
+	memcpy(hGNSSCom.DebugBuffer,commandSetTP,sizeof(commandSetTP));
+	GNSSCom_ReceiveDebug();
+
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)messagetest,sizeof(messagetest),HAL_MAX_DELAY);
 
 	HAL_UART_Transmit(hGNSSCom.huart, test_UBXNav_TIMEUTC,sizeof(test_UBXNav_TIMEUTC),HAL_MAX_DELAY);
@@ -62,7 +69,6 @@ void GNSSCom_ReceiveDebug(){
 	// Initialiser la chaîne de sortie à une chaîne vide
 	char output_string[UART_DEBUG_BUFFER_SIZE];
 	int bool_UBXflag = 0;
-	 uint8_t *bufferToLook = &(hGNSSCom.DebugBuffer);
 	for (int i = 0; i < UART_DEBUG_BUFFER_SIZE; i++) {
 
 
@@ -75,44 +81,40 @@ void GNSSCom_ReceiveDebug(){
 				UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed)) ;
 
 				UbxMessage->msgClass = hGNSSCom.DebugBuffer[i + 1];
-			    UbxMessage->msgID = hGNSSCom.DebugBuffer[i + 2];
-			    UbxMessage->len = len;
-			    memcpy(UbxMessage->load, hGNSSCom.DebugBuffer + i + 5, len);
-			    create_message_debug(UbxMessage); //On obtient l'adresse de la structure qui correspond au message
+				UbxMessage->msgID = hGNSSCom.DebugBuffer[i + 2];
+				UbxMessage->len = len;
+				memcpy(UbxMessage->load, hGNSSCom.DebugBuffer + i + 5, len);
+				create_message_debug(UbxMessage); //On obtient l'adresse de la structure qui correspond au message
 				//Maintenant pour pouvoir utilsier ici la structure il nous faut savoir quelle type de structure est elle
-
-
-
-				bufferToLook = &(UbxMessage->bufferDebug);
+				HAL_UART_Transmit(hGNSSCom.huartDebug, UbxMessage->bufferDebug, sizeof(UbxMessage->bufferDebug),HAL_MAX_DELAY);
+				break;
 			}
 		}
 
-		switch (bufferToLook[i]) {
+		switch (hGNSSCom.DebugBuffer[i]) {
 		case '\n': // Nouvelle ligne détectée
 			strcat(output_string, "\n"); // Ajout d'un saut de ligne à la chaîne de sortie
 			break;
 		case '\r': // Retour de chariot détecté
 			strcat(output_string, "\r");
-			break; // Ignorer le caractère de retour de chariot
+			break;
 		default:
 			switch (type) {
 			case RAW:
-				snprintf(output_string + strlen(output_string), sizeof(output_string) - strlen(output_string), "%d", bufferToLook[i]);
+				snprintf(output_string + i, sizeof(output_string) - i, "%d", hGNSSCom.DebugBuffer[i]);
 				break;
 
 			case HEX:
-				snprintf(output_string + strlen(output_string), sizeof(output_string) - strlen(output_string), "%02X", bufferToLook[i]);
+				snprintf(output_string +i, sizeof(output_string) - i, "%02X", hGNSSCom.DebugBuffer[i]);
 				break;
 
 			case ASCII:
-				snprintf(output_string + strlen(output_string), sizeof(output_string) - strlen(output_string), "%c",
-						(bufferToLook[i] >= 32 && bufferToLook[i] <= 126) ? bufferToLook[i] : '.');
+				snprintf(output_string +i, sizeof(output_string) - i, "%c",
+						((hGNSSCom.DebugBuffer[i] >= 32 && hGNSSCom.DebugBuffer[i] <= 126)||hGNSSCom.DebugBuffer[i] >= 192) ? hGNSSCom.DebugBuffer[i] : '.');
 				break;
 			}
+			strncat(output_string, " ", sizeof(output_string) - i - 1);
 
-			if (i < sizeof(&bufferToLook) - 1) {
-				strncat(output_string, " ", sizeof(output_string) - strlen(output_string) - 1);
-			}
 		}
 	}
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)output_string, strlen(output_string),HAL_MAX_DELAY);

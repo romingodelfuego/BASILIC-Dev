@@ -12,7 +12,7 @@
 #include <stdint.h>
 
 #define MAX_SIZE_LOAD 200
-#define MAX_SIZE_DEBUG 500
+#define MAX_SIZE_DEBUG 200
 
 typedef struct {
 	uint8_t msgClass;
