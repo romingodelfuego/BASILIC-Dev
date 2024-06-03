@@ -43,23 +43,23 @@ void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *struct
 
 	int len =sprintf(UBXMessage->bufferDebug,
 			"\r\n___debug_UBX_NAV_TIMEUTC__\r\n"
-			"iTOW: %u\r\n"
-			"tAcc: %u\r\n"
-			"nano: %d\r\n"
-			"Date[YYYY-MM-DD]: %u-%u-%u\r\n"
-			"Time[HH:MM:SS]: %u:%u:%u\r\n"
+			"iTOW [ms]: %u\r\n"
+			"tAcc [ns]: %u\r\n"
+			"Date [YYYY-MM-DD]: %u-%u-%u\r\n"
+			"Time [HH:MM:SS]: %u:%u:%u - %u [ns]\r\n"
 			"valid: %u\r\n",
 			bytes_to_endian(structAssociate->iTOW,sizeof(structAssociate->iTOW),'l'),
 			bytes_to_endian(structAssociate->tAcc,sizeof(structAssociate->tAcc),'l'),
-			bytes_to_endian(structAssociate->nano,sizeof(structAssociate->nano),'l'),
 			bytes_to_endian(structAssociate->year,sizeof(structAssociate->year),'l'),
 			bytes_to_endian(structAssociate->month,sizeof(structAssociate->month),'l'),
 			bytes_to_endian(structAssociate->day,sizeof(structAssociate->day),'l'),
 			bytes_to_endian(structAssociate->hour,sizeof(structAssociate->hour),'l'),
 			bytes_to_endian(structAssociate->min,sizeof(structAssociate->min),'l'),
 			bytes_to_endian(structAssociate->sec,sizeof(structAssociate->sec),'l'),
-			bytes_to_endian(structAssociate->valid,sizeof(structAssociate->valid),'b')
+			bytes_to_endian(structAssociate->nano,sizeof(structAssociate->nano),'l'),
+			bytes_to_endian(structAssociate->valid,sizeof(structAssociate->valid),'l')
 	);
+
 	fill_unuse_memory(UBXMessage,len);
 	ITM_Port32(31)=20;
 }
@@ -112,7 +112,7 @@ void debug_GetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_GETVAL* structAssociate)
 	//
 	int len = sprintf(UBXMessage->bufferDebug,
 			"\r\n___debug_GetVal___\r\n"
-			"version: %u\r\n"
+			"version: %llu\r\n"
 			"layers: %u\r\n",
 			"position: %u\r\n",
 			"keys: %u\r\n",
@@ -136,7 +136,14 @@ unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 			result |= ((uint64_t)attr[i]) << ((sizeof(uint64_t) - i - 1) * 8);
 		}
 	}
-
+	else if (type_endian == '2'){ //little-endiand 2's complements
+		if (attr[length - 1] & 0x80) { // Check if the most significant bit (MSB) is 1 (indicating negative number)
+			result = -1; // Initialize result to all 1s for negative number
+		}
+		for (size_t i = 0; i < length; ++i) {
+			result |= ((uint64_t)attr[i]) << (i * 8);
+		}
+	}
 	return result;
 }
 
@@ -147,11 +154,11 @@ void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use){
 }
 
 char* array_to_hex_string(const uint8_t* array, size_t length) {
-    // Taille maximale pour le buffer
-    static char hex_string[MAX_SIZE_LOAD * 2 + 1];
-    for (size_t i = 0; i < length; ++i) {
-        sprintf(hex_string + (i * 2), "%02x", array[i]);
-    }
-    hex_string[length * 2] = '\0';
-    return hex_string;
+	// Taille maximale pour le buffer
+	static char hex_string[MAX_SIZE_LOAD * 2 + 1];
+	for (size_t i = 0; i < length; ++i) {
+		sprintf(hex_string + (i * 2), "%02x", array[i]);
+	}
+	hex_string[length * 2] = '\0';
+	return hex_string;
 }
