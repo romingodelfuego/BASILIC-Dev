@@ -8,9 +8,9 @@
 #include "traductor.h"
 
 
-void get_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){
+void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){
 	size_t offset = 0;
-
+	ITM_Port32(31)=21;
 	memcpy(&(structAssociate->iTOW), UBXMessage->load + offset, sizeof(structAssociate->iTOW));
 	offset += sizeof(structAssociate->iTOW);
 
@@ -42,7 +42,7 @@ void get_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAs
 	offset += sizeof(structAssociate->valid);
 
 	int len =sprintf(UBXMessage->bufferDebug,
-			"\r\n___get_UBX_NAV_TIMEUTC__\r\n"
+			"\r\n___debug_UBX_NAV_TIMEUTC__\r\n"
 			"iTOW: %u\r\n"
 			"tAcc: %u\r\n"
 			"nano: %d\r\n"
@@ -59,11 +59,12 @@ void get_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAs
 			bytes_to_endian(structAssociate->min,sizeof(structAssociate->min),'l'),
 			bytes_to_endian(structAssociate->sec,sizeof(structAssociate->sec),'l'),
 			bytes_to_endian(structAssociate->valid,sizeof(structAssociate->valid),'b')
-			);
+	);
 	fill_unuse_memory(UBXMessage,len);
+	ITM_Port32(31)=20;
 }
 
-void get_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate){
+void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate){
 
 	size_t offset = 0;
 
@@ -72,19 +73,57 @@ void get_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate){
 
 	memcpy(&(structAssociate->layers), UBXMessage->load + offset, sizeof(structAssociate->layers));
 	offset += sizeof((structAssociate->layers));
+
+	offset += sizeof((structAssociate->reserved));
+
+	memcpy(&(structAssociate->cfgData), UBXMessage->load + offset, sizeof(structAssociate->cfgData));
+	offset += sizeof((structAssociate->cfgData));
+	//Diviser ici en flag
+	//
+
+	int len = sprintf(UBXMessage->bufferDebug,
+			"\r\n__debug_SetVal___\r\n"
+			"version: %u\r\n"
+			"layers: %u\r\n"
+			"KeyId|Value: %s\r\n",
+			bytes_to_endian(structAssociate->version,sizeof(structAssociate->version),'b'),
+			bytes_to_endian(structAssociate->layers,sizeof(structAssociate->layers),'l'),
+			array_to_hex_string(structAssociate->cfgData,sizeof(structAssociate->cfgData))
+	);
+	fill_unuse_memory(UBXMessage,len);
+}
+
+void debug_GetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_GETVAL* structAssociate){
+
+	size_t offset = 0;
+
+	memcpy(&(structAssociate->version), UBXMessage->load + offset, sizeof(structAssociate->version));
+	offset += sizeof((structAssociate->version));
+
+	memcpy(&(structAssociate->layers), UBXMessage->load + offset, sizeof(structAssociate->layers));
+	offset += sizeof((structAssociate->layers));
+
+	memcpy(&(structAssociate->position), UBXMessage->load + offset, sizeof(structAssociate->position));
+	offset += sizeof((structAssociate->position));
+
+	memcpy(&(structAssociate->keys), UBXMessage->load + offset, sizeof(structAssociate->keys));
+	offset += sizeof((structAssociate->keys));
 	//Diviser ici en flag
 	//
 	int len = sprintf(UBXMessage->bufferDebug,
-			"\r\n___get_SetVal___\r\n"
+			"\r\n___debug_GetVal___\r\n"
 			"version: %u\r\n"
 			"layers: %u\r\n",
+			"position: %u\r\n",
+			"keys: %u\r\n",
 			bytes_to_endian(structAssociate->version,sizeof(structAssociate->version),'b'),
-			bytes_to_endian(structAssociate->layers,sizeof(structAssociate->layers),'l')
-			);
+			bytes_to_endian(structAssociate->layers,sizeof(structAssociate->layers),'l'),
+			bytes_to_endian(structAssociate->position,sizeof(structAssociate->position),'l'),
+			bytes_to_endian(structAssociate->keys,sizeof(structAssociate->keys),'l')
+	);
 	fill_unuse_memory(UBXMessage,len);
 
 }
-
 
 unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 	uint64_t result = 0;
@@ -103,7 +142,16 @@ unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 
 void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use){
 	if (len_use < sizeof(UBXMessage->bufferDebug)) {
-	    memset(UBXMessage->bufferDebug + len_use, " ", sizeof(UBXMessage->bufferDebug) - len_use);
+		memset(UBXMessage->bufferDebug + len_use, " ", sizeof(UBXMessage->bufferDebug) - len_use);
 	}
 }
 
+char* array_to_hex_string(const uint8_t* array, size_t length) {
+    // Taille maximale pour le buffer
+    static char hex_string[MAX_SIZE_LOAD * 2 + 1];
+    for (size_t i = 0; i < length; ++i) {
+        sprintf(hex_string + (i * 2), "%02x", array[i]);
+    }
+    hex_string[length * 2] = '\0';
+    return hex_string;
+}

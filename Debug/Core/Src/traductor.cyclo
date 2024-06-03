@@ -1,0 +1,6 @@
+../Core/Src/traductor.c:11:6:debug_UBX_NAV_TIMEUTC	1
+../Core/Src/traductor.c:67:6:debug_SetVal	1
+../Core/Src/traductor.c:96:6:debug_GetVal	1
+../Core/Src/traductor.c:128:14:bytes_to_endian	5
+../Core/Src/traductor.c:143:6:fill_unuse_memory	2
+../Core/Src/traductor.c:149:7:array_to_hex_string	2

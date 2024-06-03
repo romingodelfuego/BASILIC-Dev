@@ -31,6 +31,7 @@ void GNSSCom_Send_SetVal(void){
 	const char message2[] = "\r\t\t\n...Message2...\r\n";
 	const char message3[] = "\r\t\t...Message3...\r\n";
 	const char message4[] = "\r\t\t...Message4...\r\n";
+	const char message5[] = "\r\t\t...Message5...\r\n";
 	const char messagetest[] = "\r\t\t...Message TEST...\r\n";
 	//const char messageEnd[] = "\r\t\t...END...\r\n";
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message1,sizeof(message1),HAL_MAX_DELAY);
@@ -55,6 +56,12 @@ void GNSSCom_Send_SetVal(void){
 
 	HAL_UART_Transmit(hGNSSCom.huart, commandSetTP,sizeof(commandSetTP),HAL_MAX_DELAY);
 	memcpy(hGNSSCom.DebugBuffer,commandSetTP,sizeof(commandSetTP));
+	GNSSCom_ReceiveDebug();
+
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message4,sizeof(message4),HAL_MAX_DELAY);
+
+	HAL_UART_Transmit(hGNSSCom.huart, commandMeasureRate,sizeof(commandMeasureRate),HAL_MAX_DELAY);
+	memcpy(hGNSSCom.DebugBuffer,commandMeasureRate,sizeof(commandMeasureRate));
 	GNSSCom_ReceiveDebug();
 
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)messagetest,sizeof(messagetest),HAL_MAX_DELAY);

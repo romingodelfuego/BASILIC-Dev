@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include "debug.h"
 
 #define MAX_SIZE_LOAD 200
 #define MAX_SIZE_DEBUG 200

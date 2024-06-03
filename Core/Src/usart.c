@@ -321,9 +321,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	 if (huart3.Instance == huart->Instance)
 	{
+		 ITM_Port32(31)=01;
 		 memcpy(hGNSSCom.DebugBuffer,hGNSSCom.RxBuffer,UART_RX_BUFFER_SIZE);
 		 GNSSCom_ReceiveDebug();
 		 GNSSCom_UartActivate(&hGNSSCom);
+		 ITM_Port32(31)=00;
 	}
 }
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {

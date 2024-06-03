@@ -10,11 +10,13 @@
 // Define the instances for the message structures
 UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
+UBX_CFG_GETVAL UBX_CFG_GETVAL_instance;
 
 // Define the message mappings array
 MessageMapping message_mappings[] = {
-    {0x01, 0x21, get_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance},
-	{0x06, 0x8a, get_SetVal, &UBX_CFG_SETVAL_instance},
+    {0x01, 0x21, debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance},
+	{0x06, 0x8a, debug_SetVal, &UBX_CFG_SETVAL_instance},
+	{0x06, 0x8b, debug_GetVal, &UBX_CFG_GETVAL_instance},
     // Add other mappings for other message types if necessary
 };
 
