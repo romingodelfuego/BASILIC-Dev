@@ -319,17 +319,16 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	 if (huart3.Instance == huart->Instance)
+	 if (hGNSSCom.huart->Instance == huart3.Instance)
 	{
-		 ITM_Port32(31)=01;
-		 memcpy(hGNSSCom.DebugBuffer,hGNSSCom.RxBuffer,UART_RX_BUFFER_SIZE);
+		 ITM_Port32(30)=01;
 		 GNSSCom_ReceiveDebug();
 		 GNSSCom_UartActivate(&hGNSSCom);
-		 ITM_Port32(31)=00;
+		 ITM_Port32(30)=00;
 	}
 }
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == huart3.Instance) {
+    if (hGNSSCom.huart->Instance == huart3.Instance) {
     	HAL_UART_Receive_IT(hGNSSCom.huart, hGNSSCom.RxBuffer, sizeof(hGNSSCom.RxBuffer)); // Relancer la réception
     }
 

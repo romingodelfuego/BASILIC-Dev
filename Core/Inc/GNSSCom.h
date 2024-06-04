@@ -17,7 +17,7 @@
 #include "traductor.h"
 #include "UBXParser.h"
 
-#define UART_RX_BUFFER_SIZE 200
+#define UART_RX_BUFFER_SIZE 50
 #define UART_TX_BUFFER_SIZE 50
 #define UART_DEBUG_BUFFER_SIZE 200
 
