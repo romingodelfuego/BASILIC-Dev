@@ -75,29 +75,24 @@ void GNSSCom_Send_SetVal(void){
 void GNSSCom_ReceiveDebug(){
 	// Initialiser la chaîne de sortie à une chaîne vide
 	char output_string[UART_DEBUG_BUFFER_SIZE];
-	int bool_UBXflag = 0;
 	for (int i = 0; i < UART_DEBUG_BUFFER_SIZE; i++) {
 
-
-		if (hGNSSCom.DebugBuffer[i] == HEADER_CheckValue1 || bool_UBXflag ){
-			bool_UBXflag = 1;
-			if (hGNSSCom.DebugBuffer[i] == HEADER_CheckValue2 ){
+		if (hGNSSCom.DebugBuffer[i] == HEADER_CheckValue1 &&
+			hGNSSCom.DebugBuffer[i +1] == HEADER_CheckValue2 ){
 				//On est sur un message UBX
-				bool_UBXflag =0;
-				int len = (hGNSSCom.DebugBuffer[i+4] << 8) |hGNSSCom.DebugBuffer[i+3];
+				int len = (hGNSSCom.DebugBuffer[i+5] << 8) |hGNSSCom.DebugBuffer[i+4];
 				UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed)) ;
 
-				UbxMessage->msgClass = hGNSSCom.DebugBuffer[i + 1];
-				UbxMessage->msgID = hGNSSCom.DebugBuffer[i + 2];
+				UbxMessage->msgClass = hGNSSCom.DebugBuffer[i + 2];
+				UbxMessage->msgID = hGNSSCom.DebugBuffer[i + 3];
 				UbxMessage->len = len;
-				memcpy(UbxMessage->load, hGNSSCom.DebugBuffer + i + 5, len);
+				memcpy(UbxMessage->load, hGNSSCom.DebugBuffer + i + 6, len);
 				create_message_debug(UbxMessage); //On obtient l'adresse de la structure qui correspond au message
 				//Maintenant pour pouvoir utilsier ici la structure il nous faut savoir quelle type de structure est elle
 				HAL_UART_Transmit(hGNSSCom.huartDebug, UbxMessage->bufferDebug, sizeof(UbxMessage->bufferDebug),HAL_MAX_DELAY);
-				break;
 			}
-		}
 
+		else{
 		switch (hGNSSCom.DebugBuffer[i]) {
 		case '\n': // Nouvelle ligne détectée
 			strcat(output_string, "\n"); // Ajout d'un saut de ligne à la chaîne de sortie
@@ -123,6 +118,7 @@ void GNSSCom_ReceiveDebug(){
 			strncat(output_string, " ", sizeof(output_string) - i - 1);
 
 		}
+	}
 	}
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)output_string, strlen(output_string),HAL_MAX_DELAY);
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)"\r\n", 4,HAL_MAX_DELAY);
