@@ -16,13 +16,8 @@
 #include "command.h"
 #include "traductor.h"
 #include "UBXParser.h"
+#include "constants.h"
 
-#define UART_RX_BUFFER_SIZE 50
-#define UART_TX_BUFFER_SIZE 50
-#define UART_DEBUG_BUFFER_SIZE 200
-
-#define HEADER_CheckValue1 0xB5
-#define HEADER_CheckValue2 0x62
 
 typedef struct {
 	UART_HandleTypeDef* huart;

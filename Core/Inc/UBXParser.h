@@ -11,16 +11,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "debug.h"
-
-#define MAX_SIZE_LOAD 200
-#define MAX_SIZE_DEBUG 200
+#include "constants.h"
 
 typedef struct {
 	uint8_t msgClass;
 	uint8_t msgID;
 	uint16_t len;
-	uint8_t load[MAX_SIZE_LOAD]; // Pointeur de tableau
-	char bufferDebug[MAX_SIZE_DEBUG];
+	uint8_t load[UART_DEBUG_BUFFER_SIZE]; // Pointeur de tableau
+	char bufferDebug[UART_DEBUG_BUFFER_SIZE];
 }UBXMessage_parsed ;
 
 typedef struct {

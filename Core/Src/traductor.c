@@ -155,7 +155,7 @@ void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use){
 
 char* array_to_hex_string(const uint8_t* array, size_t length) {
 	// Taille maximale pour le buffer
-	static char hex_string[MAX_SIZE_LOAD * 2 + 1];
+	static char hex_string[UART_RX_BUFFER_SIZE * 2 + 1];
 	for (size_t i = 0; i < length; ++i) {
 		sprintf(hex_string + (i * 2), "%02x", array[i]);
 	}

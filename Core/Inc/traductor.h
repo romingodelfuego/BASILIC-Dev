@@ -13,7 +13,7 @@
 #include <stddef.h>  // Pour size_t
 #include <stdlib.h>
 #include <string.h> // Pour memcpy
-
+#include "constants.h"
 #include "UBXParser.h"
 
 typedef struct {
@@ -34,7 +34,7 @@ typedef struct {
 	uint8_t version[1];
 	uint8_t layers[1];
 	uint8_t reserved[2];
-	uint8_t cfgData[MAX_SIZE_LOAD];
+	uint8_t cfgData[UART_RX_BUFFER_SIZE];
 }UBX_CFG_SETVAL;
 extern UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
 
@@ -42,7 +42,7 @@ typedef struct {
 	uint8_t version[1];
 	uint8_t layers[1];
 	uint8_t position[2];
-	uint8_t keys[MAX_SIZE_LOAD];
+	uint8_t keys[UART_RX_BUFFER_SIZE];
 }UBX_CFG_GETVAL;
 extern UBX_CFG_GETVAL UBX_CFG_GETVAL_instance;
 
