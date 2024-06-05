@@ -15,14 +15,13 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huartDebug = huartDebug;
 
 	hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
+	memset(hGNSSCom.TxBuffer, 0, UART_TX_BUFFER_SIZE);
+	memset(hGNSSCom.DebugBuffer, 0, UART_DEBUG_BUFFER_SIZE);
 
-	memcpy(hGNSSCom.TxBuffer, NULL, UART_TX_BUFFER_SIZE);
-	memcpy(hGNSSCom.DebugBuffer, NULL, UART_DEBUG_BUFFER_SIZE);
 	GNSSCom_UartActivate(&hGNSSCom);
 	HAL_Delay(5000); //En theorie il suffit d attendre la reception du premier msg UART pour envoyer
 	GNSSCom_Send_SetVal();
 }
-
 DynamicBuffer* initializeBuffer(size_t initialSize) {
     DynamicBuffer *bufferDynamic = malloc(sizeof(DynamicBuffer));
     if (bufferDynamic == NULL) {
@@ -39,14 +38,11 @@ DynamicBuffer* initializeBuffer(size_t initialSize) {
     return bufferDynamic;
 }
 void resizeBuffer(DynamicBuffer *bufferDynamic, size_t newSize) {
-    char *newData = realloc(bufferDynamic->buffer, newSize);
-    if (newData == NULL) {
-        return 0; // Échec de la réallocation mémoire
+    uint8_t *newData = realloc(bufferDynamic->buffer, newSize);
+    if (newData != NULL) {
+    	bufferDynamic->buffer = newData;
+    	    bufferDynamic->size = newSize;
     }
-
-    bufferDynamic->buffer = newData;
-    bufferDynamic->size = newSize;
-    return 1; // Réallocation réussie
 }
 void freeBuffer(DynamicBuffer *bufferDynamic) {
     free(bufferDynamic->buffer);
@@ -55,74 +51,50 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
-
 void GNSSCom_Send_SetVal(void){
-	const char message1[] = "\r\t\t\n...Message1...\r\n";
-	const char message2[] = "\r\t\t\n...Message2...\r\n";
-	const char message3[] = "\r\t\t...Message3...\r\n";
-	const char message4[] = "\r\t\t...Message4...\r\n";
-	//const char message5[] = "\r\t\t...Message5...\r\n";
-	const char messagetest[] = "\r\t\t...Message TEST...\r\n";
-	//const char messageEnd[] = "\r\t\t...END...\r\n";
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message1,sizeof(message1),HAL_MAX_DELAY);
 
-	HAL_UART_Transmit(hGNSSCom.huart, commandSetGNSS_Config,sizeof(commandSetGNSS_Config),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,commandSetGNSS_Config,sizeof(commandSetGNSS_Config));
-	GNSSCom_ReceiveDebug();
+	CommandnSize commands[] = {
+	    {commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
+	    {commandUart1Ouput, sizeof(commandUart1Ouput)},
+	    {commandUBXTimeUTC, sizeof(commandUBXTimeUTC)},
+	    {commandSetTP, sizeof(commandSetTP)},
+	    {commandMeasureRate, sizeof(commandMeasureRate)}
+	};
+	char message[50];
 
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message2,sizeof(message2),HAL_MAX_DELAY);
+	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i) {
+	    // Transmit debug message
+	    sprintf(message, "\r\t\t\n...Message%d...\r\n", i + 1);
+	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
 
-	HAL_UART_Transmit(hGNSSCom.huart, commandUart1Ouput,sizeof(commandUart1Ouput),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,commandUart1Ouput,sizeof(commandUart1Ouput));
-	GNSSCom_ReceiveDebug();
+	    // Transmit command
+	    HAL_UART_Transmit(hGNSSCom.huart, commands[i].command, commands[i].size, HAL_MAX_DELAY);
 
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message3,sizeof(message3),HAL_MAX_DELAY);
-
-	HAL_UART_Transmit(hGNSSCom.huart, commandUBXTimeUTC,sizeof(commandUBXTimeUTC),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,commandUBXTimeUTC,sizeof(commandUBXTimeUTC));
-	GNSSCom_ReceiveDebug();
-
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message3,sizeof(message3),HAL_MAX_DELAY);
-
-	HAL_UART_Transmit(hGNSSCom.huart, commandSetTP,sizeof(commandSetTP),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,commandSetTP,sizeof(commandSetTP));
-	GNSSCom_ReceiveDebug();
-
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message4,sizeof(message4),HAL_MAX_DELAY);
-
-	HAL_UART_Transmit(hGNSSCom.huart, commandMeasureRate,sizeof(commandMeasureRate),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,commandMeasureRate,sizeof(commandMeasureRate));
-	GNSSCom_ReceiveDebug();
-
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)messagetest,sizeof(messagetest),HAL_MAX_DELAY);
-
-	HAL_UART_Transmit(hGNSSCom.huart, test_UBXNav_TIMEUTC,sizeof(test_UBXNav_TIMEUTC),HAL_MAX_DELAY);
-	memcpy(hGNSSCom.Rx->buffer,test_UBXNav_TIMEUTC,sizeof(test_UBXNav_TIMEUTC));
-	GNSSCom_ReceiveDebug();
-
+	    // Receive debug
+	    memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
+	    GNSSCom_ReceiveDebug();
+	}
 }
-
 void GNSSCom_ReceiveDebug(){
 	// Initialiser la chaîne de sortie à une chaîne vide
 	char output_string[UART_DEBUG_BUFFER_SIZE];
-	int isUBX=0;
-	for (int i = 0; i < UART_RX_BUFFER_SIZE; i++) {
+	int isUBX = 0;
+	for (int i = 0; i < hGNSSCom.Rx->size; i++) {
 
 		if (hGNSSCom.Rx->buffer[i] == HEADER_UBX_1 &&
 			hGNSSCom.Rx->buffer[i +1] == HEADER_UBX_2 ){
 				//On est sur un message UBX
 				isUBX=1;
-				int len = (hGNSSCom.Rx->buffer[i+5] << 8) |hGNSSCom.Rx->buffer[i+4];
-				UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed)) ;
 
+				UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed)) ;
 				UbxMessage->msgClass = hGNSSCom.Rx->buffer[i + 2];
 				UbxMessage->msgID = hGNSSCom.Rx->buffer[i + 3];
-				UbxMessage->len = len;
-				memcpy(UbxMessage->load, hGNSSCom.Rx->buffer + i + 6, len);
-				create_message_debug(UbxMessage); //On obtient l'adresse de la structure qui correspond au message
-				//Maintenant pour pouvoir utilsier ici la structure il nous faut savoir quelle type de structure est elle
-				HAL_UART_Transmit(hGNSSCom.huartDebug, UbxMessage->bufferDebug, sizeof(UbxMessage->bufferDebug),HAL_MAX_DELAY);
-				i+=6+len;
+				UbxMessage->len = (hGNSSCom.Rx->buffer[i+5] << 8) |hGNSSCom.Rx->buffer[i+4];
+				memcpy(UbxMessage->load, hGNSSCom.Rx->buffer + i + 6, UbxMessage->len);
+
+				create_message_debug(UbxMessage);
+
+				HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*) UbxMessage->bufferDebug, sizeof(UbxMessage->bufferDebug),HAL_MAX_DELAY);
 				free(UbxMessage);
 		}
 

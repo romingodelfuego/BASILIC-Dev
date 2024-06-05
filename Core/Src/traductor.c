@@ -92,7 +92,30 @@ void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate)
 	);
 	fill_unuse_memory(UBXMessage,len);
 }
+void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociate){
+	size_t offset = 0;
 
+		memcpy(&(structAssociate->msgClass), UBXMessage->load + offset, sizeof(structAssociate->msgClass));
+		offset += sizeof((structAssociate->msgClass));
+
+		memcpy(&(structAssociate->msgID), UBXMessage->load + offset, sizeof(structAssociate->msgID));
+		offset += sizeof((structAssociate->msgID));
+
+		memcpy(&(structAssociate->rate), UBXMessage->load + offset, sizeof(structAssociate->rate));
+		offset += sizeof((structAssociate->rate));
+
+		int len = sprintf(UBXMessage->bufferDebug,
+				"\r\n__debug_PollMsg___\r\n"
+				"msgClass: %u\r\n"
+				"msgID: %u\r\n"
+				"rate :%u\r\n",
+				bytes_to_endian(structAssociate->msgClass,sizeof(structAssociate->msgClass),'l'),
+				bytes_to_endian(structAssociate->msgID,sizeof(structAssociate->msgID),'l'),
+				bytes_to_endian(structAssociate->rate,sizeof(structAssociate->rate),'l')
+		);
+		fill_unuse_memory(UBXMessage,len);
+
+}
 unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 	uint64_t result = 0;
 	if (type_endian == 'l') { // little-endian
@@ -114,13 +137,11 @@ unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 	}
 	return result;
 }
-
 void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use){
 	if (len_use < sizeof(UBXMessage->bufferDebug)) {
 		memset(UBXMessage->bufferDebug + len_use, '/', sizeof(UBXMessage->bufferDebug) - len_use);
 	}
 }
-
 char* array_to_hex_string(const uint8_t* array, size_t length) {
 	// Taille maximale pour le buffer
 	static char hex_string[UART_RX_BUFFER_SIZE * 2 + 1];

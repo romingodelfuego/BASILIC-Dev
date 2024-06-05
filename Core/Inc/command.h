@@ -10,7 +10,14 @@
 
 #include <stdint.h>
 
-static uint8_t commandSetGNSS_Config[] = {
+/* 							DISCLAIMER
+ *	All these commands are going to be write on the flash memory,
+ *	so at every start commands are send to ZED-F9T.
+ *	Commands are not made by the STM, because it takes too muche space,
+ *	so use the u-blox application : u-center to make faster and easier commands.
+ */
+
+static uint8_t commandSetGNSS_Config[] __attribute__((used)) = {
 		0xb5, 0x62, 0x06, 0x8a, 0x7c, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00,
 		0x31, 0x10, 0x01, 0x03, 0x00, 0x31, 0x10, 0x00, 0x04, 0x00, 0x31, 0x10,
 		0x00, 0x05, 0x00, 0x31, 0x10, 0x00, 0x07, 0x00, 0x31, 0x10, 0x01, 0x09,
@@ -23,10 +30,19 @@ static uint8_t commandSetGNSS_Config[] = {
 		0x10, 0x01, 0x24, 0x00, 0x31, 0x10, 0x01, 0x25, 0x00, 0x31, 0x10, 0x01,
 		0x26, 0x00, 0x31, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x72, 0xec
 };
-
+/*
+ * GPS : ENABLE			| L1C/A : ENABLE - L1C & L2C & L5 : DISABLE
+ * SBS: ENABLE			| L1C/A : DISABLE
+ * GALILEO : ENABLE		| E1 & E5A : ENALE - E5b & E6 : DISABLE
+ * BEIDOU : ENABLE		| B1 & B2A : ENALE - B1C & B2 & B3 : DISABLE
+ * IMES : DISABLE		| L1 : DISABLE
+ * QZSS : ENABLE		| L1C/A & L5 : ENABLE - L1C & L1S & L2C : DISABLE
+ * GLONASS : ENABLE		|L1 : ENABLE - L10C & L2 & L3 : DISABLE
+ * NAVIC : ENABLE		|L5 :DISABLE
+ */
 
 // MessageS construit par u-center
-static uint8_t commandSetTP[] = {
+static uint8_t commandSetTP[] __attribute__((used))= {
 		0xb5, 0x62, 0x06, 0x8a, 0x66, 0x00, 0x00, 0x01, 0x00, 0x00, 0x23, 0x00, 0x05, 0x20, 0x01, 0x30,
 		0x00, 0x05, 0x20, 0x00, 0x01, 0x00, 0x05, 0x30, 0x32, 0x00, 0x02, 0x00, 0x05, 0x40, 0x01, 0x00,
 		0x00, 0x00, 0x03, 0x00, 0x05, 0x40, 0x01, 0x00, 0x00, 0x00, 0x24, 0x00, 0x05, 0x40, 0x40, 0x42,
@@ -34,11 +50,12 @@ static uint8_t commandSetTP[] = {
 		0x00, 0x00, 0x05, 0x00, 0x05, 0x40, 0x01, 0x00, 0x00, 0x00, 0x2a, 0x00, 0x05, 0x50, 0x00, 0x00,
 		0x00, 0x00, 0x00, 0x00, 0x24, 0x40, 0x2b, 0x00, 0x05, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x49, 0x40, 0x07, 0x00, 0x05, 0x10, 0x01, 0x12, 0x00, 0x05, 0x10, 0x01, 0x48, 0xe4
-}; /*RAM CFG-TP-PULSE_DEF     1                    # write value 1 - FREQ             to item id 0x20050023 in layer 0
-  RAM CFG-TP-PULSE_LENGTH_DEF 0                    # write value 0 - RATIO            to item id 0x20050030 in layer 0
-  RAM CFG-TP-ANT_CABLEDELAY 0x32                 # write value 50  0x32             to item id 0x30050001 in layer 0
+}; /*
+  RAM CFG-TP-PULSE_DEF     1                 	# write value 1 - FREQ             to item id 0x20050023 in layer 0
+  RAM CFG-TP-PULSE_LENGTH_DEF 0                 # write value 0 - RATIO            to item id 0x20050030 in layer 0
+  RAM CFG-TP-ANT_CABLEDELAY 0x32                # write value 50  0x32             to item id 0x30050001 in layer 0
   RAM CFG-TP-PERIOD_TP1    0x1                  # write value 1  0x1               to item id 0x40050002 in layer 0
-  RAM CFG-TP-PERIOD_LOCK_TP1 0x1                  # write value 1  0x1               to item id 0x40050003 in layer 0
+  RAM CFG-TP-PERIOD_LOCK_TP1 0x1                # write value 1  0x1               to item id 0x40050003 in layer 0
   RAM CFG-TP-FREQ_TP1      0xf4240              # write value 1000000  0xf4240     to item id 0x40050024 in layer 0
   RAM CFG-TP-FREQ_LOCK_TP1 0xf4240              # write value 1000000  0xf4240     to item id 0x40050025 in layer 0
   RAM CFG-TP-LEN_TP1       0x0                  # write value 0  0x0               to item id 0x40050004 in layer 0
@@ -49,35 +66,34 @@ static uint8_t commandSetTP[] = {
   RAM CFG-TP-TP2_ENA       1                    # write value 1                    to item id 0x10050012 in layer 0
  */
 
-static uint8_t commandUart1Ouput[] = {
+static uint8_t commandUart1Ouput[] __attribute__((used))= {
 		0xb5, 0x62, 0x06, 0x8a, 0x13, 0x00, 0x00, 0x01,
 		0x00, 0x00, 0x02, 0x00, 0x74, 0x10, 0x00, 0x01,
 		0x00, 0x74, 0x10, 0x01, 0x04, 0x00, 0x74, 0x10,
 		0x00, 0x38, 0x79
 };
-/*  RAM CFG-UART1OUTPROT-NMEA 0                    # write value 0                    to item id 0x10740002 in layer 0
-  RAM CFG-UART1OUTPROT-UBX 1                    # write value 1                    to item id 0x10740001 in layer 0
-  RAM CFG-UART1OUTPROT-RTCM3X 0                    # write value 0
+/*
+  RAM CFG-UART1OUTPROT-NMEA 0                    	# write value 0                    to item id 0x10740002 in layer 0
+  RAM CFG-UART1OUTPROT-UBX 1                    	# write value 1                    to item id 0x10740001 in layer 0
+  RAM CFG-UART1OUTPROT-RTCM3X 0                    	# write value 0
  */
-static uint8_t commandMeasureRate[] = {
+static uint8_t commandMeasureRate[] __attribute__((used))= {
 		0xb5, 0x62, 0x06, 0x8a, 0x15, 0x00, 0x00, 0x01,
 		0x00, 0x00, 0x01, 0x00, 0x21, 0x30, 0x64, 0x00,
 		0x02, 0x00, 0x21, 0x30, 0x01, 0x00, 0x03, 0x00,
 		0x21, 0x20, 0x00, 0xf4, 0xa9
 };
-/*  RAM CFG-RATE-MEAS        0x64               # write value 100  0x64        	   to item id 0x30210001 in layer 0
+/*
+  RAM CFG-RATE-MEAS        0x64               	# write value 100  0x64        	   to item id 0x30210001 in layer 0
   RAM CFG-RATE-NAV         0x1                  # write value 1  0x1               to item id 0x30210002 in layer 0
   RAM CFG-RATE-TIMEREF     0                    # write value 0 - UTC              to item id 0x20210003 in layer 0
  */
 
-static uint8_t commandUBXTimeUTC[] = {
+static uint8_t commandUBXTimeUTC[] __attribute__((used))= {
 		0xb5, 0x62, 0x06, 0x01, 0x03, 0x00, 0x01, 0x21, 0x01, 0x2d, 0x85
 };
+/*
+ ENABLE POLLING UBX_NAV_TIMEUTC every RAM CFG-RATE-MEAS period
+*/
 
-static uint8_t test_UBXNav_TIMEUTC[]={
-		0xB5, 0x62, 0x01, 0x21, 0x14, 0x00, 0xB0, 0x1F,
-		0xBF, 0x07, 0x8C, 0x7C, 0x00, 0x00, 0xC2, 0x3F,
-		0x03, 0x00, 0xE8, 0x07, 0x06, 0x03, 0x0C, 0x05,
-		0x30, 0x37, 0x47, 0x22
-};
 #endif /* INC_COMMAND_H_ */

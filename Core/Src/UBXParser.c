@@ -11,11 +11,13 @@
 // Define the instances for the message structures
 UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
+UBX_CFG_MSG UBX_CFG_MSG_instance;
 
 // Define the message mappings array
 MessageMapping message_mappings[] = {
-    {0x01, 0x21, debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance},
-	{0x06, 0x8a, debug_SetVal, &UBX_CFG_SETVAL_instance},
+    {0x01, 0x21, (void (*)(UBXMessage_parsed *, void *)) debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance}, //A la place de la fonction debug on peut penser a ecrire sur la SD
+	{0x06, 0x8a,(void (*)(UBXMessage_parsed *, void *)) debug_SetVal, &UBX_CFG_SETVAL_instance},
+	{0x06, 0x01,(void (*)(UBXMessage_parsed *, void *)) debug_PollMessage, &UBX_CFG_MSG_instance},
     // Add other mappings for other message types if necessary
 };
 
@@ -31,7 +33,7 @@ void create_message_debug(UBXMessage_parsed* UBXMessage) {
             message_mappings[i].msgID == UBXMessage->msgID) {
             // Retrieve the corresponding get function and associated structure and variables
             get_func = message_mappings[i].get_func;
-            structAssociate = message_mappings[i].structAssociate;
+            structAssociate = message_mappings[i].structAssociate; //Pour l'utilosation dans d'autres fonctions, perhaps
             get_func(UBXMessage,structAssociate);
 
             //On adapte la taille du buffer pour les prochains messages
