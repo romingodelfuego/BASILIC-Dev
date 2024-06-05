@@ -329,7 +329,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
     if (hGNSSCom.huart->Instance == huart3.Instance) {
-    	HAL_UART_Receive_IT(hGNSSCom.huart, hGNSSCom.RxBuffer, sizeof(hGNSSCom.RxBuffer)); // Relancer la réception
+    	HAL_UART_Receive_IT(hGNSSCom.huart, hGNSSCom.Rx->buffer, hGNSSCom.Rx->size); // Relancer la réception
     }
 
 }
