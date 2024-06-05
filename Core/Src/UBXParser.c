@@ -6,21 +6,20 @@
  */
 #include "UBXParser.h"
 #include "traductor.h"
+#include "GNSSCom.h"
 
 // Define the instances for the message structures
 UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
-UBX_CFG_GETVAL UBX_CFG_GETVAL_instance;
 
 // Define the message mappings array
 MessageMapping message_mappings[] = {
     {0x01, 0x21, debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance},
 	{0x06, 0x8a, debug_SetVal, &UBX_CFG_SETVAL_instance},
-	{0x06, 0x8b, debug_GetVal, &UBX_CFG_GETVAL_instance},
     // Add other mappings for other message types if necessary
 };
 
-// Function to create a message structure
+
 void create_message_debug(UBXMessage_parsed* UBXMessage) {
     // Function pointer and variables to hold the matched mapping's values
     void (*get_func)(UBXMessage_parsed*, void *) = NULL;
@@ -34,6 +33,9 @@ void create_message_debug(UBXMessage_parsed* UBXMessage) {
             get_func = message_mappings[i].get_func;
             structAssociate = message_mappings[i].structAssociate;
             get_func(UBXMessage,structAssociate);
+
+            //On adapte la taille du buffer pour les prochains messages
+            resizeBuffer(hGNSSCom.Rx,UBXMessage->len + 8);
             break;
         }
 

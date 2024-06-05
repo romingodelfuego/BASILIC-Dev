@@ -18,16 +18,21 @@
 #include "UBXParser.h"
 #include "constants.h"
 
+typedef struct {
+    char *buffer;
+    size_t size;
+} DynamicBuffer;
 
 typedef struct {
 	UART_HandleTypeDef* huart;
 	UART_HandleTypeDef* huartDebug;
 
-	uint8_t RxBuffer[UART_RX_BUFFER_SIZE];
+	DynamicBuffer* Rx;
+
 	uint8_t TxBuffer[UART_TX_BUFFER_SIZE];
 
 	uint8_t DebugBuffer[UART_DEBUG_BUFFER_SIZE];
-	uint8_t uart_RX_error;
+
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;
 
@@ -45,9 +50,12 @@ typedef enum {
 extern OutputProtocol protocol;// = NMEA;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug);
+DynamicBuffer* initializeBuffer(size_t initialSize);
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS);
-void GNSSCom_ReceiveDebug(void);
 
+void GNSSCom_ReceiveDebug(void);
+void resizeBuffer(DynamicBuffer *buffer, size_t newSize);
+void freeBuffer(DynamicBuffer *buffer);
 void GNSSCom_Send_SetVal(void);
 void remove_spaces(const char* str);
 

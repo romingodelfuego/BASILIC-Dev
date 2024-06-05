@@ -93,38 +93,6 @@ void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate)
 	fill_unuse_memory(UBXMessage,len);
 }
 
-void debug_GetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_GETVAL* structAssociate){
-
-	size_t offset = 0;
-
-	memcpy(&(structAssociate->version), UBXMessage->load + offset, sizeof(structAssociate->version));
-	offset += sizeof((structAssociate->version));
-
-	memcpy(&(structAssociate->layers), UBXMessage->load + offset, sizeof(structAssociate->layers));
-	offset += sizeof((structAssociate->layers));
-
-	memcpy(&(structAssociate->position), UBXMessage->load + offset, sizeof(structAssociate->position));
-	offset += sizeof((structAssociate->position));
-
-	memcpy(&(structAssociate->keys), UBXMessage->load + offset, sizeof(structAssociate->keys));
-	offset += sizeof((structAssociate->keys));
-	//Diviser ici en flag
-	//
-	int len = sprintf(UBXMessage->bufferDebug,
-			"\r\n___debug_GetVal___\r\n"
-			"version: %llu\r\n"
-			"layers: %u\r\n",
-			"position: %u\r\n",
-			"keys: %u\r\n",
-			bytes_to_endian(structAssociate->version,sizeof(structAssociate->version),'b'),
-			bytes_to_endian(structAssociate->layers,sizeof(structAssociate->layers),'l'),
-			bytes_to_endian(structAssociate->position,sizeof(structAssociate->position),'l'),
-			bytes_to_endian(structAssociate->keys,sizeof(structAssociate->keys),'l')
-	);
-	fill_unuse_memory(UBXMessage,len);
-
-}
-
 unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 	uint64_t result = 0;
 	if (type_endian == 'l') { // little-endian
@@ -149,7 +117,7 @@ unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 
 void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use){
 	if (len_use < sizeof(UBXMessage->bufferDebug)) {
-		memset(UBXMessage->bufferDebug + len_use, " ", sizeof(UBXMessage->bufferDebug) - len_use);
+		memset(UBXMessage->bufferDebug + len_use, '/', sizeof(UBXMessage->bufferDebug) - len_use);
 	}
 }
 

@@ -49,7 +49,6 @@ extern UBX_CFG_GETVAL UBX_CFG_GETVAL_instance;
 
 void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC*);
 void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL*);
-void debug_GetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_GETVAL* structAssociate);
 unsigned int bytes_to_endian(uint8_t attr[],size_t length,char type_endian);
 char* array_to_hex_string(const uint8_t* array, size_t length);
 void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use);
