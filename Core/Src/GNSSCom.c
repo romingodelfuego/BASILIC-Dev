@@ -52,14 +52,14 @@ void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
 void GNSSCom_Send_SetVal(void){
-//,
+
 	CommandnSize commands[] = {
 	    {commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
 	    {commandUart1Ouput, sizeof(commandUart1Ouput)},
 	    {commandUBXTimeUTC, sizeof(commandUBXTimeUTC)},
-		{commandSetTP, sizeof(commandSetTP)},
-		//{commandSetTP_atNVTRate,sizeof(commandSetTP_atNVTRate)},
-	    {commandMeasureRate, sizeof(commandMeasureRate)}
+		{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
+		{commandSetTP2, sizeof(commandSetTP2)},
+		{commandMeasureRate, sizeof(commandMeasureRate)}
 	};
 	char message[50];
 
