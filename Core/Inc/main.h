@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <GNSSCom.h>
+#include <GNSS/GNSSCom.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -4,7 +4,7 @@
  *  Created on: May 23, 2024
  *      Author: romain.pace
  */
-#include <GNSSCom.h>
+#include <GNSS/GNSSCom.h>
 
 GNSSCom_HandleTypeDef hGNSSCom;
 OutputType type = ASCII;
