@@ -37,8 +37,8 @@ static uint8_t commandSetGNSS_Config[] __attribute__((used)) = {
  * BEIDOU : ENABLE		| B1 & B2A : ENALE - B1C & B2 & B3 : DISABLE
  * IMES : DISABLE		| L1 : DISABLE
  * QZSS : ENABLE		| L1C/A & L5 : ENABLE - L1C & L1S & L2C : DISABLE
- * GLONASS : ENABLE		|L1 : ENABLE - L10C & L2 & L3 : DISABLE
- * NAVIC : ENABLE		|L5 :DISABLE
+ * GLONASS : ENABLE		| L1 : ENABLE - L10C & L2 & L3 : DISABLE
+ * NAVIC : ENABLE		| L5 :DISABLE
  */
 
 // MessageS construit par u-center
@@ -94,6 +94,35 @@ static uint8_t commandUBXTimeUTC[] __attribute__((used))= {
 };
 /*
  ENABLE POLLING UBX_NAV_TIMEUTC every RAM CFG-RATE-MEAS period
-*/
+ */
 
+/*
+  RAM CFG-TP-PULSE_DEF     1                    # write value 1 - FREQ             to item id 0x20050023 in layer 0
+  RAM CFG-TP-PULSE_LENGTH_DEF 0                    # write value 0 - RATIO            to item id 0x20050030 in layer 0
+  RAM CFG-TP-ANT_CABLEDELAY 0x32                 # write value 50  0x32             to item id 0x30050001 in layer 0
+  RAM CFG-TP-FREQ_TP1      0xa                  # write value 10  0xa              to item id 0x40050024 in layer 0
+  RAM CFG-TP-FREQ_LOCK_TP1 0xa                  # write value 10  0xa              to item id 0x40050025 in layer 0
+  RAM CFG-TP-DUTY_TP1      10.000000            # write value 10.000000            to item id 0x5005002a in layer 0
+  RAM CFG-TP-DUTY_LOCK_TP1 50.000000            # write value 50.000000            to item id 0x5005002b in layer 0
+  RAM CFG-TP-TP1_ENA       1                    # write value 1                    to item id 0x10050007 in layer 0
+  RAM CFG-TP-SYNC_GNSS_TP1 1                    # write value 1                    to item id 0x10050008 in layer 0
+  RAM CFG-TP-USE_LOCKED_TP1 1                    # write value 1                    to item id 0x10050009 in layer 0
+  RAM CFG-TP-ALIGN_TO_TOW_TP1 1                    # write value 1                    to item id 0x1005000a in layer 0
+  RAM CFG-TP-POL_TP1       1                    # write value 1                    to item id 0x1005000b in layer 0
+  RAM CFG-TP-TIMEGRID_TP1  0                    # write value 0 - UTC              to item id 0x2005000c in layer 0
+ */
+static uint8_t commandSetTP_atNVTRate[] __attribute__((used))={
+		0xb5, 0x62, 0x06, 0x8a, 0x5a, 0x00, 0x00, 0x01,
+		0x00, 0x00, 0x23, 0x00, 0x05, 0x20, 0x01, 0x30,
+		0x00, 0x05, 0x20, 0x00, 0x01, 0x00, 0x05, 0x30,
+		0x32, 0x00, 0x24, 0x00, 0x05, 0x40, 0x0a, 0x00,
+		0x00, 0x00, 0x25, 0x00, 0x05, 0x40, 0x0a, 0x00,
+		0x00, 0x00, 0x2a, 0x00, 0x05, 0x50, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x24, 0x40, 0x2b, 0x00, 0x05,
+		0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x49, 0x40,
+		0x07, 0x00, 0x05, 0x10, 0x01, 0x08, 0x00, 0x05,
+		0x10, 0x01, 0x09, 0x00, 0x05, 0x10, 0x01, 0x0a,
+		0x00, 0x05, 0x10, 0x01, 0x0b, 0x00, 0x05, 0x10,
+		0x01, 0x0c, 0x00, 0x05, 0x20, 0x00, 0x90, 0xa3
+};
 #endif /* INC_COMMAND_H_ */
