@@ -5,7 +5,7 @@
  *      Author: romain.pace
  */
 
-#include "traductor.h"
+#include "GNSS/traductor.h"
 
 
 void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){

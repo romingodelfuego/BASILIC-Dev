@@ -4,9 +4,9 @@
  *  Created on: May 29, 2024
  *      Author: romain.pace
  */
-#include "UBXParser.h"
-#include "traductor.h"
-#include "GNSSCom.h"
+#include "GNSS/UBXParser.h"
+#include "GNSS/traductor.h"
+#include "GNSS/GNSSCom.h"
 
 // Define the instances for the message structures
 UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
