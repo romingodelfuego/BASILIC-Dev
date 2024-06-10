@@ -54,10 +54,13 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, PROC_M2_Pin|PROC_RESET_FPGA_Pin|UI_LED_R_Pin|UI_LED_G_Pin
-                          |RFM_EN_Pin|RFM_RST_Pin|PROC_M0_Pin|PROC_M1_Pin, GPIO_PIN_RESET);
+                          |RFM_RST_Pin|PROC_M0_Pin|PROC_M1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(UI_LED_B_GPIO_Port, UI_LED_B_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RFM_EN_GPIO_Port, RFM_EN_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, CLK_64M_EN_Pin|STM_ACQ_TRIG_SRC0_Pin|STM_ACQ_TRIG_SRC1_Pin, GPIO_PIN_RESET);
@@ -110,7 +113,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = RFM_IRQ_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(RFM_IRQ_GPIO_Port, &GPIO_InitStruct);
 

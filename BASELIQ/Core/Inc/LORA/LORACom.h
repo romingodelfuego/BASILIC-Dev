@@ -29,5 +29,5 @@ typedef struct {
 extern LORACom_HandleTypeDef hLORACom;
 
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
-
+void LORA_debug(char* flag, uint8_t* value);
 #endif /* INC_LORA_LORACOM_H_ */

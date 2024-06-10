@@ -51,7 +51,7 @@ void RFM9x_Init( void )
     // TxContinuousMode = 0 : Normal mode: a single packet is sent
     // RxPayloadCrcOn = 1 : CRC enabled
     // SymbTimeout[9:8] = 0
-    RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
+   // RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
 
     // LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
     // AgcAutoOn = 0 : LNA gain set by register LnaGain
@@ -103,54 +103,52 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
     {
     	RFM9x_WriteReg(RFM9x_REG_00_FIFO, data[i]);
     }
-
+    uint8_t read_FIFO=RFM9x_ReadReg(RFM9x_REG_00_FIFO);
+    LORA_debug("RFM9x_REG_00_FIFO", read_FIFO);
     // The message length
     RFM9x_WriteReg(RFM9x_REG_22_PAYLOAD_LENGTH, len);
 
     // Start the transmitter
-    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
+    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, 0x03);
 
     // Interrupt on DIO0 for TxDone
     RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-    char message[50];
-    sprintf(message,"RFM9x SEND: %s\r\n",data);
-    HAL_UART_Transmit_IT(hLORACom.huartDebug, message, strlen(message));
+    LORA_debug("RFM9x SEND", data);
     return;
 }
 
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
-	print1("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
+	LORA_debug("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
 
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
 
 	// Set Interrupt on DIO0 to RxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
 
-	print("WFI...");
+	LORA_debug("WFI...", NULL);
 	// wait for interrupt
-	uint32_t start_time_ms = HAL_GetTick();
-	/*while (! HAL_GPIO_ReadPin(SPI1_INT_GPIO_Port, SPI1_INT_Pin))
+	/*uint32_t start_time_ms = HAL_GetTick();
+	while (! HAL_GPIO_ReadPin(SPI2_INT_GPIO_Port, SPI1_INT_Pin))
 	{
 		//spin wait
 
 		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
 		if( (HAL_GetTick() - start_time_ms) > 900)
 		{
-			HAL_GPIO_WritePin(GRN_LED_GPIO_Port, GRN_LED_Pin, GPIO_PIN_RESET);
 		}
 	}*/
 
 	// Read the interrupt register
 	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	print1("IRQ Flags:", irq_flags);
+	LORA_debug("IRQ Flags", irq_flags);
 
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	print1("RxCurAddr: ", start);
-	print1("RxNbrBytes:", len);
+	LORA_debug("RxCurAddr", start);
+	LORA_debug("RxNbrBytes", len);
 
 	// get the read data
 	if (len > (maxlen-1)) len = maxlen-1;
@@ -165,9 +163,10 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 
 	// Report the SNR and RSSI
-	print1("SNR: ", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	print1("RSSI:", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
+	LORA_debug("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
+	LORA_debug("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
+	LORA_debug("*Final data*",data);
 	// if good CRC
 	/*if ( (irq_flags & RFM9x_PAYLOAD_CRC_ERROR) == 0)
 	{
@@ -181,18 +180,7 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 		// bad BEEEEP
 		beep(160,3);
 	}*/
-	/*sprintf(hLORACom.DebugBuffer,
-			"RxCurAddr: %d\r\n"
-			"IRQ Flags: %d\r\n"
-			"SNR: %u"
-			"RSSI: %u",
-			RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR),
-			irq_flags,
-			start,
-			len,
-			RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE),
-			RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
-*/
+
 }
 
 uint8_t RFM9x_GetMode( void )
@@ -235,7 +223,8 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	}
 	else
 	{
-		HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
+		LORA_debug("*HAL_ERROR*", NULL);
+		//HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
 		// handle errors here
 	}
 
@@ -251,7 +240,9 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 {
 	HAL_StatusTypeDef status;
 
-	//print2("RFM9x WR", reg, data );
+	LORA_debug_val("RFM9x WR -reg", reg );
+	LORA_debug_val("RFM9x WR -value", data );
+
 
 	//set the reg msb for write
 	reg |= 0x80;
@@ -269,7 +260,7 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 
 	if (status != HAL_OK)
 	{
-		HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
+		HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
 		// handle errors here
 	}
 

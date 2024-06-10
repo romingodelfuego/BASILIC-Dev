@@ -21,9 +21,9 @@
 void RFM9x_Init( void )
 {
 	// Assert Reset low on the RFM9x
-	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
 	Delay_ms(10);
-	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_SET);
 	Delay_ms(10);
 
 	// Set sleep mode, so we can also set RFM9x mode:
@@ -51,7 +51,7 @@ void RFM9x_Init( void )
     // TxContinuousMode = 0 : Normal mode: a single packet is sent
     // RxPayloadCrcOn = 1 : CRC enabled
     // SymbTimeout[9:8] = 0
-    RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
+    //RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
 
     // LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
     // AgcAutoOn = 0 : LNA gain set by register LnaGain
@@ -73,13 +73,17 @@ void RFM9x_Init( void )
     RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
 
     // PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
-    RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
+    //RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
 
     // PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
     // MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
     // Output Power = 8 : 10dBm from Pout=17-(15-OutputPower) if PaSelect = 1. RadioHead says this is 13 dBm, though
     //RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
     RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
+
+
+	//HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
+	//Delay_ms(10);
 
     return;
 }
@@ -113,44 +117,41 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
     // Interrupt on DIO0 for TxDone
     RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-    char message[50];
-    sprintf(message,"RFM9x SEND: %s\r\n",data);
-    HAL_UART_Transmit(hLORACom.huartDebug, message, strlen(message), HAL_MAX_DELAY);
+    LORA_debug("RFM9x SEND", data);
     return;
 }
 
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
-	print1("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
+	LORA_debug("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
 
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
 
 	// Set Interrupt on DIO0 to RxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
 
-	print("WFI...");
+	LORA_debug("WFI...", NULL);
 	// wait for interrupt
 	uint32_t start_time_ms = HAL_GetTick();
-	/*while (! HAL_GPIO_ReadPin(SPI1_INT_GPIO_Port, SPI1_INT_Pin))
-	{
-		//spin wait
-
-		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
-		if( (HAL_GetTick() - start_time_ms) > 900)
+	while (! HAL_GPIO_ReadPin(RFM_IRQ_GPIO_Port, RFM_IRQ_Pin))
 		{
-			HAL_GPIO_WritePin(GRN_LED_GPIO_Port, GRN_LED_Pin, GPIO_PIN_RESET);
+			//spin wait
+
+			//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
+			if( (HAL_GetTick() - start_time_ms) > 900)
+			{
+			}
 		}
-	}*/
 
 	// Read the interrupt register
 	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	print1("IRQ Flags:", irq_flags);
+	LORA_debug("IRQ Flags", irq_flags);
 
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	print1("RxCurAddr: ", start);
-	print1("RxNbrBytes:", len);
+	LORA_debug("RxCurAddr", start);
+	LORA_debug("RxNbrBytes", len);
 
 	// get the read data
 	if (len > (maxlen-1)) len = maxlen-1;
@@ -165,9 +166,10 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 
 	// Report the SNR and RSSI
-	print1("SNR: ", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	print1("RSSI:", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
+	LORA_debug("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
+	LORA_debug("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
+	LORA_debug("*Final data*",data);
 	// if good CRC
 	/*if ( (irq_flags & RFM9x_PAYLOAD_CRC_ERROR) == 0)
 	{
@@ -181,6 +183,7 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 		// bad BEEEEP
 		beep(160,3);
 	}*/
+
 }
 
 uint8_t RFM9x_GetMode( void )
@@ -210,8 +213,8 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	// default data value if error
 	uint8_t data = 0x00;
 
-	// Set CS low (active)
-	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
+	// Set nCS low (active)
+	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_RESET);
 
 	// write 8 bit reg and read 8 bit data
 	status = HAL_SPI_TransmitReceive(hLORACom.hspi, txData, rxData, size, HAL_MAX_DELAY);
@@ -223,14 +226,12 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	}
 	else
 	{
-		HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
-		// handle errors here
+		LORA_debug("*HAL_ERROR*", NULL);
+
 	}
 
-	//print2("RFM9x RD", reg, data );
-
-	// Set CS high (inactive)
-	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
+	// Set nCS high (inactive)
+	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_SET);
 
 	return data;
 }
@@ -249,24 +250,23 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 	const uint16_t size = sizeof(txData);
 
 
-	// Set CS low (active)
-	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
+	// Set nCS low (active)
+	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_RESET);
 
 	// write 8 bit reg and read 8 bit data
 	status = HAL_SPI_Transmit(hLORACom.hspi, txData, size, HAL_MAX_DELAY);
 
 	if (status != HAL_OK)
 	{
-		HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
+		HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
 		// handle errors here
 	}
 
 	//HACK: Wait for SPI transfer to complete
 	Delay_ms(1);
-	// Set CS high (inactive)
-	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
+	// Set nCS high (inactive)
+	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_SET);
 }
-
 
 void Delay_ms( uint32_t delay_ms )
 {

@@ -76,7 +76,8 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  static uint8_t mode;
+  static uint8_t buffer[64];
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -96,18 +97,28 @@ int main(void)
 
   	HAL_UART_Transmit(&huart2, (uint8_t *)startMessage, sizeof(startMessage), 10);
   	LORACom_Init(&hspi1,&huart2);
+  	RFM9x_Init();
   	HAL_UART_Transmit(&huart2, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
+  	mode = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  RFM9x_Send((uint8_t *)"123456789ABDCEFH",16);
+	  if (mode){
+	  RFM9x_Send((uint8_t *)"987654321",9);
+	  Delay_ms(1000);
+	  RFM9x_ClearInt();
+	  }
+	  else{
+		  RFM9x_Receive(buffer, 64);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
+
   /* USER CODE END 3 */
 }
 
@@ -143,7 +154,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 16;
+  RCC_OscInitStruct.PLL.PLLN = 40;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -161,7 +172,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
   {
     Error_Handler();
   }

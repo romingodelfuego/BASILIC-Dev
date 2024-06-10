@@ -74,7 +74,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
   /* USER CODE END Init */
@@ -102,13 +102,19 @@ int main(void)
 	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)startMessage, sizeof(startMessage), 10);
-	GNSSCom_Init(&huart3,&huart1);
+	//GNSSCom_Init(&huart3,&huart1);
+	LORACom_Init(&hspi2, &huart1);
+	RFM9x_Init();
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 
 
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
 	HAL_Delay(1000);
 
+	static uint8_t mode;
+	static uint8_t buffer[64];
+
+	mode = 0;
 
   /* USER CODE END 2 */
 
@@ -116,6 +122,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
+		if (mode){
+			RFM9x_Send((uint8_t *)"123456789ABDCEF",16);
+			Delay_ms(1000);
+			RFM9x_ClearInt();
+		}
+		else{
+			RFM9x_Receive(buffer, 64);
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
