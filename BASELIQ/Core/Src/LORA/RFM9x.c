@@ -28,100 +28,122 @@ void RFM9x_Init( void )
 	Delay_ms(10);
 	RF_TestSpi();
 	// Set sleep mode, so we can also set RFM9x mode:
-    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
-    // Wait for sleep mode to take over from say, CAD
-    Delay_ms(10);
+	// Wait for sleep mode to take over from say, CAD
+	Delay_ms(10);
 
-    // Check we are in sleep mode, with RFM9x set
-    if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
-    {
-    	//	TODO: Throw RFM9x init error
-    }
+	// Check we are in sleep mode, with RFM9x set
+	if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
+	{
+		//	TODO: Throw RFM9x init error
+	}
 
-    // Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
-    RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
-    RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
+	// Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
+	RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
+	RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
 
-    // BW = 7: 125 kHz
-    // CodingRate = 1:  4/5 code rate
-    // ImplicitHeaderModeOn = 1, Implicit Header mode
-    RFM9x_WriteReg(RFM9x_REG_1D_MODEM_CONFIG1, 0x72);
+	// BW = 7: 125 kHz
+	// CodingRate = 1:  4/5 code rate
+	// ImplicitHeaderModeOn = 1, Implicit Header mode
+	RFM9x_WriteReg(RFM9x_REG_1D_MODEM_CONFIG1, 0x72);
 
-    // SpreadingFactor = 7: 128 chips / symbol,
-    // TxContinuousMode = 0 : Normal mode: a single packet is sent
-    // RxPayloadCrcOn = 1 : CRC enabled
-    // SymbTimeout[9:8] = 0
-    //RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
+	// SpreadingFactor = 7: 128 chips / symbol,
+	// TxContinuousMode = 0 : Normal mode: a single packet is sent
+	// RxPayloadCrcOn = 1 : CRC enabled
+	// SymbTimeout[9:8] = 0
+	//RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
 
-    // LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
-    // AgcAutoOn = 0 : LNA gain set by register LnaGain
-    RFM9x_WriteReg(RFM9x_REG_26_MODEM_CONFIG3, 0x04);
+	// LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
+	// AgcAutoOn = 0 : LNA gain set by register LnaGain
+	RFM9x_WriteReg(RFM9x_REG_26_MODEM_CONFIG3, 0x04);
 
-    // Preamble Length = 16;
-    RFM9x_WriteReg(RFM9x_REG_20_PREAMBLE_MSB, 0x00);
-    RFM9x_WriteReg(RFM9x_REG_21_PREAMBLE_LSB, 0x10);
+	// Preamble Length = 16;
+	RFM9x_WriteReg(RFM9x_REG_20_PREAMBLE_MSB, 0x00);
+	RFM9x_WriteReg(RFM9x_REG_21_PREAMBLE_LSB, 0x10);
 
-    // Set Frequency = 433 MHz
-    //   FRF[23:0] = Freq / Fstep
-    //   Fstep = Fxosc / 2^^19
-    // where:
-    //   Freq = 433 MHz
-    //   Fxosc = 32 MHz
-    uint32_t frf = (uint32_t) ( 433000000.0 / (32000000.0 / 524288.0) ) ;
-    RFM9x_WriteReg(RFM9x_REG_06_FRF_MSB, (frf >> 16) & 0xff);
-    RFM9x_WriteReg(RFM9x_REG_07_FRF_MID, (frf >> 8) & 0xff);
-    RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
+	// Set Frequency = 433 MHz
+	//   FRF[23:0] = Freq / Fstep
+	//   Fstep = Fxosc / 2^^19
+	// where:
+	//   Freq = 433 MHz
+	//   Fxosc = 32 MHz
+	uint32_t frf = (uint32_t) ( 433000000.0 / (32000000.0 / 524288.0) ) ;
+	RFM9x_WriteReg(RFM9x_REG_06_FRF_MSB, (frf >> 16) & 0xff);
+	RFM9x_WriteReg(RFM9x_REG_07_FRF_MID, (frf >> 8) & 0xff);
+	RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
 
-    // PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
-    RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
+	// PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
+	RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
 
-    // PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
-    // MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
-    // Output Power = 8 : 10dBm from Pout=17-(15-OutputPower) if PaSelect = 1. RadioHead says this is 13 dBm, though
-    //RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
-    RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
+	// PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
+	// MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
+	// Output Power = 8 : 10dBm from Pout=17-(15-OutputPower) if PaSelect = 1. RadioHead says this is 13 dBm, though
+	//RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
+	RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-
-	//HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
-	//Delay_ms(10);
-    RF_TestSpi();
-    return;
+	RF_TestSpi();
+	return;
 }
 
 
-void RFM9x_Send(const uint8_t* data, uint8_t len)
+void RFM9x_Send(uint8_t* data, uint8_t len)
 {
-    //TODO: Chec (len > RFM9x_MAX_MESSAGE_LEN)
+	/*if(len > RFM9x_FIFO_SIZE)
+	{
+		//waitPacketSent(); // Make sure we dont interrupt an outgoing message
+		setModeIdle();
 
-    //waitPacketSent(); // Make sure we dont interrupt an outgoing message
-    //setModeIdle();
+		if (!waitCAD()){
+			return 0;  // Check channel activity
+		}
+	}*/
+	// Position at the beginning of the FIFO
+	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, 0);
 
-    //if (!waitCAD())
-	// return false;  // Check channel activity
+	// The payload data
+	for(int i=0; i < len; i++)
+	{
+		RFM9x_WriteReg(RFM9x_REG_00_FIFO, data[i]);
+	}
+	// The message length
+	RFM9x_WriteReg(RFM9x_REG_22_PAYLOAD_LENGTH, len);
 
-    // Position at the beginning of the FIFO
-    RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, 0);
+	// Start the transmitter
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
 
-    // The payload data
-    for(int i=0; i < len; i++)
-    {
-    	RFM9x_WriteReg(RFM9x_REG_00_FIFO, data[i]);
-    }
+	// Interrupt on DIO0 for TxDone
+	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-    // The message length
-    RFM9x_WriteReg(RFM9x_REG_22_PAYLOAD_LENGTH, len);
-
-    // Start the transmitter
-    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
-
-    // Interrupt on DIO0 for TxDone
-    RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
-
-    LORA_debug("RFM9x SEND", data);
-    return;
+	LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
+	return;
+}
+void waitPacketSent() {
+	// Implement this function to wait until the packet has been sent
+	// This could involve polling a status register or waiting for an interrupt
 }
 
+void setModeIdle() {
+	// Implement this function to set the RFM9x to idle mode
+	// This typically involves writing to a mode register
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_STDBY);
+}
+/*
+int waitCAD() {
+	// Implement this function to wait for channel activity detection (CAD)
+	// This could involve starting a CAD operation and polling a status register or waiting for an interrupt
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_CAD);
+	// Wait for CAD to complete and check the result
+	// Example:
+	while (RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS) & RFM9x_IRQ_CAD_DONE) {
+		// CAD operation done
+		if (RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS) & RFM9x_IRQ_CAD_DETECTED) {
+			// Channel activity detected
+			return 0;
+		}
+	}
+	return 1;  // No activity detected
+}*/
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
 	LORA_debug_val("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
@@ -135,14 +157,14 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	// wait for interrupt
 	uint32_t start_time_ms = HAL_GetTick();
 	while (! HAL_GPIO_ReadPin(RFM_IRQ_GPIO_Port, RFM_IRQ_Pin))
-		{
-			//spin wait
+	{
+		//spin wait
 
-			//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
-			if( (HAL_GetTick() - start_time_ms) > 900)
-			{
-			}
+		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
+		if( (HAL_GetTick() - start_time_ms) > 900)
+		{
 		}
+	}
 
 	// Read the interrupt register
 	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
@@ -170,20 +192,7 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
 	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
-	LORA_debug("*Final data*",data);
-	// if good CRC
-	/*if ( (irq_flags & RFM9x_PAYLOAD_CRC_ERROR) == 0)
-	{
-		// turn on LED
-		HAL_GPIO_WritePin(GRN_LED_GPIO_Port, GRN_LED_Pin, GPIO_PIN_SET);
-		// Good beep
-		beep(80,0);
-	}
-	else
-	{
-		// bad BEEEEP
-		beep(160,3);
-	}*/
+	LORA_debug("*Final data*",(uint8_t*)data);
 
 }
 
@@ -264,7 +273,7 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 	}
 
 	//HACK: Wait for SPI transfer to complete
-	Delay_ms(1);
+	//HAL_Delay(1);
 	// Set nCS high (inactive)
 	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_SET);
 }
@@ -287,37 +296,32 @@ void Delay_ms( uint32_t delay_ms )
 // Debug Routines
 void RF_TestSpi( void )
 {
-    uint8_t i;
-    uint8_t v;
-    print("----TEST----");
-    for(i=0; i<8; i++)
-    {
-        v = (1 << i);
-        print1("Write", v);
-        RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
-        Delay_ms(1);
-        v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
-        print1("Read ", v);
-        Delay_ms(1);
-    }
-    print("------------");
-    return;
+	uint8_t i;
+	uint8_t v;
+	print("----TEST----");
+	for(i=0; i<8; i++)
+	{
+		v = (1 << i);
+		print1("Write", v);
+		RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
+		Delay_ms(1);
+		v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
+		print1("Read ", v);
+		Delay_ms(1);
+	}
+	print("------------");
+	return;
 }
 void print1(const char *text, uint8_t x)
 {	char msg[50];
-	  sprintf(msg, "%s 0x%02X\r\n", text, (int) x );
-	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+sprintf(msg, "%s 0x%02X\r\n", text, (int) x );
+HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
 }
 void print(const char *text)
 {char msg[50];
-	  sprintf(msg, "%s\r\n", text );
-	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+sprintf(msg, "%s\r\n", text );
+HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
 }
-void LORA_debug_val(const char* flag, uint8_t value)
-{
-    char message[50];
-    snprintf(message, sizeof(message), "%s: %02X\r\n", flag, (value == '\0') ? 0 : value);
-    HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
-}
+
 
 

@@ -27,10 +27,14 @@ typedef struct {
 
 } LORACom_HandleTypeDef;
 extern LORACom_HandleTypeDef hLORACom;
-
+typedef enum {
+	RECEIVER,
+	TRANSMITTER,
+}MODE;
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
 void LORA_debug(char* flag, uint8_t* value);
 void LORA_debug_val(const char* flag, uint8_t value);
+void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);
 void RF_TestSpi( void );
 void print1(const char *text, uint8_t x);
 void print(const char *text);

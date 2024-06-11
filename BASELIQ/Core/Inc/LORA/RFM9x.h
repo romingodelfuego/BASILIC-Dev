@@ -231,7 +231,7 @@
 /* Public function prototypes ------------------------------------------------*/
 
 void RFM9x_Init( void );
-void RFM9x_Send(const uint8_t* data, uint8_t len);
+void RFM9x_Send(uint8_t* data, uint8_t len);
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen);
 uint8_t RFM9x_GetMode( void );
 void RFM9x_ClearInt( void );

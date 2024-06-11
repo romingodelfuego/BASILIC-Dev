@@ -82,9 +82,6 @@ void RFM9x_Init( void )
 	    //RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
 	    RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-
-		//HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
-		//Delay_ms(10);
 	    RF_TestSpi();
 	    return;
 }
@@ -108,24 +105,22 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
     {
     	RFM9x_WriteReg(RFM9x_REG_00_FIFO, data[i]);
     }
-    uint8_t read_FIFO=RFM9x_ReadReg(RFM9x_REG_00_FIFO);
-    LORA_debug_val("RFM9x_REG_00_FIFO", read_FIFO);
     // The message length
     RFM9x_WriteReg(RFM9x_REG_22_PAYLOAD_LENGTH, len);
 
     // Start the transmitter
-    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, 0x03);
+    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
 
     // Interrupt on DIO0 for TxDone
     RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-    LORA_debug_val("RFM9x SEND", data);
+    LORA_debug("RFM9x SEND",(uint8_t*) data);
     return;
 }
 
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
-	LORA_debug("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
+	LORA_debug_val("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
 
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
 
@@ -134,26 +129,26 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 
 	LORA_debug("WFI...", NULL);
 	// wait for interrupt
-	/*uint32_t start_time_ms = HAL_GetTick();
-	while (! HAL_GPIO_ReadPin(SPI2_INT_GPIO_Port, RFM_IRQ_Pin))
+	uint32_t start_time_ms = HAL_GetTick();
+	while (! HAL_GPIO_ReadPin(SPI1_IRQ_GPIO_Port, SPI1_IRQ_Pin))
 	{
 		//spin wait
-
 		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
 		if( (HAL_GetTick() - start_time_ms) > 900)
 		{
 		}
-	}*/
+
+	}
 
 	// Read the interrupt register
 	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	LORA_debug("IRQ Flags", irq_flags);
+	LORA_debug_val("IRQ Flags", irq_flags);
 
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	LORA_debug("RxCurAddr", start);
-	LORA_debug("RxNbrBytes", len);
+	LORA_debug_val("RxCurAddr", start);
+	LORA_debug_val("RxNbrBytes", len);
 
 	// get the read data
 	if (len > (maxlen-1)) len = maxlen-1;
@@ -168,23 +163,11 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 
 	// Report the SNR and RSSI
-	LORA_debug("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	LORA_debug("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
+	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
+	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
-	LORA_debug("*Final data*",data);
-	// if good CRC
-	/*if ( (irq_flags & RFM9x_PAYLOAD_CRC_ERROR) == 0)
-	{
-		// turn on LED
-		HAL_GPIO_WritePin(GRN_LED_GPIO_Port, GRN_LED_Pin, GPIO_PIN_SET);
-		// Good beep
-		beep(80,0);
-	}
-	else
-	{
-		// bad BEEEEP
-		beep(160,3);
-	}*/
+	LORA_debug_hexa("*Final data*",(uint8_t*)data , len);
+	//Process les donnees
 
 }
 
@@ -229,11 +212,8 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	else
 	{
 		LORA_debug("*HAL_ERROR*", NULL);
-		//HAL_UART_Transmit(&huart2, (uint8_t *) &"*HAL_ERROR*\r\n", 13, HAL_MAX_DELAY);
-		// handle errors here
-	}
 
-	//print2("RFM9x RD", reg, data );
+	}
 
 	// Set CS high (inactive)
 	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
@@ -244,10 +224,6 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 {
 	HAL_StatusTypeDef status;
-
-	//LORA_debug_val("RFM9x WR -reg", reg );
-	//LORA_debug_val("RFM9x WR -value", data );
-
 
 	//set the reg msb for write
 	reg |= 0x80;

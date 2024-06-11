@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -76,8 +76,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  static uint8_t mode;
-  static uint8_t buffer[64];
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -92,32 +90,44 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  const char startMessage[] = "\r\nStarting...\r\n";
-  const char initDoneMessage[] = "\r\nInit Done\r\n\n";
+	const char startMessage[] = "\r\nStarting...\r\n";
+	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
-  	HAL_UART_Transmit(&huart2, (uint8_t *)startMessage, sizeof(startMessage), 10);
-  	LORACom_Init(&hspi1,&huart2);
-  	RFM9x_Init();
-  	HAL_UART_Transmit(&huart2, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
-  	mode = 1;
+	HAL_UART_Transmit(&huart2, (uint8_t *)startMessage, sizeof(startMessage), 10);
+	LORACom_Init(&hspi1,&huart2);
+	RFM9x_Init();
+	HAL_UART_Transmit(&huart2, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  if (mode){
-	  RFM9x_Send((uint8_t *)"987654321",9);
-	  Delay_ms(1000);
-	  RFM9x_ClearInt();
-	  }
-	  else{
-		  RFM9x_Receive(buffer, 64);
-	  }
+	static uint8_t buffer[64];
+
+	//MODE mode = TRANSMITTER;
+	MODE mode = RECEIVER;
+	uint8_t value = 1; // Valeur initiale à envoyer
+
+	while (1)
+	{
+		if (mode){ 		//TRANSMITTER
+			char msg[2];
+			snprintf(msg, sizeof(msg), "%X", value);
+			RFM9x_Send((uint8_t *)msg,1);
+			Delay_ms(1000);
+			RFM9x_ClearInt();
+			if (value == 0xF) {
+				value = 1; // Réinitialiser à 1 après avoir envoyé F
+			} else {
+				value++;
+			}
+		}
+		else{		// RECEIVER
+			RFM9x_Receive(buffer, 64);
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
 
   /* USER CODE END 3 */
 }
@@ -193,11 +203,11 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1)
+	{
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
@@ -212,7 +222,7 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
