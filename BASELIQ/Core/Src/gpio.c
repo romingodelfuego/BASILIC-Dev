@@ -63,7 +63,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(RFM_EN_GPIO_Port, RFM_EN_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, CLK_64M_EN_Pin|STM_ACQ_TRIG_SRC0_Pin|STM_ACQ_TRIG_SRC1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, CLK_64M_EN_Pin|STM_ACQ_TRIG_SRC0_Pin|STM_ACQ_TRIG_SRC1_Pin|RFM_SPI_nCS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, ACQ_POW_EN_Pin|GPS_RESET_Pin, GPIO_PIN_SET);
@@ -103,9 +103,9 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(UI_LED_B_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin
-                           PDPin */
+                           PDPin PDPin */
   GPIO_InitStruct.Pin = CLK_64M_EN_Pin|ACQ_POW_EN_Pin|STM_ACQ_TRIG_SRC0_Pin|STM_ACQ_TRIG_SRC1_Pin
-                          |GPS_RESET_Pin;
+                          |RFM_SPI_nCS_Pin|GPS_RESET_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

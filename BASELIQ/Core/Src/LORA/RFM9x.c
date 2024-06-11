@@ -21,11 +21,12 @@
 void RFM9x_Init( void )
 {
 	// Assert Reset low on the RFM9x
+	RF_TestSpi();
 	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
 	Delay_ms(10);
 	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_SET);
 	Delay_ms(10);
-
+	RF_TestSpi();
 	// Set sleep mode, so we can also set RFM9x mode:
     RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
@@ -73,7 +74,7 @@ void RFM9x_Init( void )
     RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
 
     // PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
-    //RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
+    RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
 
     // PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
     // MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
@@ -84,7 +85,7 @@ void RFM9x_Init( void )
 
 	//HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
 	//Delay_ms(10);
-
+    RF_TestSpi();
     return;
 }
 
@@ -123,7 +124,7 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
 
 void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
-	LORA_debug("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
+	LORA_debug_val("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
 
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
 
@@ -145,13 +146,13 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 
 	// Read the interrupt register
 	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	LORA_debug("IRQ Flags", irq_flags);
+	LORA_debug_val("IRQ Flags", irq_flags);
 
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	LORA_debug("RxCurAddr", start);
-	LORA_debug("RxNbrBytes", len);
+	LORA_debug_val("RxCurAddr", start);
+	LORA_debug_val("RxNbrBytes", len);
 
 	// get the read data
 	if (len > (maxlen-1)) len = maxlen-1;
@@ -166,8 +167,8 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 
 	// Report the SNR and RSSI
-	LORA_debug("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	LORA_debug("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
+	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
+	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
 	LORA_debug("*Final data*",data);
 	// if good CRC
@@ -282,6 +283,41 @@ void Delay_ms( uint32_t delay_ms )
 	}
 
 	return;
+}
+// Debug Routines
+void RF_TestSpi( void )
+{
+    uint8_t i;
+    uint8_t v;
+    print("----TEST----");
+    for(i=0; i<8; i++)
+    {
+        v = (1 << i);
+        print1("Write", v);
+        RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
+        Delay_ms(1);
+        v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
+        print1("Read ", v);
+        Delay_ms(1);
+    }
+    print("------------");
+    return;
+}
+void print1(const char *text, uint8_t x)
+{	char msg[50];
+	  sprintf(msg, "%s 0x%02X\r\n", text, (int) x );
+	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+}
+void print(const char *text)
+{char msg[50];
+	  sprintf(msg, "%s\r\n", text );
+	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+}
+void LORA_debug_val(const char* flag, uint8_t value)
+{
+    char message[50];
+    snprintf(message, sizeof(message), "%s: %02X\r\n", flag, (value == '\0') ? 0 : value);
+    HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
 }
 
 

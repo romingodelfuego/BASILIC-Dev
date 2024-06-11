@@ -128,6 +128,8 @@ int main(void)
 			RFM9x_ClearInt();
 		}
 		else{
+			//RFM9x_Init();
+			//Delay_ms(2000);
 			RFM9x_Receive(buffer, 64);
 		}
     /* USER CODE END WHILE */

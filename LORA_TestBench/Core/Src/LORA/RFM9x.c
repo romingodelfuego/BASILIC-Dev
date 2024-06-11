@@ -21,67 +21,72 @@
 void RFM9x_Init( void )
 {
 	// Assert Reset low on the RFM9x
-	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
-	Delay_ms(10);
-	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_SET);
-	Delay_ms(10);
+		RF_TestSpi();
+		HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
+		Delay_ms(10);
+		HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_SET);
+		Delay_ms(10);
+		RF_TestSpi();
+		// Set sleep mode, so we can also set RFM9x mode:
+	    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
-	// Set sleep mode, so we can also set RFM9x mode:
-    RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
+	    // Wait for sleep mode to take over from say, CAD
+	    Delay_ms(10);
 
-    // Wait for sleep mode to take over from say, CAD
-    Delay_ms(10);
+	    // Check we are in sleep mode, with RFM9x set
+	    if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
+	    {
+	    	//	TODO: Throw RFM9x init error
+	    }
 
-    // Check we are in sleep mode, with RFM9x set
-    if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
-    {
-    	//	TODO: Throw RFM9x init error
-    }
+	    // Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
+	    RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
+	    RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
 
-    // Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
-    RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
-    RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
+	    // BW = 7: 125 kHz
+	    // CodingRate = 1:  4/5 code rate
+	    // ImplicitHeaderModeOn = 1, Implicit Header mode
+	    RFM9x_WriteReg(RFM9x_REG_1D_MODEM_CONFIG1, 0x72);
 
-    // BW = 7: 125 kHz
-    // CodingRate = 1:  4/5 code rate
-    // ImplicitHeaderModeOn = 1, Implicit Header mode
-    RFM9x_WriteReg(RFM9x_REG_1D_MODEM_CONFIG1, 0x72);
+	    // SpreadingFactor = 7: 128 chips / symbol,
+	    // TxContinuousMode = 0 : Normal mode: a single packet is sent
+	    // RxPayloadCrcOn = 1 : CRC enabled
+	    // SymbTimeout[9:8] = 0
+	    //RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
 
-    // SpreadingFactor = 7: 128 chips / symbol,
-    // TxContinuousMode = 0 : Normal mode: a single packet is sent
-    // RxPayloadCrcOn = 1 : CRC enabled
-    // SymbTimeout[9:8] = 0
-   // RFM9x_WriteReg(RFM9x_REG_1E_MODEM_CONFIG2, 0x74);
+	    // LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
+	    // AgcAutoOn = 0 : LNA gain set by register LnaGain
+	    RFM9x_WriteReg(RFM9x_REG_26_MODEM_CONFIG3, 0x04);
 
-    // LowDataRateOptimize = 1 : Enabled; mandated for when the symbol length exceeds 16ms
-    // AgcAutoOn = 0 : LNA gain set by register LnaGain
-    RFM9x_WriteReg(RFM9x_REG_26_MODEM_CONFIG3, 0x04);
+	    // Preamble Length = 16;
+	    RFM9x_WriteReg(RFM9x_REG_20_PREAMBLE_MSB, 0x00);
+	    RFM9x_WriteReg(RFM9x_REG_21_PREAMBLE_LSB, 0x10);
 
-    // Preamble Length = 16;
-    RFM9x_WriteReg(RFM9x_REG_20_PREAMBLE_MSB, 0x00);
-    RFM9x_WriteReg(RFM9x_REG_21_PREAMBLE_LSB, 0x10);
+	    // Set Frequency = 433 MHz
+	    //   FRF[23:0] = Freq / Fstep
+	    //   Fstep = Fxosc / 2^^19
+	    // where:
+	    //   Freq = 433 MHz
+	    //   Fxosc = 32 MHz
+	    uint32_t frf = (uint32_t) ( 433000000.0 / (32000000.0 / 524288.0) ) ;
+	    RFM9x_WriteReg(RFM9x_REG_06_FRF_MSB, (frf >> 16) & 0xff);
+	    RFM9x_WriteReg(RFM9x_REG_07_FRF_MID, (frf >> 8) & 0xff);
+	    RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
 
-    // Set Frequency = 433 MHz
-    //   FRF[23:0] = Freq / Fstep
-    //   Fstep = Fxosc / 2^^19
-    // where:
-    //   Freq = 433 MHz
-    //   Fxosc = 32 MHz
-    uint32_t frf = (uint32_t) ( 433000000.0 / (32000000.0 / 524288.0) ) ;
-    RFM9x_WriteReg(RFM9x_REG_06_FRF_MSB, (frf >> 16) & 0xff);
-    RFM9x_WriteReg(RFM9x_REG_07_FRF_MID, (frf >> 8) & 0xff);
-    RFM9x_WriteReg(RFM9x_REG_08_FRF_LSB, frf & 0xff);
+	    // PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
+	    RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
 
-    // PaDac = 4 : Disables the +20dBm option on PA_BOOST pin
-    RFM9x_WriteReg(RFM9x_REG_4D_PA_DAC, 0x04);
+	    // PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
+	    // MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
+	    // Output Power = 8 : 10dBm from Pout=17-(15-OutputPower) if PaSelect = 1. RadioHead says this is 13 dBm, though
+	    //RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
+	    RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-    // PaSelect = 1 : PA_BOOST pin (instead of RFO pin).
-    // MaxPower = 0 : Pmax=10.8+0.6*MaxPower [dBm]
-    // Output Power = 8 : 10dBm from Pout=17-(15-OutputPower) if PaSelect = 1. RadioHead says this is 13 dBm, though
-    //RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
-    RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-    return;
+		//HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
+		//Delay_ms(10);
+	    RF_TestSpi();
+	    return;
 }
 
 
@@ -104,7 +109,7 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
     	RFM9x_WriteReg(RFM9x_REG_00_FIFO, data[i]);
     }
     uint8_t read_FIFO=RFM9x_ReadReg(RFM9x_REG_00_FIFO);
-    LORA_debug("RFM9x_REG_00_FIFO", read_FIFO);
+    LORA_debug_val("RFM9x_REG_00_FIFO", read_FIFO);
     // The message length
     RFM9x_WriteReg(RFM9x_REG_22_PAYLOAD_LENGTH, len);
 
@@ -114,7 +119,7 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
     // Interrupt on DIO0 for TxDone
     RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-    LORA_debug("RFM9x SEND", data);
+    LORA_debug_val("RFM9x SEND", data);
     return;
 }
 
@@ -130,7 +135,7 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	LORA_debug("WFI...", NULL);
 	// wait for interrupt
 	/*uint32_t start_time_ms = HAL_GetTick();
-	while (! HAL_GPIO_ReadPin(SPI2_INT_GPIO_Port, SPI1_INT_Pin))
+	while (! HAL_GPIO_ReadPin(SPI2_INT_GPIO_Port, RFM_IRQ_Pin))
 	{
 		//spin wait
 
@@ -240,8 +245,8 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 {
 	HAL_StatusTypeDef status;
 
-	LORA_debug_val("RFM9x WR -reg", reg );
-	LORA_debug_val("RFM9x WR -value", data );
+	//LORA_debug_val("RFM9x WR -reg", reg );
+	//LORA_debug_val("RFM9x WR -value", data );
 
 
 	//set the reg msb for write
@@ -286,4 +291,33 @@ void Delay_ms( uint32_t delay_ms )
 	return;
 }
 
+// Debug Routines
+void RF_TestSpi( void )
+{
+    uint8_t i;
+    uint8_t v;
+    print("----TEST----");
+    for(i=0; i<8; i++)
+    {
 
+        v = (1 << i);
+        print1("Write", v);
+        RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
+        Delay_ms(1);
+        v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
+        print1("Read ", v);
+        Delay_ms(1);
+    }
+    print("------------");
+    return;
+}
+void print1(const char *text, uint8_t x)
+{	char msg[50];
+	  sprintf(msg, "%s 0x%02X\r\n", text, (int) x );
+	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+}
+void print(const char *text)
+{char msg[50];
+	  sprintf(msg, "%s\r\n", text );
+	  HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
+}
