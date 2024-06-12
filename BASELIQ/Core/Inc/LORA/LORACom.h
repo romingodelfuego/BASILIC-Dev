@@ -16,8 +16,7 @@
 #include <string.h>
 #include "spi.h"
 #include "usart.h"
-
-#define UART_DEBUG_BUFFER_SIZE 200
+#include "GNSS/constants.h"
 
 typedef struct {
 	SPI_HandleTypeDef* hspi;

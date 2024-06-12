@@ -10,7 +10,7 @@
 
 GNSSCom_HandleTypeDef hGNSSCom;
 OutputType type = ASCII;
-OutputProtocol protocol = NMEA;
+OutputProtocol protocol = UBX;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
@@ -67,80 +67,54 @@ void GNSSCom_Send_SetVal(void){
 
 	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i) {
 		// Transmit debug message
-		sprintf(message, "\r\t\t\n...Message%d...\r\n", i + 1);
+		sprintf(message, "\r\t\t\n...UBXMessage%d...\r\n", i + 1);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
 
 		// Transmit command
 		HAL_UART_Transmit(hGNSSCom.huart, commands[i].command, commands[i].size, HAL_MAX_DELAY);
 
-		// Receive debug
+		// Print UBX debug
 		memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
-		GNSSCom_ReceiveDebug();
+
+		GenericMessage* message = GNSSCom_Receive();
+		UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) message->Message.UBXMessage;
+		create_message_debug(messageUBX);
+		HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
+		freeBuffer(message->Message.UBXMessage->UBX_Brute);
+		freeBuffer(message->Message.UBXMessage->load);
+		free(message->Message.UBXMessage);
+		free(message);
+
 	}
 }
-void GNSSCom_ReceiveDebug(){
-	// Initialiser la chaîne de sortie à une chaîne vide
-	char output_string[UART_DEBUG_BUFFER_SIZE];
-	int isUBX = 0;
-	for (int i = 0; i < hGNSSCom.Rx->size; i++) {
+GenericMessage* GNSSCom_Receive(){
+	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
+	for (int i = 0; i < hGNSSCom.Rx->size; i++) {
 		if (hGNSSCom.Rx->buffer[i] == HEADER_UBX_1 &&
 				hGNSSCom.Rx->buffer[i +1] == HEADER_UBX_2 ){
-			//On est sur un message UBX
-			isUBX=1;
-
+			genericMessage->typeMessage=UBX;
 			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
 			UbxMessage->msgClass = hGNSSCom.Rx->buffer[i + 2];
 			UbxMessage->msgID = hGNSSCom.Rx->buffer[i + 3];
 			UbxMessage->len = (hGNSSCom.Rx->buffer[i+5] << 8) |hGNSSCom.Rx->buffer[i+4];
-			memcpy(UbxMessage->load, hGNSSCom.Rx->buffer + i + 6, UbxMessage->len);
+			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len);
+			memcpy(UbxMessage->load->buffer, hGNSSCom.Rx->buffer + i + 6, UbxMessage->load->size);
 
-			//---PARTIE PAS SURE--//
-			int UBX_Brute_length = UbxMessage->len + 8;
-			uint8_t *UBX_Brute = (uint8_t*)malloc(sizeof(uint8_t)*UBX_Brute_length);
-			memcpy(UBX_Brute,hGNSSCom.Rx->buffer + i,UBX_Brute_length);
-			RFM9x_Send((uint8_t*) UBX_Brute,UBX_Brute_length);
+			UbxMessage->UBX_Brute=initializeBuffer((size_t)UbxMessage->len + 8);
+			memcpy(UbxMessage->UBX_Brute->buffer, hGNSSCom.Rx->buffer + i, UbxMessage->UBX_Brute->size);
 
-			create_message_debug(UbxMessage);// Modifie la taille du buffer RX CARREMENT
-
-			HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*) UbxMessage->bufferDebug, sizeof(UbxMessage->bufferDebug),HAL_MAX_DELAY);
-
-			free(UbxMessage);
-			free(UBX_Brute);
+			genericMessage->Message.UBXMessage = UbxMessage;
+			return genericMessage;
 		}
 
-		else if (!isUBX){
-			switch (hGNSSCom.Rx->buffer[i]) {
-			case '\n': // Nouvelle ligne détectée
-				strcat(output_string, "\n"); // Ajout d'un saut de ligne à la chaîne de sortie
-				break;
-			case '\r': // Retour de chariot détecté
-				strcat(output_string, "\r");
-				break;
-			default:
-				switch (type) {
-				case RAW:
-					snprintf(output_string + i, sizeof(output_string) - i, "%d", hGNSSCom.Rx->buffer[i]);
-					break;
-
-				case HEX:
-					snprintf(output_string +i, sizeof(output_string) - i, "%02X", hGNSSCom.Rx->buffer[i]);
-					break;
-
-				case ASCII:
-					snprintf(output_string +i, sizeof(output_string) - i, "%c",
-							((hGNSSCom.Rx->buffer[i] >= 32 && hGNSSCom.Rx->buffer[i] <= 126)||hGNSSCom.Rx->buffer[i] >= 192) ? hGNSSCom.Rx->buffer[i] : '.');
-					break;
-				}
-				strncat(output_string, " ", sizeof(output_string) - i - 1);
-
-			}
+		else if(hGNSSCom.Rx->buffer[i] == HEADER_NMEA) {
+			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) malloc(sizeof(NMEAMessage_parsed));
+			genericMessage->typeMessage= NMEA;
+			genericMessage->Message.NMEAMessage = NMEAMessage;
+			return genericMessage; //Temporaire
 		}
 	}
-	if (!isUBX){
-		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)output_string, strlen(output_string),HAL_MAX_DELAY);
-		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)"\r\n", 4,HAL_MAX_DELAY);
-	}
+
+	return genericMessage;
 }
-
-

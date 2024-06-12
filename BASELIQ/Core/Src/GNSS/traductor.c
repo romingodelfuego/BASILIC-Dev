@@ -11,37 +11,37 @@
 void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){
 	size_t offset = 0;
 	ITM_Port32(31)=21;
-	memcpy(&(structAssociate->iTOW), UBXMessage->load + offset, sizeof(structAssociate->iTOW));
+	memcpy(&(structAssociate->iTOW), UBXMessage->load->buffer + offset, sizeof(structAssociate->iTOW));
 	offset += sizeof(structAssociate->iTOW);
 
-	memcpy(&(structAssociate->tAcc), UBXMessage->load + offset, sizeof(structAssociate->tAcc));
+	memcpy(&(structAssociate->tAcc), UBXMessage->load->buffer + offset, sizeof(structAssociate->tAcc));
 	offset += sizeof(structAssociate->tAcc);
 
-	memcpy(&(structAssociate->nano), UBXMessage->load + offset, sizeof(structAssociate->nano));
+	memcpy(&(structAssociate->nano), UBXMessage->load->buffer + offset, sizeof(structAssociate->nano));
 	offset += sizeof(structAssociate->nano);
 
-	memcpy(&(structAssociate->year), UBXMessage->load + offset, sizeof(structAssociate->year));
+	memcpy(&(structAssociate->year), UBXMessage->load->buffer + offset, sizeof(structAssociate->year));
 	offset += sizeof(structAssociate->year);
 
-	memcpy(&(structAssociate->month), UBXMessage->load + offset, sizeof(structAssociate->month));
+	memcpy(&(structAssociate->month), UBXMessage->load->buffer + offset, sizeof(structAssociate->month));
 	offset += sizeof(structAssociate->month);
 
-	memcpy(&(structAssociate->day), UBXMessage->load + offset, sizeof(structAssociate->day));
+	memcpy(&(structAssociate->day), UBXMessage->load->buffer + offset, sizeof(structAssociate->day));
 	offset += sizeof(structAssociate->day);
 
-	memcpy(&(structAssociate->hour), UBXMessage->load + offset, sizeof(structAssociate->hour));
+	memcpy(&(structAssociate->hour), UBXMessage->load->buffer + offset, sizeof(structAssociate->hour));
 	offset += sizeof(structAssociate->hour);
 
-	memcpy(&(structAssociate->min), UBXMessage->load + offset, sizeof(structAssociate->min));
+	memcpy(&(structAssociate->min), UBXMessage->load->buffer + offset, sizeof(structAssociate->min));
 	offset += sizeof(structAssociate->min);
 
-	memcpy(&(structAssociate->sec), UBXMessage->load + offset, sizeof(structAssociate->sec));
+	memcpy(&(structAssociate->sec), UBXMessage->load->buffer + offset, sizeof(structAssociate->sec));
 	offset += sizeof(structAssociate->sec);
 
-	memcpy(&(structAssociate->valid), UBXMessage->load + offset, sizeof(structAssociate->valid));
+	memcpy(&(structAssociate->valid), UBXMessage->load->buffer + offset, sizeof(structAssociate->valid));
 	offset += sizeof(structAssociate->valid);
 
-	int len =sprintf(UBXMessage->bufferDebug,
+	int len =snprintf(UBXMessage->bufferDebug,  (size_t)UART_DEBUG_BUFFER_SIZE,
 			"\r\n___debug_UBX_NAV_TIMEUTC__\r\n"
 			"iTOW [ms]: %u\r\n"
 			"tAcc [ns]: %u\r\n"
@@ -68,20 +68,20 @@ void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate)
 
 	size_t offset = 0;
 
-	memcpy(&(structAssociate->version), UBXMessage->load + offset, sizeof(structAssociate->version));
+	memcpy(&(structAssociate->version), UBXMessage->load->buffer + offset, sizeof(structAssociate->version));
 	offset += sizeof((structAssociate->version));
 
-	memcpy(&(structAssociate->layers), UBXMessage->load + offset, sizeof(structAssociate->layers));
+	memcpy(&(structAssociate->layers), UBXMessage->load->buffer + offset, sizeof(structAssociate->layers));
 	offset += sizeof((structAssociate->layers));
 
 	offset += sizeof((structAssociate->reserved));
 
-	memcpy(&(structAssociate->cfgData), UBXMessage->load + offset, sizeof(structAssociate->cfgData));
+	memcpy(&(structAssociate->cfgData), UBXMessage->load->buffer + offset, sizeof(structAssociate->cfgData));
 	offset += sizeof((structAssociate->cfgData));
 	//Diviser ici en flag
 	//
 
-	int len = sprintf(UBXMessage->bufferDebug,
+	int len = snprintf(UBXMessage->bufferDebug, (size_t)UART_DEBUG_BUFFER_SIZE,
 			"\r\n__debug_SetVal___\r\n"
 			"version: %u\r\n"
 			"layers: %u\r\n"
@@ -95,16 +95,16 @@ void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate)
 void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociate){
 	size_t offset = 0;
 
-		memcpy(&(structAssociate->msgClass), UBXMessage->load + offset, sizeof(structAssociate->msgClass));
+		memcpy(&(structAssociate->msgClass), UBXMessage->load->buffer + offset, sizeof(structAssociate->msgClass));
 		offset += sizeof((structAssociate->msgClass));
 
-		memcpy(&(structAssociate->msgID), UBXMessage->load + offset, sizeof(structAssociate->msgID));
+		memcpy(&(structAssociate->msgID), UBXMessage->load->buffer + offset, sizeof(structAssociate->msgID));
 		offset += sizeof((structAssociate->msgID));
 
-		memcpy(&(structAssociate->rate), UBXMessage->load + offset, sizeof(structAssociate->rate));
+		memcpy(&(structAssociate->rate), UBXMessage->load->buffer + offset, sizeof(structAssociate->rate));
 		offset += sizeof((structAssociate->rate));
 
-		int len = sprintf(UBXMessage->bufferDebug,
+		int len = snprintf(UBXMessage->bufferDebug,  (size_t)UART_DEBUG_BUFFER_SIZE,
 				"\r\n__debug_PollMsg___\r\n"
 				"msgClass: %u\r\n"
 				"msgID: %u\r\n"

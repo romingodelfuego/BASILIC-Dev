@@ -15,13 +15,23 @@
 #include <string.h>
 #include "command.h"
 #include "traductor.h"
-#include "UBXParser.h"
+//#include "UBXParser.h"
 #include "constants.h"
 
+
 typedef struct {
-    uint8_t *buffer;
+    const uint8_t *command;
     size_t size;
-} DynamicBuffer;
+} CommandnSize;
+
+typedef enum {
+    RAW,
+    HEX,
+    ASCII
+} OutputType;
+extern OutputType type;
+
+
 
 typedef struct {
 	UART_HandleTypeDef* huart;
@@ -36,29 +46,14 @@ typedef struct {
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;
 
-typedef struct {
-    const uint8_t *command;
-    size_t size;
-} CommandnSize;
-
-typedef enum {
-    RAW,
-    HEX,
-    ASCII
-} OutputType;
-extern OutputType type; //=ASCII
-typedef enum {
-    NMEA,
-    UBX,
-} OutputProtocol;
-
-extern OutputProtocol protocol;// = NMEA;
-
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug);
 DynamicBuffer* initializeBuffer(size_t initialSize);
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS);
 void GNSSCom_Send_SetVal(void);
 void GNSSCom_ReceiveDebug(void);
+
+GenericMessage* GNSSCom_Receive();
+
 void resizeBuffer(DynamicBuffer *buffer, size_t newSize);
 void freeBuffer(DynamicBuffer *buffer);
 void remove_spaces(const char* str);

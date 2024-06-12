@@ -183,7 +183,6 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	{
 		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
 	}
-	data[len] = '\0';
 
 	// clear all the IRQ flags
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
@@ -298,7 +297,7 @@ void RF_TestSpi( void )
 {
 	uint8_t i;
 	uint8_t v;
-	print("----TEST----");
+	print("\r\n----TEST----");
 	for(i=0; i<8; i++)
 	{
 		v = (1 << i);
