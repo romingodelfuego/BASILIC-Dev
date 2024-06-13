@@ -326,7 +326,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		//	Si on veut debug alors quel messsage on debug
 		//	Si on veut transferer alors quel message (class,id)
 
-		GenericMessage* reception = GNSSCom_Receive();
+		GenericMessage* reception = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
 		if (protocol == UBX && reception->typeMessage == UBX){
 
 			UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;

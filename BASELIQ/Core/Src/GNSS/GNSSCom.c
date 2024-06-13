@@ -76,7 +76,7 @@ void GNSSCom_Send_SetVal(void){
 		// On fais croire que la commande a ete recu par le RX buffer : TIPS pour print en debug la commande
 		memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
 
-		GenericMessage* command_debug = GNSSCom_Receive();
+		GenericMessage* command_debug = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
 		if (command_debug->typeMessage == UBX){
 			UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) command_debug->Message.UBXMessage;
 			create_message_debug(messageUBX);
@@ -98,28 +98,28 @@ void GNSSCom_Send_SetVal(void){
 		}
 	}
 }
-GenericMessage* GNSSCom_Receive(){
+GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
-	for (int i = 0; i < hGNSSCom.Rx->size; i++) {
-		if (hGNSSCom.Rx->buffer[i] == HEADER_UBX_1 &&
-				hGNSSCom.Rx->buffer[i +1] == HEADER_UBX_2 ){
+	for (int i = 0; i < size; i++) {
+		if (buffer[i] == HEADER_UBX_1 &&
+				buffer[i +1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
 			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->msgClass = hGNSSCom.Rx->buffer[i + 2];
-			UbxMessage->msgID = hGNSSCom.Rx->buffer[i + 3];
-			UbxMessage->len = (hGNSSCom.Rx->buffer[i+5] << 8) |hGNSSCom.Rx->buffer[i+4];
+			UbxMessage->msgClass = buffer[i + 2];
+			UbxMessage->msgID = buffer[i + 3];
+			UbxMessage->len = (buffer[i+5] << 8) |buffer[i+4];
 			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len);
-			memcpy(UbxMessage->load->buffer, hGNSSCom.Rx->buffer + i + 6, UbxMessage->load->size);
+			memcpy(UbxMessage->load->buffer, buffer + i + 6, UbxMessage->load->size);
 
 			UbxMessage->UBX_Brute=initializeBuffer((size_t)UbxMessage->len + 8);
-			memcpy(UbxMessage->UBX_Brute->buffer, hGNSSCom.Rx->buffer + i, UbxMessage->UBX_Brute->size);
+			memcpy(UbxMessage->UBX_Brute->buffer, buffer + i, UbxMessage->UBX_Brute->size);
 
 			genericMessage->Message.UBXMessage = UbxMessage;
 			return genericMessage;
 		}
 
-		else if(hGNSSCom.Rx->buffer[i] == HEADER_NMEA) {
+		else if(buffer[i] == HEADER_NMEA) {
 			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) malloc(sizeof(NMEAMessage_parsed));
 			genericMessage->typeMessage= NMEA;
 			genericMessage->Message.NMEAMessage = NMEAMessage;

@@ -23,6 +23,7 @@
 // PAQUE TYPE
 #define PACKET_TYPE_DATA 0x01
 #define PACKET_TYPE_ACK  0x02
+#define PACKET_TYPE_POLL 0x03
 
 
 typedef struct {

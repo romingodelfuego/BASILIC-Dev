@@ -184,7 +184,7 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
     uint8_t *payload = malloc(len * sizeof(uint8_t));
 	memcpy(payload,data + 4, len_payload);
 
-	GenericMessage* message = GNSSCom_Receive((uint8_t*)payload);
+	GenericMessage* message = GNSSCom_Receive((uint8_t*)payload,(size_t) len);
 	UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) message->Message.UBXMessage;
 	create_message_debug(messageUBX);
 	HAL_UART_Transmit(hLORACom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);

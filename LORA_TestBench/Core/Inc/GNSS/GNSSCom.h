@@ -52,7 +52,7 @@ void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS);
 void GNSSCom_Send_SetVal(void);
 void GNSSCom_ReceiveDebug(void);
 
-GenericMessage* GNSSCom_Receive(uint8_t* buffer);
+GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size);
 
 void resizeBuffer(DynamicBuffer *buffer, size_t newSize);
 void freeBuffer(DynamicBuffer *buffer);

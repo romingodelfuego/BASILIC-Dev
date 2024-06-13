@@ -53,10 +53,10 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
-GenericMessage* GNSSCom_Receive(uint8_t* buffer){
+GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
-	for (int i = 0; i < hGNSSCom.Rx->size; i++) {
+	for (int i = 0; i < size; i++) {
 		if (buffer[i] == HEADER_UBX_1 &&
 				buffer[i +1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
