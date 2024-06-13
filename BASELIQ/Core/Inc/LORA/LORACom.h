@@ -18,6 +18,13 @@
 #include "usart.h"
 #include "GNSS/constants.h"
 
+//WHO AM I
+#define MODULE_SOURCE_ADDRESS 0x01
+// PAQUE TYPE
+#define PACKET_TYPE_DATA 0x01
+#define PACKET_TYPE_ACK  0x02
+
+
 typedef struct {
 	SPI_HandleTypeDef* hspi;
 	UART_HandleTypeDef* huartDebug;
@@ -31,6 +38,7 @@ typedef enum {
 	TRANSMITTER,
 }MODE;
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
+void LORA_Send(uint8_t destination, uint8_t type, uint8_t* payload, uint8_t len);
 void LORA_debug(char* flag, uint8_t* value);
 void LORA_debug_val(const char* flag, uint8_t value);
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);

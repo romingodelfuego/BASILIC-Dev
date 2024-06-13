@@ -33,11 +33,9 @@ typedef struct {
 	char bufferDebug[UART_DEBUG_BUFFER_SIZE];
 	DynamicBuffer* load; // Pointeur de tableau
 	DynamicBuffer* UBX_Brute; // Pointeur de tableau de longeur variable
-
 }UBXMessage_parsed ;
 
 typedef struct {
-
 	char* NMEA_Brute;
 }NMEAMessage_parsed;
 
@@ -50,6 +48,8 @@ typedef struct{
 	OutputProtocol typeMessage;
 	MessageStruct Message;
 }GenericMessage;
+
+
 typedef struct {
     uint8_t msgClass;
     uint8_t msgID;

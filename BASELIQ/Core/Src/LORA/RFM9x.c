@@ -38,7 +38,6 @@ void RFM9x_Init( void )
 	{
 		//	TODO: Throw RFM9x init error
 	}
-
 	// Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
 	RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
 	RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
@@ -83,7 +82,6 @@ void RFM9x_Init( void )
 	RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
 	RF_TestSpi();
-	return;
 }
 
 
@@ -115,8 +113,7 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-	LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
-	return;
+	//LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
 }
 void waitPacketSent() {
 	// Implement this function to wait until the packet has been sent

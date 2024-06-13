@@ -57,11 +57,11 @@ void GNSSCom_Send_SetVal(void){
 
 	CommandnSize commands[] = {
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
-			{commandUart1Ouput, sizeof(commandUart1Ouput)},
 			{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)},
 			{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
 			{commandSetTP2, sizeof(commandSetTP2)},
-			{commandMeasureRate, sizeof(commandMeasureRate)}
+			{commandMeasureRate, sizeof(commandMeasureRate)},
+			{commandUart1Ouput, sizeof(commandUart1Ouput)}
 	};
 	char message[50];
 
@@ -73,18 +73,29 @@ void GNSSCom_Send_SetVal(void){
 		// Transmit command
 		HAL_UART_Transmit(hGNSSCom.huart, commands[i].command, commands[i].size, HAL_MAX_DELAY);
 
-		// Print UBX debug
+		// On fais croire que la commande a ete recu par le RX buffer : TIPS pour print en debug la commande
 		memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
 
-		GenericMessage* message = GNSSCom_Receive();
-		UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) message->Message.UBXMessage;
-		create_message_debug(messageUBX);
-		HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-		freeBuffer(message->Message.UBXMessage->UBX_Brute);
-		freeBuffer(message->Message.UBXMessage->load);
-		free(message->Message.UBXMessage);
-		free(message);
+		GenericMessage* command_debug = GNSSCom_Receive();
+		if (command_debug->typeMessage == UBX){
+			UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) command_debug->Message.UBXMessage;
+			create_message_debug(messageUBX);
+			HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
+			freeBuffer(command_debug->Message.UBXMessage->UBX_Brute);
+			freeBuffer(command_debug->Message.UBXMessage->load);
+			free(command_debug->Message.UBXMessage);
+			free(command_debug);
+		}
 
+
+		else{
+			sprintf(message, "\r\t\t\n...UBXMessage%d - FAILED...\r\n", i + 1);
+			HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
+			if (command_debug->typeMessage == NMEA){
+				free(command_debug->Message.NMEAMessage);
+				free(command_debug);
+			}
+		}
 	}
 }
 GenericMessage* GNSSCom_Receive(){
@@ -115,6 +126,5 @@ GenericMessage* GNSSCom_Receive(){
 			return genericMessage; //Temporaire
 		}
 	}
-
 	return genericMessage;
 }

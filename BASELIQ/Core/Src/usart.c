@@ -322,10 +322,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (hGNSSCom.huart->Instance == huart->Instance)
 	{
-		/*ITM_Port32(30)=01;
-		 GNSSCom_ReceiveDebug();
-		 GNSSCom_UartActivate(&hGNSSCom);
-		 ITM_Port32(30)=00;*/
+		//	TODO : Filtrer la partie envoie et la partie debug
+		//	Si on veut debug alors quel messsage on debug
+		//	Si on veut transferer alors quel message (class,id)
+
 		GenericMessage* reception = GNSSCom_Receive();
 		if (protocol == UBX && reception->typeMessage == UBX){
 
@@ -333,8 +333,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			create_message_debug(messageUBX);
 			HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
 
-			RFM9x_Send((uint8_t*) messageUBX->UBX_Brute->buffer,messageUBX->UBX_Brute->size);
-			HAL_UART_Transmit(hLORACom.huartDebug,(uint8_t*)hLORACom.DebugBuffer, sizeof(hLORACom.DebugBuffer), HAL_MAX_DELAY);
+			LORA_Send((uint8_t)253,
+					PACKET_TYPE_DATA,
+					(uint8_t*) messageUBX->UBX_Brute->buffer,
+					(size_t)messageUBX->UBX_Brute->size);
 
 			freeBuffer(reception->Message.UBXMessage->UBX_Brute);
 			freeBuffer(reception->Message.UBXMessage->load);
@@ -347,7 +349,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 		free(reception);
 		GNSSCom_UartActivate(&hGNSSCom);
-
 	}
 }
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {

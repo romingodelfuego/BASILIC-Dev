@@ -17,6 +17,12 @@
 #include "spi.h"
 #include "usart.h"
 
+#define BROADCAST_ADDRESS 0xFF
+#define MODULE_SOURCE_ADDRESS 0xFE//WHO AM I
+// PAQUE TYPE
+#define PACKET_TYPE_DATA 0x01
+#define PACKET_TYPE_ACK  0x02
+
 #define UART_DEBUG_BUFFER_SIZE 200
 
 typedef struct {

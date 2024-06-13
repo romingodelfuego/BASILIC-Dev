@@ -167,9 +167,24 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
 	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
 
-	LORA_debug_hexa("*Final data*",(uint8_t*)data , len);
+	//LORA_debug_hexa("*Final data*",(uint8_t*)data , len);
 
-	GenericMessage* message = GNSSCom_Receive((uint8_t*)data);
+	//Extraction en-tete
+	uint8_t target_recipient_address =data[0];
+	uint8_t origin_sender_address =data[1];
+	uint8_t type =data[2];
+	uint8_t len_payload =data[3];
+
+	LORA_debug_val("Target Address",target_recipient_address);
+	LORA_debug_val("Origin Address",origin_sender_address);
+	LORA_debug_val("Type",type);
+	LORA_debug_val("Len",len_payload);
+	if (target_recipient_address == MODULE_SOURCE_ADDRESS || target_recipient_address == BROADCAST_ADDRESS){
+
+    uint8_t *payload = malloc(len * sizeof(uint8_t));
+	memcpy(payload,data + 4, len_payload);
+
+	GenericMessage* message = GNSSCom_Receive((uint8_t*)payload);
 	UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) message->Message.UBXMessage;
 	create_message_debug(messageUBX);
 	HAL_UART_Transmit(hLORACom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
@@ -177,8 +192,8 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	freeBuffer(message->Message.UBXMessage->load);
 	free(message->Message.UBXMessage);
 	free(message);
-	//Process les donnees
-
+	free(payload);
+	}
 }
 
 uint8_t RFM9x_GetMode( void )

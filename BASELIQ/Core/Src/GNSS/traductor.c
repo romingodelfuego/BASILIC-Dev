@@ -116,6 +116,10 @@ void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociat
 		fill_unuse_memory(UBXMessage,len);
 
 }
+
+
+
+
 unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
 	uint64_t result = 0;
 	if (type_endian == 'l') { // little-endian

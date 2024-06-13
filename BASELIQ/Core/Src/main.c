@@ -112,10 +112,7 @@ int main(void)
 	HAL_Delay(1000);
 
 	static uint8_t buffer[64];
-
 	MODE mode = TRANSMITTER;
-	//MODE mode =RECEIVER;
-	uint8_t value = 1; // Valeur initiale à envoyer
 
 	/* USER CODE END 2 */
 
@@ -123,21 +120,6 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		/*if (mode){
-			char msg[2];
-			snprintf(msg, sizeof(msg), "%X", value);
-			RFM9x_Send((uint8_t *)msg,1);
-			Delay_ms(1000);
-			RFM9x_ClearInt();
-			if (value == 0xF) {
-				value = 1; // Réinitialiser à 1 après avoir envoyé F
-			} else {
-				value++;
-			}
-		}
-		else{
-			RFM9x_Receive(buffer, 64);
-		}*/
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
