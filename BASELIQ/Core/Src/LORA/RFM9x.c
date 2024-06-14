@@ -81,7 +81,8 @@ void RFM9x_Init( void )
 	//RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
 	RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-	RF_TestSpi();
+	//On decide que le Lora est par defaut en mode ECOUTE
+	RFM9x_SetMode_Receive();
 }
 
 
@@ -119,7 +120,6 @@ void waitPacketSent() {
 	// Implement this function to wait until the packet has been sent
 	// This could involve polling a status register or waiting for an interrupt
 }
-
 void setModeIdle() {
 	// Implement this function to set the RFM9x to idle mode
 	// This typically involves writing to a mode register
@@ -141,7 +141,7 @@ int waitCAD() {
 	}
 	return 1;  // No activity detected
 }*/
-void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
+/*void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 {
 	LORA_debug_val("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
 
@@ -191,7 +191,43 @@ void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
 	LORA_debug("*Final data*",(uint8_t*)data);
 
 }
+ */
+void RFM9x_Receive(LORA_Receive* LORA_Receive_Message){
+	// Number of bytes received
+	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
+	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
+	if (len<4){
+		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
+		return;
+	}
+	uint8_t *data = (uint8_t*)malloc(len * sizeof(uint8_t));
+	// get the read data
+	if (len > (RFM9x_FIFO_SIZE)) len = RFM9x_FIFO_SIZE;
+	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
+	for (int i = 0; i < len; i++)
+	{
+		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
+	}
+	LORA_Receive_Message->IRQFlags=RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
+	LORA_Receive_Message->RxCurrAddr=start;
+	LORA_Receive_Message->RxNbrBytes=len;
+	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
+	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
+	memcpy(LORA_Receive_Message->header, data, 4);
+	memcpy(LORA_Receive_Message->payload, data+4, len-4);
+	free(data);
 
+	// clear all the IRQ flags
+	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
+}
+void RFM9x_SetMode_Receive(void){
+	// Set sleep mode, so we can also set RFM9x mode:
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
+	// Configurer le mode réception continue
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
+	// Configurer l'interruption sur DIO0 pour RxDone
+	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
+}
 uint8_t RFM9x_GetMode( void )
 {
 	uint8_t mode = RFM9x_ReadReg( RFM9x_REG_01_OP_MODE );

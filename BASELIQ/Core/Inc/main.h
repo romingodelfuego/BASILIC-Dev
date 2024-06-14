@@ -69,6 +69,7 @@ void Error_Handler(void);
 #define UI_LED_G_GPIO_Port GPIOE
 #define UI_WakeUp_Pin GPIO_PIN_6
 #define UI_WakeUp_GPIO_Port GPIOE
+#define UI_WakeUp_EXTI_IRQn EXTI9_5_IRQn
 #define GPS_PROC_TIME_INT_Pin GPIO_PIN_13
 #define GPS_PROC_TIME_INT_GPIO_Port GPIOC
 #define OSC_RTC_IN_Pin GPIO_PIN_14
@@ -89,6 +90,7 @@ void Error_Handler(void);
 #define STM_DAC_CS_GPIO_Port GPIOA
 #define PROC_FPGA_BUSY_Pin GPIO_PIN_5
 #define PROC_FPGA_BUSY_GPIO_Port GPIOC
+#define PROC_FPGA_BUSY_EXTI_IRQn EXTI9_5_IRQn
 #define UI_LED_B_Pin GPIO_PIN_1
 #define UI_LED_B_GPIO_Port GPIOB
 #define RFM_EN_Pin GPIO_PIN_7
@@ -117,6 +119,7 @@ void Error_Handler(void);
 #define STM_ACQ_TRIG_SRC1_GPIO_Port GPIOD
 #define SD_DETECT_INT_Pin GPIO_PIN_7
 #define SD_DETECT_INT_GPIO_Port GPIOC
+#define SD_DETECT_INT_EXTI_IRQn EXTI9_5_IRQn
 #define USB_VBUS_DETECT_Pin GPIO_PIN_9
 #define USB_VBUS_DETECT_GPIO_Port GPIOA
 #define STM_VCP_RX_Pin GPIO_PIN_10
@@ -149,6 +152,7 @@ void Error_Handler(void);
 #define STM_VCP_TX_GPIO_Port GPIOB
 #define RFM_IRQ_Pin GPIO_PIN_9
 #define RFM_IRQ_GPIO_Port GPIOB
+#define RFM_IRQ_EXTI_IRQn EXTI9_5_IRQn
 #define PROC_M0_Pin GPIO_PIN_0
 #define PROC_M0_GPIO_Port GPIOE
 #define PROC_M1_Pin GPIO_PIN_1

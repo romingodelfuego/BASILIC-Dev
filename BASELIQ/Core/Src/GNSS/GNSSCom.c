@@ -7,10 +7,9 @@
 #include <GNSS/GNSSCom.h>
 #include "LORA/RFM9x.h"
 
-
-GNSSCom_HandleTypeDef hGNSSCom;
-OutputType type = ASCII;
-OutputProtocol protocol = UBX;
+	GNSSCom_HandleTypeDef hGNSSCom;
+	OutputType type = ASCII;
+	OutputProtocol protocol = UBX;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
@@ -22,7 +21,10 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 
 	GNSSCom_UartActivate(&hGNSSCom);
 	HAL_Delay(5000); //En theorie il suffit d attendre la reception du premier msg UART pour envoyer
-	GNSSCom_Send_SetVal();
+	GNSSCom_Send_SetVal_Init();
+}
+void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
+	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
 DynamicBuffer* initializeBuffer(size_t initialSize) {
 	DynamicBuffer *bufferDynamic = malloc(sizeof(DynamicBuffer));
@@ -50,10 +52,10 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	free(bufferDynamic->buffer);
 	free(bufferDynamic);
 }
-void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
-	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
+void GNSSCom_Send_SetVal(CommandnSize toTransmit){
+	HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY);
 }
-void GNSSCom_Send_SetVal(void){
+void GNSSCom_Send_SetVal_Init(void){
 
 	CommandnSize commands[] = {
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
@@ -71,7 +73,7 @@ void GNSSCom_Send_SetVal(void){
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
 
 		// Transmit command
-		HAL_UART_Transmit(hGNSSCom.huart, commands[i].command, commands[i].size, HAL_MAX_DELAY);
+		GNSSCom_Send_SetVal(commands[i]);
 
 		// On fais croire que la commande a ete recu par le RX buffer : TIPS pour print en debug la commande
 		memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
@@ -86,8 +88,6 @@ void GNSSCom_Send_SetVal(void){
 			free(command_debug->Message.UBXMessage);
 			free(command_debug);
 		}
-
-
 		else{
 			sprintf(message, "\r\t\t\n...UBXMessage%d - FAILED...\r\n", i + 1);
 			HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
@@ -127,4 +127,13 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 		}
 	}
 	return genericMessage;
+}
+
+void UART_Debug(GenericMessage* reception){
+	UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;
+	create_message_debug(messageUBX);
+	HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
+	freeBuffer(reception->Message.UBXMessage->UBX_Brute);
+	freeBuffer(reception->Message.UBXMessage->load);
+	free(reception->Message.UBXMessage);
 }

@@ -14,8 +14,12 @@ void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug)
 {
 	hLORACom.hspi = hspi;
 	hLORACom.huartDebug = huartDebug;
-}
 
+	LORACom_SPIActivate(&hLORACom);
+}
+void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA){
+	HAL_SPI_Receive_IT(hLORA->hspi, hLORA->RxBuffer, MAX_SPI_SIZE);
+}
 void LORA_Send(uint8_t destination, uint8_t type, uint8_t* payload, uint8_t len){
     uint8_t buffer[RFM9x_FIFO_SIZE];
 
@@ -26,8 +30,8 @@ void LORA_Send(uint8_t destination, uint8_t type, uint8_t* payload, uint8_t len)
     buffer[3] = len;
 
     // Ajouter la charge utile
-    memcpy(&buffer[4], payload, len);
-    RFM9x_Send(buffer, len +4);
+    memcpy(buffer + 4 , payload, len);
+    RFM9x_Send(buffer, len + 4);
 }
 
 

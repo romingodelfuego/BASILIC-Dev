@@ -46,10 +46,18 @@ typedef struct {
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;
 
+typedef struct{
+	uint8_t flag;
+	uint8_t nbIter;
+	void* content;
+}NeedsIt;
+
+
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug);
 DynamicBuffer* initializeBuffer(size_t initialSize);
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS);
-void GNSSCom_Send_SetVal(void);
+void GNSSCom_Send_SetVal(CommandnSize toTransmit);
+void GNSSCom_Send_SetVal_Init(void);
 void GNSSCom_ReceiveDebug(void);
 
 GenericMessage* GNSSCom_Receive();

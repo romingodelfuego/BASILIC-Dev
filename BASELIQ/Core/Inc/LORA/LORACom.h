@@ -20,15 +20,20 @@
 
 //WHO AM I
 #define MODULE_SOURCE_ADDRESS 0x01
+#define MODULE_BROADCAST_ADDRESS 0xFF
 // PAQUE TYPE
 #define PACKET_TYPE_DATA 0x01
 #define PACKET_TYPE_ACK  0x02
 #define PACKET_TYPE_POLL 0x03
 
+#define MAX_SPI_SIZE 300
 
 typedef struct {
 	SPI_HandleTypeDef* hspi;
 	UART_HandleTypeDef* huartDebug;
+
+	uint8_t RxBuffer[MAX_SPI_SIZE];
+	uint8_t TxBuffer[MAX_SPI_SIZE];
 
 	uint8_t DebugBuffer[UART_DEBUG_BUFFER_SIZE];
 
@@ -39,6 +44,7 @@ typedef enum {
 	TRANSMITTER,
 }MODE;
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
+void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA);
 void LORA_Send(uint8_t destination, uint8_t type, uint8_t* payload, uint8_t len);
 void LORA_debug(char* flag, uint8_t* value);
 void LORA_debug_val(const char* flag, uint8_t value);

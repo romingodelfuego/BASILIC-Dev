@@ -104,7 +104,7 @@ int main(void)
 	static uint8_t buffer[64];
 
 	//MODE mode = TRANSMITTER;
-	MODE mode = RECEIVER;
+	MODE mode = TRANSMITTER;
 	uint8_t value = 1; // Valeur initiale à envoyer
 
 	while (1)
@@ -112,8 +112,9 @@ int main(void)
 		if (mode){ 		//TRANSMITTER
 			char msg[2];
 			snprintf(msg, sizeof(msg), "%X", value);
-			RFM9x_Send((uint8_t *)msg,1);
-			Delay_ms(1000);
+			//RFM9x_Send((uint8_t *)msg,1);
+			RFM9x_Send((uint8_t *)"ABCDEFGFHIJ",10);
+			Delay_ms(500);
 			RFM9x_ClearInt();
 			if (value == 0xF) {
 				value = 1; // Réinitialiser à 1 après avoir envoyé F

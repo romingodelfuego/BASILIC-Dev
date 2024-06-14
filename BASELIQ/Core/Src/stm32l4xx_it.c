@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    stm32l4xx_it.c
-  * @brief   Interrupt Service Routines.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    stm32l4xx_it.c
+ * @brief   Interrupt Service Routines.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -74,9 +74,9 @@ void NMI_Handler(void)
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-   while (1)
-  {
-  }
+	while (1)
+	{
+	}
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
@@ -84,7 +84,6 @@ void NMI_Handler(void)
   * @brief This function handles Hard fault interrupt.
   */
 void HardFault_Handler(void)
-
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
 
@@ -200,6 +199,53 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32l4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
+		//Alors on recoit un message
+		LORA_Receive* LORA_Receive_Message = (LORA_Receive*)malloc(sizeof(LORA_Receive));
+		RFM9x_Receive(LORA_Receive_Message);
+
+		if (LORA_Receive_Message->header[0]==MODULE_BROADCAST_ADDRESS
+				||
+				LORA_Receive_Message->header[0]==MODULE_SOURCE_ADDRESS ){
+
+			switch (LORA_Receive_Message->header[2] ){
+
+			case PACKET_TYPE_DATA:
+				break;
+
+			case PACKET_TYPE_ACK:
+				//Lora send un messsage vide
+				LORA_Send(LORA_Receive_Message->header[1], PACKET_TYPE_ACK, NULL, 1);
+				break;
+
+			case PACKET_TYPE_POLL:
+				//il faut que le gnss poll
+				CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
+						(size_t) LORA_Receive_Message->RxNbrBytes-4};
+				GNSSCom_Send_SetVal(poll);
+				break;
+			}
+		}
+		free(LORA_Receive_Message);
+		RFM9x_SetMode_Receive();
+	}
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(PROC_FPGA_BUSY_Pin);
+  HAL_GPIO_EXTI_IRQHandler(UI_WakeUp_Pin);
+  HAL_GPIO_EXTI_IRQHandler(SD_DETECT_INT_Pin);
+  HAL_GPIO_EXTI_IRQHandler(RFM_IRQ_Pin);
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
+}
 
 /**
   * @brief This function handles USART1 global interrupt.

@@ -11,6 +11,28 @@
 #ifndef RFM9x_h
 #define RFM9x_h
 
+/* Public function prototypes ------------------------------------------------*/
+
+void RFM9x_Init( void );
+void RFM9x_Send(uint8_t* data, uint8_t len);
+void RFM9x_SetMode_Receive(void);
+uint8_t RFM9x_GetMode( void );
+void RFM9x_ClearInt( void );
+
+uint8_t RFM9x_ReadReg( uint8_t reg );
+void RFM9x_WriteReg( uint8_t reg, uint8_t data );
+void Delay_ms( uint32_t delay_ms );
+
+typedef struct {
+	uint8_t IRQFlags;
+	uint8_t RxCurrAddr;
+	uint8_t RxNbrBytes;
+	uint8_t SNR;
+	uint8_t RSSI;
+	uint8_t header[4];
+	uint8_t* payload;
+}LORA_Receive;
+void RFM9x_Receive(LORA_Receive* LORA_Receive_Message);
 /* Public define -------------------------------------------------------------*/
 
 // Max number of octets the LORA Rx/Tx FIFO can hold
@@ -228,17 +250,7 @@
 #define RFM9x_PA_DAC_DISABLE                        0x04
 #define RFM9x_PA_DAC_ENABLE                         0x07
 
-/* Public function prototypes ------------------------------------------------*/
 
-void RFM9x_Init( void );
-void RFM9x_Send(uint8_t* data, uint8_t len);
-void RFM9x_Receive(uint8_t* data, uint8_t maxlen);
-uint8_t RFM9x_GetMode( void );
-void RFM9x_ClearInt( void );
-
-uint8_t RFM9x_ReadReg( uint8_t reg );
-void RFM9x_WriteReg( uint8_t reg, uint8_t data );
-void Delay_ms( uint32_t delay_ms );
 
 #endif
 
