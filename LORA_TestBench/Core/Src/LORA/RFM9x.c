@@ -116,7 +116,7 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-	LORA_debug("RFM9x SEND",(uint8_t*) data);
+	LORA_debug_hexa("RFM9x SEND",(uint8_t*) data,len);
 	return;
 }
 

@@ -16,12 +16,14 @@
 #include <string.h>
 #include "spi.h"
 #include "usart.h"
+#include "shared.h"
 
 #define BROADCAST_ADDRESS 0xFF
 #define MODULE_SOURCE_ADDRESS 0xFE//WHO AM I
-// PAQUE TYPE
+// PAQUET TYPE
 #define PACKET_TYPE_DATA 0x01
 #define PACKET_TYPE_ACK  0x02
+#define PACKET_TYPE_POLL 0x03
 
 #define UART_DEBUG_BUFFER_SIZE 200
 
@@ -39,6 +41,7 @@ typedef enum {
 }MODE;
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
 void LORA_debug(char* flag, uint8_t* value);
+void LORA_Send(Header* header, uint8_t* payload);
 void LORA_debug_val(const char* flag, uint8_t value);
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);
 void RF_TestSpi( void );

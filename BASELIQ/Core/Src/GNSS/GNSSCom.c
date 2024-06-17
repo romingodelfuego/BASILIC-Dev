@@ -6,6 +6,8 @@
  */
 #include <GNSS/GNSSCom.h>
 #include "LORA/RFM9x.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 	GNSSCom_HandleTypeDef hGNSSCom;
 	OutputType type = ASCII;
@@ -22,6 +24,8 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	GNSSCom_UartActivate(&hGNSSCom);
 	HAL_Delay(5000); //En theorie il suffit d attendre la reception du premier msg UART pour envoyer
 	GNSSCom_Send_SetVal_Init();
+
+
 }
 void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
@@ -59,11 +63,12 @@ void GNSSCom_Send_SetVal_Init(void){
 
 	CommandnSize commands[] = {
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
-			{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)},
+
 			{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
 			{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
-			{commandUart1Ouput, sizeof(commandUart1Ouput)}
+			{commandUart1Ouput, sizeof(commandUart1Ouput)},
+			{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
 	};
 	char message[50];
 

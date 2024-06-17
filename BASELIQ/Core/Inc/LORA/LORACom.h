@@ -10,13 +10,16 @@
 
 
 
+#include <shared.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdint.h> // Incluez les bibliothèques standard nécessaires
 #include "spi.h"
 #include "usart.h"
 #include "GNSS/constants.h"
+#include "shared.h"
 
 //WHO AM I
 #define MODULE_SOURCE_ADDRESS 0x01
@@ -39,13 +42,11 @@ typedef struct {
 
 } LORACom_HandleTypeDef;
 extern LORACom_HandleTypeDef hLORACom;
-typedef enum {
-	RECEIVER,
-	TRANSMITTER,
-}MODE;
+
+
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
 void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA);
-void LORA_Send(uint8_t destination, uint8_t type, uint8_t* payload, uint8_t len);
+void LORA_Send(Header* header, uint8_t* payload);
 void LORA_debug(char* flag, uint8_t* value);
 void LORA_debug_val(const char* flag, uint8_t value);
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);

@@ -24,7 +24,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "shared.h"
+#include "LORA/LORACom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,30 +102,35 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	static uint8_t buffer[64];
-
-	//MODE mode = TRANSMITTER;
-	MODE mode = TRANSMITTER;
-	uint8_t value = 1; // Valeur initiale à envoyer
 
 	while (1)
 	{
-		if (mode){ 		//TRANSMITTER
-			char msg[2];
-			snprintf(msg, sizeof(msg), "%X", value);
-			//RFM9x_Send((uint8_t *)msg,1);
-			RFM9x_Send((uint8_t *)"ABCDEFGFHIJ",10);
+			uint8_t PollStatutGNSS[] ={0xb5, 0x62, 0x06, 0x01, 0x03, 0x00, 0x01, 0x21, 0x01, 0x2d, 0x85};
+			Header * header = (Header*)malloc(sizeof(Header));
+			*header = (Header){
+					.recipient = 0x01,
+					.sender = MODULE_SOURCE_ADDRESS,
+					.type = PACKET_TYPE_POLL,
+					.len_payload = sizeof(PollStatutGNSS)
+			};
+			// Messages de débogage détaillés
+			    char debug_msg[50];
+
+			    sprintf(debug_msg, "Recipient: 0x%02X\r\n", header->recipient);
+			    HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+			    sprintf(debug_msg, "Sender: 0x%02X\r\n", header->sender);
+			    HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+			    sprintf(debug_msg, "Type: 0x%02X\r\n", header->type);
+			    HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+			    sprintf(debug_msg, "Payload Length: %d\r\n", header->len_payload);
+			    HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+			LORA_Send(header, PollStatutGNSS);
 			Delay_ms(500);
 			RFM9x_ClearInt();
-			if (value == 0xF) {
-				value = 1; // Réinitialiser à 1 après avoir envoyé F
-			} else {
-				value++;
-			}
-		}
-		else{		// RECEIVER
-			RFM9x_Receive(buffer, 64);
-		}
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

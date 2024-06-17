@@ -6,12 +6,13 @@
 // Author: Mike McCauley (mikem@airspayce.com)
 // Copyright (C) 2014 Mike McCauley
 // $Id: RH_RF95.h,v 1.22 2019/07/14 00:18:48 mikem Exp $
-// 
+//
 
 #ifndef RFM9x_h
 #define RFM9x_h
 
 /* Public function prototypes ------------------------------------------------*/
+#include "shared.h"
 
 void RFM9x_Init( void );
 void RFM9x_Send(uint8_t* data, uint8_t len);
@@ -23,15 +24,7 @@ uint8_t RFM9x_ReadReg( uint8_t reg );
 void RFM9x_WriteReg( uint8_t reg, uint8_t data );
 void Delay_ms( uint32_t delay_ms );
 
-typedef struct {
-	uint8_t IRQFlags;
-	uint8_t RxCurrAddr;
-	uint8_t RxNbrBytes;
-	uint8_t SNR;
-	uint8_t RSSI;
-	uint8_t header[4];
-	uint8_t* payload;
-}LORA_Receive;
+
 void RFM9x_Receive(LORA_Receive* LORA_Receive_Message);
 /* Public define -------------------------------------------------------------*/
 
@@ -253,4 +246,3 @@ void RFM9x_Receive(LORA_Receive* LORA_Receive_Message);
 
 
 #endif
-

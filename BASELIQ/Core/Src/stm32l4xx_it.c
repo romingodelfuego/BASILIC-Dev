@@ -20,13 +20,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l4xx_it.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -141,19 +142,6 @@ void UsageFault_Handler(void)
 }
 
 /**
-  * @brief This function handles System service call via SWI instruction.
-  */
-void SVC_Handler(void)
-{
-  /* USER CODE BEGIN SVCall_IRQn 0 */
-
-  /* USER CODE END SVCall_IRQn 0 */
-  /* USER CODE BEGIN SVCall_IRQn 1 */
-
-  /* USER CODE END SVCall_IRQn 1 */
-}
-
-/**
   * @brief This function handles Debug monitor.
   */
 void DebugMon_Handler(void)
@@ -167,19 +155,6 @@ void DebugMon_Handler(void)
 }
 
 /**
-  * @brief This function handles Pendable request for system service.
-  */
-void PendSV_Handler(void)
-{
-  /* USER CODE BEGIN PendSV_IRQn 0 */
-
-  /* USER CODE END PendSV_IRQn 0 */
-  /* USER CODE BEGIN PendSV_IRQn 1 */
-
-  /* USER CODE END PendSV_IRQn 1 */
-}
-
-/**
   * @brief This function handles System tick timer.
   */
 void SysTick_Handler(void)
@@ -188,6 +163,14 @@ void SysTick_Handler(void)
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
+#if (INCLUDE_xTaskGetSchedulerState == 1 )
+  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+  {
+#endif /* INCLUDE_xTaskGetSchedulerState */
+  xPortSysTickHandler();
+#if (INCLUDE_xTaskGetSchedulerState == 1 )
+  }
+#endif /* INCLUDE_xTaskGetSchedulerState */
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -206,23 +189,32 @@ void SysTick_Handler(void)
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
 		//Alors on recoit un message
 		LORA_Receive* LORA_Receive_Message = (LORA_Receive*)malloc(sizeof(LORA_Receive));
 		RFM9x_Receive(LORA_Receive_Message);
 
-		if (LORA_Receive_Message->header[0]==MODULE_BROADCAST_ADDRESS
+		if (LORA_Receive_Message->header->recipient==MODULE_BROADCAST_ADDRESS
 				||
-				LORA_Receive_Message->header[0]==MODULE_SOURCE_ADDRESS ){
+				LORA_Receive_Message->header->recipient==MODULE_SOURCE_ADDRESS ){
 
-			switch (LORA_Receive_Message->header[2] ){
+			switch (LORA_Receive_Message->header->type){
 
 			case PACKET_TYPE_DATA:
 				break;
 
 			case PACKET_TYPE_ACK:
 				//Lora send un messsage vide
-				LORA_Send(LORA_Receive_Message->header[1], PACKET_TYPE_ACK, NULL, 1);
+				Header* header =(Header*) malloc(sizeof(Header));
+				*header = (Header){
+						.recipient = 254,
+						.sender = MODULE_SOURCE_ADDRESS,
+						.type = PACKET_TYPE_ACK,
+						.len_payload = sizeof(NULL)
+				};
+				LORA_Send(header, NULL);
+				free(header);
 				break;
 
 			case PACKET_TYPE_POLL:
@@ -230,6 +222,20 @@ void EXTI9_5_IRQHandler(void)
 				CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
 						(size_t) LORA_Receive_Message->RxNbrBytes-4};
 				GNSSCom_Send_SetVal(poll);
+
+			    eventFlag = pdTRUE;
+
+				if (xSemaphoreTake(xSem_UBXReceive,portMAX_DELAY)==pdTRUE) {
+					Header* header =(Header*) malloc(sizeof(Header));
+					*header = (Header){
+							.recipient = 253,
+							.sender = MODULE_SOURCE_ADDRESS,
+							.type = PACKET_TYPE_ACK,
+							.len_payload = sizeof(NULL)
+					};
+					LORA_Send(header, NULL);
+					free(header);
+				}
 				break;
 			}
 		}

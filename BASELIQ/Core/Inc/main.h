@@ -31,9 +31,11 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <GNSS/GNSSCom.h>
-#include "LORA/LORACom.h"
+#include "GNSS/GNSSCom.h"
 #include "LORA/RFM9x.h"
+#include "LORA/LORACom.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -43,6 +45,10 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+
+extern SemaphoreHandle_t xSem_UBXReceive;
+extern   SemaphoreHandle_t xSem_Polling;
+extern volatile BaseType_t eventFlag;
 
 /* USER CODE END EC */
 
