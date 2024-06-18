@@ -33,6 +33,7 @@ void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 DynamicBuffer* initializeBuffer(size_t initialSize) {
 	DynamicBuffer *bufferDynamic = malloc(sizeof(DynamicBuffer));
 	if (bufferDynamic == NULL) {
+		while(1){}
 		return NULL; // Échec de l'allocation mémoire
 	}
 

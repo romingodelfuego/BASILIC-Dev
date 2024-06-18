@@ -10,8 +10,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "debug.h"
-#include "constants.h"
+#include "shared.h"
 //#include "GNSS/GNSSCom.h"
 
 typedef struct {
@@ -20,6 +19,7 @@ typedef struct {
 } DynamicBuffer;
 
 typedef enum {
+	INIT,
     NMEA,
     UBX,
 } OutputProtocol;

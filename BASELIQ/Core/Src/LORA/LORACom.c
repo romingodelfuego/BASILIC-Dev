@@ -32,6 +32,7 @@ void LORA_Send(Header* header, uint8_t* payload){
     // Ajouter la charge utile
     memcpy(buffer + 4 , payload, header->len_payload);
     RFM9x_Send(buffer, header->len_payload + 4);
+    RFM9x_SetMode_Receive();
 }
 
 

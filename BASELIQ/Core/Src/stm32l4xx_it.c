@@ -20,10 +20,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l4xx_it.h"
-#include "FreeRTOS.h"
-#include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cmsis_os.h"           // Pour les types de données FreeRTOS et CMSIS-RTOS
+#include "FreeRTOS.h"           // Pour les fonctions de FreeRTOS
+#include "semphr.h"             // Pour les sémaphores de FreeRTOS
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern osSemaphoreId xSem_LORAReceive_startHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,6 +60,8 @@
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+extern TIM_HandleTypeDef htim1;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -154,28 +157,6 @@ void DebugMon_Handler(void)
   /* USER CODE END DebugMonitor_IRQn 1 */
 }
 
-/**
-  * @brief This function handles System tick timer.
-  */
-void SysTick_Handler(void)
-{
-  /* USER CODE BEGIN SysTick_IRQn 0 */
-
-  /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
-#if (INCLUDE_xTaskGetSchedulerState == 1 )
-  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
-  {
-#endif /* INCLUDE_xTaskGetSchedulerState */
-  xPortSysTickHandler();
-#if (INCLUDE_xTaskGetSchedulerState == 1 )
-  }
-#endif /* INCLUDE_xTaskGetSchedulerState */
-  /* USER CODE BEGIN SysTick_IRQn 1 */
-
-  /* USER CODE END SysTick_IRQn 1 */
-}
-
 /******************************************************************************/
 /* STM32L4xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */
@@ -189,58 +170,9 @@ void SysTick_Handler(void)
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
-		//Alors on recoit un message
-		LORA_Receive* LORA_Receive_Message = (LORA_Receive*)malloc(sizeof(LORA_Receive));
-		RFM9x_Receive(LORA_Receive_Message);
-
-		if (LORA_Receive_Message->header->recipient==MODULE_BROADCAST_ADDRESS
-				||
-				LORA_Receive_Message->header->recipient==MODULE_SOURCE_ADDRESS ){
-
-			switch (LORA_Receive_Message->header->type){
-
-			case PACKET_TYPE_DATA:
-				break;
-
-			case PACKET_TYPE_ACK:
-				//Lora send un messsage vide
-				Header* header =(Header*) malloc(sizeof(Header));
-				*header = (Header){
-						.recipient = 254,
-						.sender = MODULE_SOURCE_ADDRESS,
-						.type = PACKET_TYPE_ACK,
-						.len_payload = sizeof(NULL)
-				};
-				LORA_Send(header, NULL);
-				free(header);
-				break;
-
-			case PACKET_TYPE_POLL:
-				//il faut que le gnss poll
-				CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
-						(size_t) LORA_Receive_Message->RxNbrBytes-4};
-				GNSSCom_Send_SetVal(poll);
-
-			    eventFlag = pdTRUE;
-
-				if (xSemaphoreTake(xSem_UBXReceive,portMAX_DELAY)==pdTRUE) {
-					Header* header =(Header*) malloc(sizeof(Header));
-					*header = (Header){
-							.recipient = 253,
-							.sender = MODULE_SOURCE_ADDRESS,
-							.type = PACKET_TYPE_ACK,
-							.len_payload = sizeof(NULL)
-					};
-					LORA_Send(header, NULL);
-					free(header);
-				}
-				break;
-			}
-		}
-		free(LORA_Receive_Message);
-		RFM9x_SetMode_Receive();
+		//Alors on libere la semaphore pour pa
+		osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */
@@ -251,6 +183,20 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM1 update interrupt and TIM16 global interrupt.
+  */
+void TIM1_UP_TIM16_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
+
+  /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
+
+  /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }
 
 /**

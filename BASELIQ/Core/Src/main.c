@@ -35,21 +35,15 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-  SemaphoreHandle_t xSem_UBXReceive;
-  SemaphoreHandle_t xSem_Polling;
-  volatile BaseType_t eventFlag = pdFALSE;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,26 +94,7 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
-
-
-	const char startMessage[] = "\r\nStarting...\r\n";
-	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)startMessage, sizeof(startMessage), 10);
-
-	GNSSCom_Init(&huart3,&huart1);
-	LORACom_Init(&hspi2, &huart1);
-	RFM9x_Init();
-
-	xSem_UBXReceive = xSemaphoreCreateBinary();
-	xSem_Polling = xSemaphoreCreateBinary();
-	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
-
-
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
-
+  __disable_irq(); //On evite toute interruption durant l'init de FreeRTOS
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -192,6 +167,27 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

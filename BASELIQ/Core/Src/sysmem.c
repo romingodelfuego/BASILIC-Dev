@@ -27,7 +27,7 @@
 /**
  * Pointer to the current high watermark of the heap usage
  */
-static uint8_t *__sbrk_heap_end = NULL;
+static uint8_t *__sbrk_heap_end = NULL; // @suppress("Symbol is not resolved")
 
 /**
  * @brief _sbrk() allocates memory to the newlib heap and is used by malloc
@@ -60,7 +60,7 @@ void *_sbrk(ptrdiff_t incr)
   uint8_t *prev_heap_end;
 
   /* Initialize heap end at first call */
-  if (NULL == __sbrk_heap_end)
+  if (NULL == __sbrk_heap_end) // @suppress("Symbol is not resolved")
   {
     __sbrk_heap_end = &_end;
   }

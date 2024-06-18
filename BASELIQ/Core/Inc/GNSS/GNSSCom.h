@@ -15,8 +15,7 @@
 #include <string.h>
 #include "command.h"
 #include "traductor.h"
-//#include "UBXParser.h"
-#include "constants.h"
+#include "shared.h"
 
 
 typedef struct {
@@ -31,8 +30,6 @@ typedef enum {
 } OutputType;
 extern OutputType type;
 
-
-
 typedef struct {
 	UART_HandleTypeDef* huart;
 	UART_HandleTypeDef* huartDebug;
@@ -45,13 +42,6 @@ typedef struct {
 
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;
-
-typedef struct{
-	uint8_t flag;
-	uint8_t nbIter;
-	void* content;
-}NeedsIt;
-
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug);
 DynamicBuffer* initializeBuffer(size_t initialSize);

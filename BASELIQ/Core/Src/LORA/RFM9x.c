@@ -142,64 +142,14 @@ int waitCAD() {
 	}
 	return 1;  // No activity detected
 }*/
-/*void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
-{
-	LORA_debug_val("RxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
-
-	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
-
-	// Set Interrupt on DIO0 to RxDone
-	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
-
-	LORA_debug("WFI...", NULL);
-	// wait for interrupt
-	uint32_t start_time_ms = HAL_GetTick();
-	while (! HAL_GPIO_ReadPin(RFM_IRQ_GPIO_Port, RFM_IRQ_Pin))
-	{
-		//spin wait
-
-		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
-		if( (HAL_GetTick() - start_time_ms) > 900)
-		{
-		}
-	}
-
-	// Read the interrupt register
-	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	LORA_debug_val("IRQ Flags", irq_flags);
-
-	// Number of bytes received
-	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
-	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	LORA_debug_val("RxCurAddr", start);
-	LORA_debug_val("RxNbrBytes", len);
-
-	// get the read data
-	if (len > (maxlen-1)) len = maxlen-1;
-	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
-	for (int i = 0; i < len; i++)
-	{
-		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
-	}
-
-	// clear all the IRQ flags
-	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
-
-	// Report the SNR and RSSI
-	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
-
-	LORA_debug("*Final data*",(uint8_t*)data);
-
-}
- */
-void RFM9x_Receive(LORA_Receive* LORA_Receive_Message){
+void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
 
 	RFM9x_SetMode_Receive();
 	if (len<4){
+		LORA_Receive_Message->RxNbrBytes=0;
 		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 		return;
 	}
@@ -218,30 +168,30 @@ void RFM9x_Receive(LORA_Receive* LORA_Receive_Message){
 	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
 	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
 
-    LORA_Receive_Message->header = (Header*)malloc(sizeof(Header));
+	LORA_Receive_Message->header = (Header*)malloc(sizeof(Header));
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
 	LORA_Receive_Message->header->type=data[2];
 	LORA_Receive_Message->header->len_payload=data[3];
 
 	// Messages de débogage détaillés
-	    char debug_msg[50];
-	    sprintf(debug_msg, "\r\nRxCurAddr :  0x%02X\r\n", start);
-	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	char debug_msg[50];
+	sprintf(debug_msg, "\r\nRxCurAddr :  0x%02X\r\n", start);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
-	    sprintf(debug_msg, "Received Recipient: 0x%02X\r\n", LORA_Receive_Message->header->recipient);
-	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	sprintf(debug_msg, "Received Recipient: 0x%02X\r\n", LORA_Receive_Message->header->recipient);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
-	    sprintf(debug_msg, "Received Sender: 0x%02X\r\n", LORA_Receive_Message->header->sender);
-	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	sprintf(debug_msg, "Received Sender: 0x%02X\r\n", LORA_Receive_Message->header->sender);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
-	    sprintf(debug_msg, "Received Type: 0x%02X\r\n", LORA_Receive_Message->header->type);
-	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	sprintf(debug_msg, "Received Type: 0x%02X\r\n", LORA_Receive_Message->header->type);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
-	    sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
-	    HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
-
+	LORA_Receive_Message->payload = (uint8_t*)malloc(sizeof(uint8_t)*(len-4));
 	memcpy(LORA_Receive_Message->payload, data+4, len-4);
 	free(data);
 

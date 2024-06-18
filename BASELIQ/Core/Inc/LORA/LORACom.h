@@ -18,7 +18,6 @@
 #include <stdint.h> // Incluez les bibliothèques standard nécessaires
 #include "spi.h"
 #include "usart.h"
-#include "GNSS/constants.h"
 #include "shared.h"
 
 //WHO AM I

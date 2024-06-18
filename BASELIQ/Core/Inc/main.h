@@ -46,9 +46,6 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
-extern SemaphoreHandle_t xSem_UBXReceive;
-extern   SemaphoreHandle_t xSem_Polling;
-extern volatile BaseType_t eventFlag;
 
 /* USER CODE END EC */
 

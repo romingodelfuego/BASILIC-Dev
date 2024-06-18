@@ -24,6 +24,12 @@
 #include "GNSS/GNSSCom.h"
 #include "LORA/LORACom.h"
 #include "main.h"
+#include "cmsis_os.h"           // Pour les types de données FreeRTOS et CMSIS-RTOS
+#include "FreeRTOS.h"           // Pour les fonctions de FreeRTOS
+#include "semphr.h"             // Pour les sémaphores de FreeRTOS
+
+extern osSemaphoreId xSem_GNSSReceive_startHandle;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -35,31 +41,31 @@ UART_HandleTypeDef huart3;
 void MX_USART1_UART_Init(void)
 {
 
-	/* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-	/* USER CODE END USART1_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-	/* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-	/* USER CODE END USART1_Init 1 */
-	huart1.Instance = USART1;
-	huart1.Init.BaudRate = 115200;
-	huart1.Init.WordLength = UART_WORDLENGTH_8B;
-	huart1.Init.StopBits = UART_STOPBITS_1;
-	huart1.Init.Parity = UART_PARITY_NONE;
-	huart1.Init.Mode = UART_MODE_TX_RX;
-	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-	huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
-	huart1.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
-	if (HAL_UART_Init(&huart1) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	/* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_SWAP_INIT;
+  huart1.AdvancedInit.Swap = UART_ADVFEATURE_SWAP_ENABLE;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
 
-	/* USER CODE END USART1_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 /* USART2 init function */
@@ -67,30 +73,30 @@ void MX_USART1_UART_Init(void)
 void MX_USART2_UART_Init(void)
 {
 
-	/* USER CODE BEGIN USART2_Init 0 */
+  /* USER CODE BEGIN USART2_Init 0 */
 
-	/* USER CODE END USART2_Init 0 */
+  /* USER CODE END USART2_Init 0 */
 
-	/* USER CODE BEGIN USART2_Init 1 */
+  /* USER CODE BEGIN USART2_Init 1 */
 
-	/* USER CODE END USART2_Init 1 */
-	huart2.Instance = USART2;
-	huart2.Init.BaudRate = 115200;
-	huart2.Init.WordLength = UART_WORDLENGTH_8B;
-	huart2.Init.StopBits = UART_STOPBITS_1;
-	huart2.Init.Parity = UART_PARITY_NONE;
-	huart2.Init.Mode = UART_MODE_TX_RX;
-	huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-	huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	if (HAL_UART_Init(&huart2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	/* USER CODE BEGIN USART2_Init 2 */
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
 
-	/* USER CODE END USART2_Init 2 */
+  /* USER CODE END USART2_Init 2 */
 
 }
 /* USART3 init function */
@@ -98,224 +104,224 @@ void MX_USART2_UART_Init(void)
 void MX_USART3_UART_Init(void)
 {
 
-	/* USER CODE BEGIN USART3_Init 0 */
+  /* USER CODE BEGIN USART3_Init 0 */
 
-	/* USER CODE END USART3_Init 0 */
+  /* USER CODE END USART3_Init 0 */
 
-	/* USER CODE BEGIN USART3_Init 1 */
+  /* USER CODE BEGIN USART3_Init 1 */
 
-	/* USER CODE END USART3_Init 1 */
-	huart3.Instance = USART3;
-	huart3.Init.BaudRate = 38400;
-	huart3.Init.WordLength = UART_WORDLENGTH_8B;
-	huart3.Init.StopBits = UART_STOPBITS_1;
-	huart3.Init.Parity = UART_PARITY_NONE;
-	huart3.Init.Mode = UART_MODE_TX_RX;
-	huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-	huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	if (HAL_UART_Init(&huart3) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	/* USER CODE BEGIN USART3_Init 2 */
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 38400;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
 
-	/* USER CODE END USART3_Init 2 */
+  /* USER CODE END USART3_Init 2 */
 
 }
 
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
 
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
-	if(uartHandle->Instance==USART1)
-	{
-		/* USER CODE BEGIN USART1_MspInit 0 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  if(uartHandle->Instance==USART1)
+  {
+  /* USER CODE BEGIN USART1_MspInit 0 */
 
-		/* USER CODE END USART1_MspInit 0 */
+  /* USER CODE END USART1_MspInit 0 */
 
-		/** Initializes the peripherals clock
-		 */
-		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-		PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
-		if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-		{
-			Error_Handler();
-		}
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
-		/* USART1 clock enable */
-		__HAL_RCC_USART1_CLK_ENABLE();
+    /* USART1 clock enable */
+    __HAL_RCC_USART1_CLK_ENABLE();
 
-		__HAL_RCC_GPIOA_CLK_ENABLE();
-		__HAL_RCC_GPIOB_CLK_ENABLE();
-		/**USART1 GPIO Configuration
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**USART1 GPIO Configuration
     PA10     ------> USART1_RX
     PB6     ------> USART1_TX
-		 */
-		GPIO_InitStruct.Pin = STM_VCP_RX_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-		HAL_GPIO_Init(STM_VCP_RX_GPIO_Port, &GPIO_InitStruct);
+    */
+    GPIO_InitStruct.Pin = STM_VCP_RX_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(STM_VCP_RX_GPIO_Port, &GPIO_InitStruct);
 
-		GPIO_InitStruct.Pin = STM_VCP_TX_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-		HAL_GPIO_Init(STM_VCP_TX_GPIO_Port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = STM_VCP_TX_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(STM_VCP_TX_GPIO_Port, &GPIO_InitStruct);
 
-		/* USART1 interrupt Init */
-		HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
-		HAL_NVIC_EnableIRQ(USART1_IRQn);
-		/* USER CODE BEGIN USART1_MspInit 1 */
+    /* USART1 interrupt Init */
+    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART1_IRQn);
+  /* USER CODE BEGIN USART1_MspInit 1 */
 
-		/* USER CODE END USART1_MspInit 1 */
-	}
-	else if(uartHandle->Instance==USART2)
-	{
-		/* USER CODE BEGIN USART2_MspInit 0 */
+  /* USER CODE END USART1_MspInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspInit 0 */
 
-		/* USER CODE END USART2_MspInit 0 */
+  /* USER CODE END USART2_MspInit 0 */
 
-		/** Initializes the peripherals clock
-		 */
-		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
-		PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
-		if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-		{
-			Error_Handler();
-		}
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+    PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
-		/* USART2 clock enable */
-		__HAL_RCC_USART2_CLK_ENABLE();
+    /* USART2 clock enable */
+    __HAL_RCC_USART2_CLK_ENABLE();
 
-		__HAL_RCC_GPIOD_CLK_ENABLE();
-		/**USART2 GPIO Configuration
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    /**USART2 GPIO Configuration
     PD5     ------> USART2_TX
     PD6     ------> USART2_RX
-		 */
-		GPIO_InitStruct.Pin = GPS_RTCM3_RX_STM_TX_Pin|GPS_RTCM3_TX_STM_RX_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    */
+    GPIO_InitStruct.Pin = GPS_RTCM3_RX_STM_TX_Pin|GPS_RTCM3_TX_STM_RX_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		/* USART2 interrupt Init */
-		HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
-		HAL_NVIC_EnableIRQ(USART2_IRQn);
-		/* USER CODE BEGIN USART2_MspInit 1 */
+    /* USART2 interrupt Init */
+    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART2_IRQn);
+  /* USER CODE BEGIN USART2_MspInit 1 */
 
-		/* USER CODE END USART2_MspInit 1 */
-	}
-	else if(uartHandle->Instance==USART3)
-	{
-		/* USER CODE BEGIN USART3_MspInit 0 */
+  /* USER CODE END USART2_MspInit 1 */
+  }
+  else if(uartHandle->Instance==USART3)
+  {
+  /* USER CODE BEGIN USART3_MspInit 0 */
 
-		/* USER CODE END USART3_MspInit 0 */
+  /* USER CODE END USART3_MspInit 0 */
 
-		/** Initializes the peripherals clock
-		 */
-		PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3;
-		PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
-		if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-		{
-			Error_Handler();
-		}
+  /** Initializes the peripherals clock
+  */
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART3;
+    PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
-		/* USART3 clock enable */
-		__HAL_RCC_USART3_CLK_ENABLE();
+    /* USART3 clock enable */
+    __HAL_RCC_USART3_CLK_ENABLE();
 
-		__HAL_RCC_GPIOD_CLK_ENABLE();
-		/**USART3 GPIO Configuration
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    /**USART3 GPIO Configuration
     PD8     ------> USART3_TX
     PD9     ------> USART3_RX
-		 */
-		GPIO_InitStruct.Pin = GPS_TX_STM_Pin|GPSR_RX_STM_Pin;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
-		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    */
+    GPIO_InitStruct.Pin = GPS_TX_STM_Pin|GPSR_RX_STM_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-		/* USART3 interrupt Init */
-		HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
-		HAL_NVIC_EnableIRQ(USART3_IRQn);
-		/* USER CODE BEGIN USART3_MspInit 1 */
+    /* USART3 interrupt Init */
+    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART3_IRQn);
+  /* USER CODE BEGIN USART3_MspInit 1 */
 
-		/* USER CODE END USART3_MspInit 1 */
-	}
+  /* USER CODE END USART3_MspInit 1 */
+  }
 }
 
 void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 {
 
-	if(uartHandle->Instance==USART1)
-	{
-		/* USER CODE BEGIN USART1_MspDeInit 0 */
+  if(uartHandle->Instance==USART1)
+  {
+  /* USER CODE BEGIN USART1_MspDeInit 0 */
 
-		/* USER CODE END USART1_MspDeInit 0 */
-		/* Peripheral clock disable */
-		__HAL_RCC_USART1_CLK_DISABLE();
+  /* USER CODE END USART1_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_USART1_CLK_DISABLE();
 
-		/**USART1 GPIO Configuration
+    /**USART1 GPIO Configuration
     PA10     ------> USART1_RX
     PB6     ------> USART1_TX
-		 */
-		HAL_GPIO_DeInit(STM_VCP_RX_GPIO_Port, STM_VCP_RX_Pin);
+    */
+    HAL_GPIO_DeInit(STM_VCP_RX_GPIO_Port, STM_VCP_RX_Pin);
 
-		HAL_GPIO_DeInit(STM_VCP_TX_GPIO_Port, STM_VCP_TX_Pin);
+    HAL_GPIO_DeInit(STM_VCP_TX_GPIO_Port, STM_VCP_TX_Pin);
 
-		/* USART1 interrupt Deinit */
-		HAL_NVIC_DisableIRQ(USART1_IRQn);
-		/* USER CODE BEGIN USART1_MspDeInit 1 */
+    /* USART1 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
+  /* USER CODE BEGIN USART1_MspDeInit 1 */
 
-		/* USER CODE END USART1_MspDeInit 1 */
-	}
-	else if(uartHandle->Instance==USART2)
-	{
-		/* USER CODE BEGIN USART2_MspDeInit 0 */
+  /* USER CODE END USART1_MspDeInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspDeInit 0 */
 
-		/* USER CODE END USART2_MspDeInit 0 */
-		/* Peripheral clock disable */
-		__HAL_RCC_USART2_CLK_DISABLE();
+  /* USER CODE END USART2_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_USART2_CLK_DISABLE();
 
-		/**USART2 GPIO Configuration
+    /**USART2 GPIO Configuration
     PD5     ------> USART2_TX
     PD6     ------> USART2_RX
-		 */
-		HAL_GPIO_DeInit(GPIOD, GPS_RTCM3_RX_STM_TX_Pin|GPS_RTCM3_TX_STM_RX_Pin);
+    */
+    HAL_GPIO_DeInit(GPIOD, GPS_RTCM3_RX_STM_TX_Pin|GPS_RTCM3_TX_STM_RX_Pin);
 
-		/* USART2 interrupt Deinit */
-		HAL_NVIC_DisableIRQ(USART2_IRQn);
-		/* USER CODE BEGIN USART2_MspDeInit 1 */
+    /* USART2 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART2_IRQn);
+  /* USER CODE BEGIN USART2_MspDeInit 1 */
 
-		/* USER CODE END USART2_MspDeInit 1 */
-	}
-	else if(uartHandle->Instance==USART3)
-	{
-		/* USER CODE BEGIN USART3_MspDeInit 0 */
+  /* USER CODE END USART2_MspDeInit 1 */
+  }
+  else if(uartHandle->Instance==USART3)
+  {
+  /* USER CODE BEGIN USART3_MspDeInit 0 */
 
-		/* USER CODE END USART3_MspDeInit 0 */
-		/* Peripheral clock disable */
-		__HAL_RCC_USART3_CLK_DISABLE();
+  /* USER CODE END USART3_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_USART3_CLK_DISABLE();
 
-		/**USART3 GPIO Configuration
+    /**USART3 GPIO Configuration
     PD8     ------> USART3_TX
     PD9     ------> USART3_RX
-		 */
-		HAL_GPIO_DeInit(GPIOD, GPS_TX_STM_Pin|GPSR_RX_STM_Pin);
+    */
+    HAL_GPIO_DeInit(GPIOD, GPS_TX_STM_Pin|GPSR_RX_STM_Pin);
 
-		/* USART3 interrupt Deinit */
-		HAL_NVIC_DisableIRQ(USART3_IRQn);
-		/* USER CODE BEGIN USART3_MspDeInit 1 */
+    /* USART3 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(USART3_IRQn);
+  /* USER CODE BEGIN USART3_MspDeInit 1 */
 
-		/* USER CODE END USART3_MspDeInit 1 */
-	}
+  /* USER CODE END USART3_MspDeInit 1 */
+  }
 }
 
 /* USER CODE BEGIN 1 */
@@ -324,48 +330,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (hGNSSCom.huart->Instance == huart->Instance)
 	{
-		//	TODO : Filtrer la partie envoie et la partie debug
-		//	Si on veut debug alors quel messsage on debug
-		//	Si on veut transferer alors quel message (class,id)
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		GenericMessage* reception = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
-
-		if (protocol == UBX && reception->typeMessage == UBX){
-
-			UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;
-			create_message_debug(messageUBX);
-			//HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-
-			Header * header = (Header*)malloc(sizeof(Header));
-			*header =(Header){
-				.recipient = 253,
-						.sender = MODULE_SOURCE_ADDRESS,
-						.type = PACKET_TYPE_DATA,
-						.len_payload = (size_t)messageUBX->UBX_Brute->size
-			};
-			//LORA_Send(header, (uint8_t*) messageUBX->UBX_Brute->buffer);
-			/*LORA_Send((uint8_t)253,
-					PACKET_TYPE_DATA,
-					(uint8_t*) messageUBX->UBX_Brute->buffer,
-					(size_t)messageUBX->UBX_Brute->size);*/
-			RFM9x_SetMode_Receive();
-			if (eventFlag == pdTRUE){
-				xSemaphoreGiveFromISR(xSem_UBXReceive, &xHigherPriorityTaskWoken);
-				eventFlag = pdFALSE;
-			}
-
-
-			freeBuffer(reception->Message.UBXMessage->UBX_Brute);
-			freeBuffer(reception->Message.UBXMessage->load);
-			free(reception->Message.UBXMessage);
-			free(header);
-		}
-		if(reception->typeMessage == NMEA){
-			free(reception->Message.NMEAMessage);
-		}
-
-		free(reception);
-		GNSSCom_UartActivate(&hGNSSCom);
+		osSemaphoreRelease(xSem_GNSSReceive_startHandle);
 	}
 }
 /*

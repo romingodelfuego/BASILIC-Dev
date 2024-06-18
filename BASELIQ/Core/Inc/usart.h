@@ -29,7 +29,7 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-#include "debug.h"
+#include "shared.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
 /* USER CODE END Includes */
