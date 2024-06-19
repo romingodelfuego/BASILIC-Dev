@@ -98,14 +98,8 @@ int main(void)
 	LORACom_Init(&hspi1,&huart2);
 	RFM9x_Init();
 	HAL_UART_Transmit(&huart2, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
-  /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-
-	while (1)
-	{
-			uint8_t PollStatutGNSS[] ={0xb5, 0x62, 0x06, 0x01, 0x03, 0x00, 0x01, 0x21, 0x01, 0x2d, 0x85};
+	uint8_t PollStatutGNSS[] ={0xb5, 0x62, 0x01, 0x43, 0x00, 0x00, 0x44, 0xcd};
 			Header * header = (Header*)malloc(sizeof(Header));
 			*header = (Header){
 					.recipient = 0x01,
@@ -113,6 +107,16 @@ int main(void)
 					.type = PACKET_TYPE_POLL,
 					.len_payload = sizeof(PollStatutGNSS)
 			};
+		    RFM9x_SetMode_Receive();
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+	while (1)
+	{
+
 			// Messages de débogage détaillés
 			    char debug_msg[50];
 
@@ -128,7 +132,8 @@ int main(void)
 			    sprintf(debug_msg, "Payload Length: %d\r\n", header->len_payload);
 			    HAL_UART_Transmit(&huart2, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 			LORA_Send(header, PollStatutGNSS);
-			Delay_ms(500);
+			Delay_ms(1000);
+
 			RFM9x_ClearInt();
 
     /* USER CODE END WHILE */

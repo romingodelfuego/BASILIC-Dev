@@ -331,6 +331,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (hGNSSCom.huart->Instance == huart->Instance)
 	{
 		osSemaphoreRelease(xSem_GNSSReceive_startHandle);
+		//osDelay(1);
 	}
 }
 /*

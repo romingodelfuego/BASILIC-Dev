@@ -111,9 +111,10 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 
 	// Start the transmitter
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
-
+	osDelay(5);
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
+	osDelay(1);
 
 	//LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
 }
@@ -147,10 +148,10 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
 
-	RFM9x_SetMode_Receive();
 	if (len<4){
 		LORA_Receive_Message->RxNbrBytes=0;
 		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
+		RFM9x_SetMode_Receive();
 		return;
 	}
 	// get the read data
@@ -197,6 +198,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 
 	// clear all the IRQ flags
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
+	RFM9x_SetMode_Receive();
 }
 void RFM9x_SetMode_Receive(void){
 	// Set sleep mode, so we can also set RFM9x mode:

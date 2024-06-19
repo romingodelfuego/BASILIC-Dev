@@ -5,11 +5,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "LORA/LORACom.h"
 #include "LORA/RFM9x.h"
 #include <string.h>
-#include "LORA/LORACom.h"
-#include "GNSS/UBXParser.h"
-#include "GNSS/GNSSCom.h"
+
 
 /* Private define ------------------------------------------------------------*/
 
@@ -25,22 +24,21 @@ void RFM9x_Init( void )
 	// Assert Reset low on the RFM9x
 	RF_TestSpi();
 	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_RESET);
-	Delay_ms(10);
+	//Delay_ms(10);
 	HAL_GPIO_WritePin(SPI1_RST_GPIO_Port, SPI1_RST_Pin, GPIO_PIN_SET);
-	Delay_ms(10);
+	//Delay_ms(10);
 	RF_TestSpi();
 	// Set sleep mode, so we can also set RFM9x mode:
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
 	// Wait for sleep mode to take over from say, CAD
-	Delay_ms(10);
+	//HDelay_ms(10);
 
 	// Check we are in sleep mode, with RFM9x set
 	if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
 	{
 		//	TODO: Throw RFM9x init error
 	}
-
 	// Either Rx or Tx can use the entire 256 byte FIFO, but not at same time
 	RFM9x_WriteReg(RFM9x_REG_0E_FIFO_TX_BASE_ADDR, 0x00);
 	RFM9x_WriteReg(RFM9x_REG_0F_FIFO_RX_BASE_ADDR, 0x80);
@@ -84,21 +82,22 @@ void RFM9x_Init( void )
 	//RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0x88);
 	RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
-	RF_TestSpi();
-	return;
+	//On decide que le Lora est par defaut en mode ECOUTE
+	RFM9x_SetMode_Receive();
 }
 
 
-void RFM9x_Send(const uint8_t* data, uint8_t len)
+void RFM9x_Send(uint8_t* data, uint8_t len)
 {
-	//TODO: Chec (len > RFM9x_MAX_MESSAGE_LEN)
+	/*if(len > RFM9x_FIFO_SIZE)
+	{
+		//waitPacketSent(); // Make sure we dont interrupt an outgoing message
+		setModeIdle();
 
-	//waitPacketSent(); // Make sure we dont interrupt an outgoing message
-	//setModeIdle();
-
-	//if (!waitCAD())
-	// return false;  // Check channel activity
-
+		if (!waitCAD()){
+			return 0;  // Check channel activity
+		}
+	}*/
 	// Position at the beginning of the FIFO
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, 0);
 
@@ -116,86 +115,99 @@ void RFM9x_Send(const uint8_t* data, uint8_t len)
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 
-	LORA_debug_hexa("RFM9x SEND",(uint8_t*) data,len);
-	return;
+	//LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
 }
-
-void RFM9x_Receive(uint8_t* data, uint8_t maxlen)
-{
-	LORA_debug_val("\r\nRxCurAddr", RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR));
-
-	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
-
-	// Set Interrupt on DIO0 to RxDone
-	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
-
-	LORA_debug("WFI...", NULL);
-	// wait for interrupt
-	uint32_t start_time_ms = HAL_GetTick();
-	while (! HAL_GPIO_ReadPin(SPI1_IRQ_GPIO_Port, SPI1_IRQ_Pin))
-	{
-		//spin wait
-		//turn off the LED after 900 msec (pulse off 100ms in 1 sec Tx cycle)
-		if( (HAL_GetTick() - start_time_ms) > 900)
-		{
+void waitPacketSent() {
+	// Implement this function to wait until the packet has been sent
+	// This could involve polling a status register or waiting for an interrupt
+}
+void setModeIdle() {
+	// Implement this function to set the RFM9x to idle mode
+	// This typically involves writing to a mode register
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_STDBY);
+}
+/*
+int waitCAD() {
+	// Implement this function to wait for channel activity detection (CAD)
+	// This could involve starting a CAD operation and polling a status register or waiting for an interrupt
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_CAD);
+	// Wait for CAD to complete and check the result
+	// Example:
+	while (RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS) & RFM9x_IRQ_CAD_DONE) {
+		// CAD operation done
+		if (RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS) & RFM9x_IRQ_CAD_DETECTED) {
+			// Channel activity detected
+			return 0;
 		}
-
 	}
-
-	// Read the interrupt register
-	uint8_t irq_flags = RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
-	LORA_debug_val("IRQ Flags", irq_flags);
-
+	return 1;  // No activity detected
+}*/
+void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
-	LORA_debug_val("RxCurAddr", start);
-	LORA_debug_val("RxNbrBytes", len);
 
+	RFM9x_SetMode_Receive();
+	if (len<4){
+		LORA_Receive_Message->RxNbrBytes=0;
+		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
+		return;
+	}
 	// get the read data
-	if (len > (maxlen-1)) len = maxlen-1;
+	if (len > (RFM9x_FIFO_SIZE)) len = RFM9x_FIFO_SIZE;
+
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
+	uint8_t *data = (uint8_t*)malloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
 	for (int i = 0; i < len; i++)
 	{
 		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
 	}
+	LORA_Receive_Message->IRQFlags=RFM9x_ReadReg(RFM9x_REG_12_IRQ_FLAGS);
+	LORA_Receive_Message->RxCurrAddr=start;
+	LORA_Receive_Message->RxNbrBytes=len;
+	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
+	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
+
+	LORA_Receive_Message->header = (Header*)malloc(sizeof(Header));
+	LORA_Receive_Message->header->recipient=data[0];
+	LORA_Receive_Message->header->sender=data[1];
+	LORA_Receive_Message->header->type=data[2];
+	LORA_Receive_Message->header->len_payload=data[3];
+
+	LORA_Receive_Message->payload = (uint8_t*)malloc(sizeof(uint8_t)*(len-sizeof(Header)));
+	memcpy(LORA_Receive_Message->payload, data+sizeof(Header), len-sizeof(Header));
+
+	// Messages de débogage détaillés
+	char debug_msg[50];
+	sprintf(debug_msg, "\r\nRxCurAddr :  0x%02X\r\n", start);
+	HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+	sprintf(debug_msg, "Received Recipient: 0x%02X\r\n", LORA_Receive_Message->header->recipient);
+	HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+	sprintf(debug_msg, "Received Sender: 0x%02X\r\n", LORA_Receive_Message->header->sender);
+	HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+	sprintf(debug_msg, "Received Type: 0x%02X\r\n", LORA_Receive_Message->header->type);
+	HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+
+	sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
+	HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
+	LORA_debug_hexa("UBX_Hexa", LORA_Receive_Message->payload, len-sizeof(Header));
+
+	free(data);
 
 	// clear all the IRQ flags
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
-
-	// Report the SNR and RSSI
-	LORA_debug_val("SNR", RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE));
-	LORA_debug_val("RSSI", RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE));
-
-	//LORA_debug_hexa("*Final data*",(uint8_t*)data , len);
-
-	//Extraction en-tete
-	uint8_t target_recipient_address =data[0];
-	uint8_t origin_sender_address =data[1];
-	uint8_t type =data[2];
-	uint8_t len_payload =data[3];
-
-	LORA_debug_val("Target Address",target_recipient_address);
-	LORA_debug_val("Origin Address",origin_sender_address);
-	LORA_debug_val("Type",type);
-	LORA_debug_val("Len",len_payload);
-	if (target_recipient_address == MODULE_SOURCE_ADDRESS || target_recipient_address == BROADCAST_ADDRESS){
-
-    uint8_t *payload = malloc(len * sizeof(uint8_t));
-	memcpy(payload,data + 4, len_payload);
-
-	GenericMessage* message = GNSSCom_Receive((uint8_t*)payload,(size_t) len);
-	UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) message->Message.UBXMessage;
-	create_message_debug(messageUBX);
-	HAL_UART_Transmit(hLORACom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-	freeBuffer(message->Message.UBXMessage->UBX_Brute);
-	freeBuffer(message->Message.UBXMessage->load);
-	free(message->Message.UBXMessage);
-	free(message);
-	free(payload);
-	}
 }
-
+void RFM9x_SetMode_Receive(void){
+	// Set sleep mode, so we can also set RFM9x mode:
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
+	// Configurer le mode réception continue
+	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
+	// Configurer l'interruption sur DIO0 pour RxDone
+	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
+}
 uint8_t RFM9x_GetMode( void )
 {
 	uint8_t mode = RFM9x_ReadReg( RFM9x_REG_01_OP_MODE );
@@ -223,7 +235,7 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	// default data value if error
 	uint8_t data = 0x00;
 
-	// Set CS low (active)
+	// Set nCS low (active)
 	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
 
 	// write 8 bit reg and read 8 bit data
@@ -240,7 +252,7 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 
 	}
 
-	// Set CS high (inactive)
+	// Set nCS high (inactive)
 	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
 
 	return data;
@@ -250,6 +262,8 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 {
 	HAL_StatusTypeDef status;
 
+	//print2("RFM9x WR", reg, data );
+
 	//set the reg msb for write
 	reg |= 0x80;
 
@@ -258,7 +272,7 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 	const uint16_t size = sizeof(txData);
 
 
-	// Set CS low (active)
+	// Set nCS low (active)
 	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_RESET);
 
 	// write 8 bit reg and read 8 bit data
@@ -271,8 +285,8 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 	}
 
 	//HACK: Wait for SPI transfer to complete
-	Delay_ms(1);
-	// Set CS high (inactive)
+	//HAL_Delay(1);
+	// Set nCS high (inactive)
 	HAL_GPIO_WritePin(SPI1_CS_GPIO_Port, SPI1_CS_Pin, GPIO_PIN_SET);
 }
 
@@ -291,23 +305,21 @@ void Delay_ms( uint32_t delay_ms )
 
 	return;
 }
-
 // Debug Routines
 void RF_TestSpi( void )
 {
 	uint8_t i;
 	uint8_t v;
-	print("----TEST----");
+	print("\r\n----TEST----");
 	for(i=0; i<8; i++)
 	{
-
 		v = (1 << i);
 		print1("Write", v);
 		RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
-		Delay_ms(1);
+		//Delay_ms(1);
 		v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
 		print1("Read ", v);
-		Delay_ms(1);
+		//Delay_ms(1);
 	}
 	print("------------");
 	return;
@@ -322,3 +334,6 @@ void print(const char *text)
 sprintf(msg, "%s\r\n", text );
 HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t *) msg, strlen(msg), HAL_MAX_DELAY);
 }
+
+
+

@@ -29,6 +29,7 @@ void LORA_Send(Header* header, uint8_t* payload){
     // Ajouter la charge utile
     memcpy(buffer + 4 , payload, header->len_payload);
     RFM9x_Send(buffer, header->len_payload + 4);
+    RFM9x_SetMode_Receive();
 }
 
 
@@ -44,19 +45,21 @@ void LORA_debug(char* flag, uint8_t* value)
     HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)message, strlen(message),HAL_MAX_DELAY);
 }
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len)
-{
-	char message[50];
+{	char* message = (char*)malloc(sizeof(flag));
     char hexString[len*2+1]; // Buffer to hold the hex string (2 characters per byte)
 	if (value != NULL){
 		for (int i = 0; i < len; i++) {
 		            snprintf(hexString + (i * 2), sizeof(hexString) - (i * 2), "%02X", value[i]);
 		        }
-		snprintf(message, sizeof(message),"%s: %s\r\n",flag,hexString);
+		message= realloc(message,sizeof(hexString)+sizeof(flag)+10);
+		snprintf(message, sizeof(hexString)+sizeof(flag)+10,"%s: %s\r\n",flag,hexString);
 	}
 	else {
-		snprintf(message,sizeof(message), "%s\r\n",flag);
+
+		snprintf(message,sizeof(flag), "%s\r\n",flag);
 	}
     HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)message, strlen(message),HAL_MAX_DELAY);
+    free(message);
 }
 void LORA_debug_val(const char* flag, uint8_t value)
 {

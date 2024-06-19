@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "shared.h"
-//#include "GNSS/GNSSCom.h"
 
 typedef struct {
     uint8_t *buffer;

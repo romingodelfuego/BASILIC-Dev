@@ -33,11 +33,13 @@ void create_message_debug(UBXMessage_parsed* UBXMessage) {
             message_mappings[i].msgID == UBXMessage->msgID) {
             // Retrieve the corresponding get function and associated structure and variables
             get_func = message_mappings[i].get_func;
-            structAssociate = message_mappings[i].structAssociate; //Pour l'utilosation dans d'autres fonctions, perhaps
+            structAssociate = message_mappings[i].structAssociate; //Pour l'utilisation dans d'autres fonctions
             get_func(UBXMessage,structAssociate);
 
             //On adapte la taille du buffer pour les prochains messages
-            resizeBuffer(hGNSSCom.Rx,UBXMessage->len + 8);
+            //resizeBuffer(hGNSSCom.Rx,UBXMessage->len + 8);
+            //On tronque le buffer
+            // ->
             break;
         }
 

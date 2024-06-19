@@ -45,7 +45,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+GenericMessage* receptionGNSS;
 /* USER CODE END Variables */
 osThreadId InitTaskHandle;
 osThreadId ReceivedGNSSHandle;
@@ -53,7 +53,6 @@ osThreadId ReceivedLORAHandle;
 osSemaphoreId xSem_GNSSReceive_startHandle;
 osSemaphoreId xSem_LORAReceive_startHandle;
 osSemaphoreId xSem_GNSSReceive_endHandle;
-GenericMessage* reception;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -179,7 +178,7 @@ void StartInitTask(void const * argument)
 	GNSSCom_Init(&huart3,&huart1);
 	LORACom_Init(&hspi2, &huart1);
 	RFM9x_Init();
-	reception->typeMessage=INIT;
+	receptionGNSS->typeMessage=INIT;
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
@@ -202,48 +201,22 @@ void ReceivedGNSSTask(void const * argument)
 	for(;;)
 	{
 		osSemaphoreWait(xSem_GNSSReceive_startHandle, osWaitForever);
+		ITM_Port32(31)=12345;
 		//	TODO : Filtrer la partie envoie et la partie debug
 		//	Si on veut debug alors quel messsage on debug
 		//	Si on veut transferer alors quel message (class,id)
+
 		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		reception = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
+		receptionGNSS = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
 
-		if (reception->typeMessage == UBX){
-
-			UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;
-			/*if(needsIt.debug.UBX.flag
-					&& messageUBX->msgClass == needsIt.debug.UBX.msgClass
-					&& messageUBX->msgID == needsIt.debug.UBX.msgID ){}*/
-			create_message_debug(messageUBX);
-			//HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-
-			Header * header = (Header*)malloc(sizeof(Header));
-			*header =(Header){
-				.recipient = 253,
-						.sender = MODULE_SOURCE_ADDRESS,
-						.type = PACKET_TYPE_DATA,
-						.len_payload = (size_t)messageUBX->UBX_Brute->size
-			};
-			//LORA_Send(header, (uint8_t*) messageUBX->UBX_Brute->buffer);
-			/*LORA_Send((uint8_t)253,
-							PACKET_TYPE_DATA,
-							(uint8_t*) messageUBX->UBX_Brute->buffer,
-							(size_t)messageUBX->UBX_Brute->size);*/
-			//RFM9x_SetMode_Receive();
-
-			freeBuffer(reception->Message.UBXMessage->UBX_Brute);
-			freeBuffer(reception->Message.UBXMessage->load);
-			free(reception->Message.UBXMessage);
-			free(header);
-
+		if (receptionGNSS->typeMessage == UBX){
+			ITM_Port32(31)=56789;
 			xSemaphoreGiveFromISR(xSem_GNSSReceive_endHandle, &xHigherPriorityTaskWoken);
 			osDelay(1);
 		}
-		if(reception->typeMessage == NMEA){
-			free(reception->Message.NMEAMessage);
+		if(receptionGNSS->typeMessage == NMEA){
+			// Il est possible d'en avoir mais pas utile
 		}
-
-		free(reception);
 		GNSSCom_UartActivate(&hGNSSCom);
 		osDelay(1);
 	}
@@ -267,17 +240,13 @@ void ReceivedLORATask(void const * argument)
 
 		LORA_Message* LORA_Receive_Message = (LORA_Message*)malloc(sizeof(LORA_Message));
 		RFM9x_Receive(LORA_Receive_Message);
-		if (!LORA_Receive_Message->RxNbrBytes){}
+		if (!LORA_Receive_Message->RxNbrBytes){ITM_Port32(31)=666;} //Si on recoit du bruit
 		else
-			if (LORA_Receive_Message->header->recipient==MODULE_BROADCAST_ADDRESS
-					||
-					LORA_Receive_Message->header->recipient==MODULE_SOURCE_ADDRESS )
-			{
+			if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
+					||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
+
 				Header* headerSend =(Header*) malloc(sizeof(Header));
 				switch (LORA_Receive_Message->header->type){
-
-				case PACKET_TYPE_DATA:
-					break;
 
 				case PACKET_TYPE_ACK:
 					//Lora send un messsage vide
@@ -291,32 +260,46 @@ void ReceivedLORATask(void const * argument)
 					free(headerSend);
 					break;
 
+
 				case PACKET_TYPE_POLL:
 					//il faut que le gnss poll
 					CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
-							(size_t) LORA_Receive_Message->RxNbrBytes-4};
+							(size_t) LORA_Receive_Message->header->len_payload};
 
 					char message[50];
 					sprintf(message, "\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n");
 					HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
+					ITM_Port32(31)=11;
+					osSemaphoreWait(xSem_GNSSReceive_endHandle, osWaitForever);//on attend la fin d'une potenitel reception
 					GNSSCom_Send_SetVal(poll); //On envoie un message
-
-					osSemaphoreWait(xSem_GNSSReceive_endHandle, osWaitForever); //donc on attend la reponse
-
-					if (reception->typeMessage==UBX){
+					osSemaphoreWait(xSem_GNSSReceive_endHandle, osWaitForever); //donc on attend la 1ere reponse
+					ITM_Port32(31)=22;
+					if(	receptionGNSS->typeMessage!=UBX ||
+							receptionGNSS->Message.UBXMessage->msgClass != LORA_Receive_Message->payload[2]||
+							receptionGNSS->Message.UBXMessage->msgID !=LORA_Receive_Message->payload[3])
+					{
+						osSemaphoreWait(xSem_GNSSReceive_endHandle, osWaitForever); //On n'as pas recu le bon message on attend encore
+					}
+					else
+					{
 						*headerSend = (Header){
 							.recipient = 0xFE,
 									.sender = MODULE_SOURCE_ADDRESS,
 									.type = PACKET_TYPE_POLL,
-									.len_payload = (size_t)reception->Message.UBXMessage->len
+									.len_payload = (size_t)receptionGNSS->Message.UBXMessage->len
 						};
-						LORA_Send(headerSend, (uint8_t*)reception->Message.UBXMessage->UBX_Brute);
-						break;
+						LORA_Send(headerSend, (uint8_t*)receptionGNSS->Message.UBXMessage->UBX_Brute->buffer);
+						sprintf(message, "\r\t\t\n...UBXMessage --SEND-- LORA Polling...\r\n");
+						HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
+						ITM_Port32(31)=44;
 					}
+					break;
 				}
 				free(headerSend);
 			}
 		free(LORA_Receive_Message);
+		ITM_Port32(31)=9999;
+		osDelay(1);
 	}
 	/* USER CODE END ReceivedLORATask */
 }

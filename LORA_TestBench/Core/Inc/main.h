@@ -77,6 +77,7 @@ void Error_Handler(void);
 #define LD3_GPIO_Port GPIOB
 #define SPI1_IRQ_Pin GPIO_PIN_6
 #define SPI1_IRQ_GPIO_Port GPIOB
+#define SPI1_IRQ_EXTI_IRQn EXTI9_5_IRQn
 #define SPI1_CS_Pin GPIO_PIN_7
 #define SPI1_CS_GPIO_Port GPIOB
 

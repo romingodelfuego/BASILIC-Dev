@@ -6,11 +6,26 @@
 // Author: Mike McCauley (mikem@airspayce.com)
 // Copyright (C) 2014 Mike McCauley
 // $Id: RH_RF95.h,v 1.22 2019/07/14 00:18:48 mikem Exp $
-// 
+//
 
 #ifndef RFM9x_h
 #define RFM9x_h
 
+/* Public function prototypes ------------------------------------------------*/
+#include "shared.h"
+
+void RFM9x_Init( void );
+void RFM9x_Send(uint8_t* data, uint8_t len);
+void RFM9x_SetMode_Receive(void);
+uint8_t RFM9x_GetMode( void );
+void RFM9x_ClearInt( void );
+
+uint8_t RFM9x_ReadReg( uint8_t reg );
+void RFM9x_WriteReg( uint8_t reg, uint8_t data );
+void Delay_ms( uint32_t delay_ms );
+
+
+void RFM9x_Receive(LORA_Message* LORA_Receive_Message);
 /* Public define -------------------------------------------------------------*/
 
 // Max number of octets the LORA Rx/Tx FIFO can hold
@@ -228,17 +243,6 @@
 #define RFM9x_PA_DAC_DISABLE                        0x04
 #define RFM9x_PA_DAC_ENABLE                         0x07
 
-/* Public function prototypes ------------------------------------------------*/
 
-void RFM9x_Init( void );
-void RFM9x_Send(const uint8_t* data, uint8_t len);
-void RFM9x_Receive(uint8_t* data, uint8_t maxlen);
-uint8_t RFM9x_GetMode( void );
-void RFM9x_ClearInt( void );
-
-uint8_t RFM9x_ReadReg( uint8_t reg );
-void RFM9x_WriteReg( uint8_t reg, uint8_t data );
-void Delay_ms( uint32_t delay_ms );
 
 #endif
-
