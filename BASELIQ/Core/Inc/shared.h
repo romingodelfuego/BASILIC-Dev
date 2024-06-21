@@ -9,10 +9,13 @@
 #define SRC_GNSS_SHARED_H_
 
 #include <stdint.h>
+#include <stdio.h>
+
 /******** DEBUG ********/
 #define ITM_Port32(n) (*((volatile unsigned long *)(0xE0000000+4*n)))
 /******** ----- ********/
 #define UART_RX_BUFFER_SIZE 200
+#define UART_MAX_BUFFER_SIZE 2048
 #define UART_TX_BUFFER_SIZE 200
 #define UART_DEBUG_BUFFER_SIZE 200
 
@@ -20,6 +23,49 @@
 #define HEADER_UBX_2 0x62
 
 #define HEADER_NMEA '$'
+/******** GNSS ********/
+typedef enum {
+	INIT,
+	NMEA,
+	UBX,
+} OutputProtocol;
+typedef struct {
+	uint8_t *buffer;
+	size_t size;
+} DynamicBuffer;
+typedef struct {
+	uint8_t class;
+	uint8_t ID;
+	uint16_t len_payload;
+	char bufferDebug[UART_DEBUG_BUFFER_SIZE];
+	DynamicBuffer* load; // Pointeur de tableau
+	DynamicBuffer* brute; // Pointeur de tableau de longeur variable
+}UBXMessage_parsed ;
+
+typedef struct {
+	char* NMEA_Brute;
+}NMEAMessage_parsed;
+
+typedef union {
+	NMEAMessage_parsed* NMEAMessage;
+	UBXMessage_parsed* UBXMessage;
+}MessageStruct;
+
+typedef struct{
+	OutputProtocol typeMessage;
+	MessageStruct Message;
+}GenericMessage;
+/******** ---- ********/
+
+/******** QUEUE ********/
+typedef struct {
+	uint8_t data;  // Un octet de données reçu via UART
+} UARTMessageQ_t;
+
+typedef struct {
+	GenericMessage* receptionGNSS;
+}GNSSMessageQ_t;
+/******** ---- ********/
 
 /******** LORA ********/
 typedef struct{
@@ -27,14 +73,14 @@ typedef struct{
 	uint8_t sender;
 	uint8_t type;
 	uint8_t len_payload;
-}Header;
+}LORA_Header;
 typedef struct {
 	uint8_t IRQFlags;
 	uint8_t RxCurrAddr;
 	uint8_t RxNbrBytes;
 	uint8_t SNR;
 	uint8_t RSSI;
-	Header* header;
+	LORA_Header* header;
 	uint8_t* payload;
 }LORA_Message;
 /******** ---- ********/

@@ -20,7 +20,7 @@ void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug)
 void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA){
 	HAL_SPI_Receive_IT(hLORA->hspi, hLORA->RxBuffer, MAX_SPI_SIZE);
 }
-void LORA_Send(Header* header, uint8_t* payload){
+void LORA_Send(LORA_Header* header, uint8_t* payload){
     uint8_t buffer[RFM9x_FIFO_SIZE];
 
     // Ajouter l'en-tête

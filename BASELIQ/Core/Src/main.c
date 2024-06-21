@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "dac.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
@@ -93,6 +94,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_USART3_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   __disable_irq(); //On evite toute interruption durant l'init de FreeRTOS
   /* USER CODE END 2 */

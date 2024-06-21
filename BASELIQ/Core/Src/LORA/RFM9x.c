@@ -169,7 +169,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
 	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
 
-	LORA_Receive_Message->header = (Header*)malloc(sizeof(Header));
+	LORA_Receive_Message->header = (LORA_Header*)malloc(sizeof(LORA_Header));
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
 	LORA_Receive_Message->header->type=data[2];

@@ -45,7 +45,7 @@ extern LORACom_HandleTypeDef hLORACom;
 
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
 void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA);
-void LORA_Send(Header* header, uint8_t* payload);
+void LORA_Send(LORA_Header* header, uint8_t* payload);
 void LORA_debug(char* flag, uint8_t* value);
 void LORA_debug_val(const char* flag, uint8_t value);
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);

@@ -326,45 +326,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (hGNSSCom.huart->Instance == huart->Instance)
-	{
-		osSemaphoreRelease(xSem_GNSSReceive_startHandle);
-		//osDelay(1);
-	}
-}
-/*
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (hGNSSCom.huart->Instance == huart->Instance)
-	{
-		GenericMessage* reception = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
-
-		if (reception->typeMessage == UBX){
-			if (needsIt.debug.flag){ //Si le debug a besoin de ce message
-				UART_Debug(reception);
-				needsIt.debug.flag = 0;
-			}
-			if (needsIt.lora.flag){
-				//On envoie en LORA
-				LORA_Send(needsIt.lora.target, needsIt.lora.type, needsIt.lora.payload, needsIt.lora.len);
-				RFM9x_SetMode_Receive();
-				needsIt.lora.flag = 0;
-			}
-			if (needsIt.sd.flag){
-				needsIt.sd.flag = 0;
-			}
-
-			}
-
-		}
-		if(reception->typeMessage == NMEA){
-					free(reception->Message.NMEAMessage);
-		free(reception);
-		GNSSCom_UartActivate(&hGNSSCom);
-	}
-}*/
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
 	if (hGNSSCom.huart->Instance == huart->Instance) {
 		GNSSCom_UartActivate(&hGNSSCom); // Relancer la réception

@@ -88,7 +88,7 @@ void GNSSCom_SetUp_Init(void){
 			UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) command_debug->Message.UBXMessage;
 			create_message_debug(messageUBX);
 			HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-			freeBuffer(command_debug->Message.UBXMessage->UBX_Brute);
+			freeBuffer(command_debug->Message.UBXMessage->brute);
 			freeBuffer(command_debug->Message.UBXMessage->load);
 			free(command_debug->Message.UBXMessage);
 			free(command_debug);
@@ -111,15 +111,15 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 				buffer[i +1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
 			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->msgClass = buffer[i + 2];
-			UbxMessage->msgID = buffer[i + 3];
-			UbxMessage->len = (buffer[i+5] << 8) |buffer[i+4];
-			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len);
+			UbxMessage->class = buffer[i + 2];
+			UbxMessage->ID = buffer[i + 3];
+			UbxMessage->len_payload = (buffer[i+5] << 8) |buffer[i+4];
+			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len_payload);
 
 			memcpy(UbxMessage->load->buffer, buffer + i + 6, UbxMessage->load->size);
 
-			UbxMessage->UBX_Brute=initializeBuffer((size_t)UbxMessage->len + 8);
-			memcpy(UbxMessage->UBX_Brute->buffer, buffer + i, UbxMessage->UBX_Brute->size);
+			UbxMessage->brute=initializeBuffer((size_t)UbxMessage->len_payload + 8);
+			memcpy(UbxMessage->brute->buffer, buffer + i, UbxMessage->brute->size);
 
 			genericMessage->Message.UBXMessage = UbxMessage;
 			return genericMessage;
@@ -139,7 +139,7 @@ void UART_Debug(GenericMessage* reception){
 	UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;
 	create_message_debug(messageUBX);
 	HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-	freeBuffer(reception->Message.UBXMessage->UBX_Brute);
+	freeBuffer(reception->Message.UBXMessage->brute);
 	freeBuffer(reception->Message.UBXMessage->load);
 	free(reception->Message.UBXMessage);
 }

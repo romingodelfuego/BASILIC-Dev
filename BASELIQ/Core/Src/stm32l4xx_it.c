@@ -44,6 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern osSemaphoreId xSem_LORAReceive_startHandle;
+extern osMessageQId UARTGnssQueueHandle;
+
+volatile unsigned long ulHighFrequencyTimerTicks = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,6 +60,7 @@ extern osSemaphoreId xSem_LORAReceive_startHandle;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim2;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
@@ -200,6 +204,20 @@ void TIM1_UP_TIM16_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM2 global interrupt.
+  */
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+  ulHighFrequencyTimerTicks++;
+  /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART1 global interrupt.
   */
 void USART1_IRQHandler(void)
@@ -233,6 +251,14 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
+		uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
+
+		// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
+		UARTMessageQ_t uartMsg = { .data = receivedByte };
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR(UARTGnssQueueHandle, &uartMsg, &xHigherPriorityTaskWoken);
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
 
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
