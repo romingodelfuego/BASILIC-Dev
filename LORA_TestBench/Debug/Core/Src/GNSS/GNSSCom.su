@@ -1,6 +1,0 @@
-../Core/Src/GNSS/GNSSCom.c:15:6:GNSSCom_Init	16	static
-../Core/Src/GNSS/GNSSCom.c:27:16:initializeBuffer	24	static
-../Core/Src/GNSS/GNSSCom.c:42:6:resizeBuffer	24	static
-../Core/Src/GNSS/GNSSCom.c:49:6:freeBuffer	16	static
-../Core/Src/GNSS/GNSSCom.c:53:6:GNSSCom_UartActivate	16	static
-../Core/Src/GNSS/GNSSCom.c:56:17:GNSSCom_Receive	32	static

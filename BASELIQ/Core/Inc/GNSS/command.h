@@ -57,6 +57,9 @@ static uint8_t commandUart1Ouput[] __attribute__((used))= {
 static uint8_t commandUBXTimeUTC[] __attribute__((used))= {
 		0xb5, 0x62, 0x06, 0x01, 0x03, 0x00, 0x01, 0x21, 0x01, 0x2d, 0x85
 };
+static uint8_t pollUBXTimeUTC[] __attribute__((used))= {
+		0xb5, 0x62, 0x01, 0x21, 0x00, 0x00, 0x22, 0x67
+};
 
 /*
   RAM CFG-TP-PULSE_DEF     1                    # write value 1 - FREQ             to item id 0x20050023 in layer 0

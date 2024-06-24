@@ -64,7 +64,7 @@ typedef struct {
 
 typedef struct {
 	GenericMessage* receptionGNSS;
-}GNSSMessageQ_t;
+}UBXMessageQ_t;
 /******** ---- ********/
 
 /******** LORA ********/
@@ -74,6 +74,7 @@ typedef struct{
 	uint8_t type;
 	uint8_t len_payload;
 }LORA_Header;
+
 typedef struct {
 	uint8_t IRQFlags;
 	uint8_t RxCurrAddr;

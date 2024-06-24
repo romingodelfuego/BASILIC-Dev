@@ -57,7 +57,9 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	free(bufferDynamic);
 }
 void GNSSCom_Send_SetVal(CommandnSize toTransmit){
-	HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY);
+	if (HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY)!= HAL_OK){
+		Error_Handler();
+	}
 }
 void GNSSCom_SetUp_Init(void){
 
@@ -68,7 +70,7 @@ void GNSSCom_SetUp_Init(void){
 			{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
 			{commandUart1Ouput, sizeof(commandUart1Ouput)},
-			{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
+			//{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
 	};
 	char message[50];
 

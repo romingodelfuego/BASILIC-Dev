@@ -4,6 +4,7 @@
 "./Core/Src/LORA/LORACom.o"
 "./Core/Src/LORA/RFM9x.o"
 "./Core/Src/dac.o"
+"./Core/Src/dma.o"
 "./Core/Src/freertos.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"

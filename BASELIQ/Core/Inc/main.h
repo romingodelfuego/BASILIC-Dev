@@ -110,8 +110,8 @@ void Error_Handler(void);
 #define PROC_MOSI_GPIO_Port GPIOE
 #define GPS_TX_STM_Pin GPIO_PIN_8
 #define GPS_TX_STM_GPIO_Port GPIOD
-#define GPSR_RX_STM_Pin GPIO_PIN_9
-#define GPSR_RX_STM_GPIO_Port GPIOD
+#define GPS_RX_STM_Pin GPIO_PIN_9
+#define GPS_RX_STM_GPIO_Port GPIOD
 #define CLK_64M_EN_Pin GPIO_PIN_10
 #define CLK_64M_EN_GPIO_Port GPIOD
 #define ACQ_POW_EN_Pin GPIO_PIN_11

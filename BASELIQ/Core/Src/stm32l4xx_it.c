@@ -44,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern osSemaphoreId xSem_LORAReceive_startHandle;
-extern osMessageQId UARTGnssQueueHandle;
+extern osMessageQId UARTbyteHandle;
 
 volatile unsigned long ulHighFrequencyTimerTicks = 0;
 /* USER CODE END PV */
@@ -61,6 +61,7 @@ volatile unsigned long ulHighFrequencyTimerTicks = 0;
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim2;
+extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
@@ -169,6 +170,20 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 channel4 global interrupt.
+  */
+void DMA1_Channel4_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
+  /* USER CODE BEGIN DMA1_Channel4_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_IRQn 1 */
+}
+
+/**
   * @brief This function handles EXTI line[9:5] interrupts.
   */
 void EXTI9_5_IRQHandler(void)
@@ -176,7 +191,7 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
 		//Alors on libere la semaphore pour pa
-		osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		//osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */
@@ -213,7 +228,7 @@ void TIM2_IRQHandler(void)
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
-  ulHighFrequencyTimerTicks++;
+	ulHighFrequencyTimerTicks++;
   /* USER CODE END TIM2_IRQn 1 */
 }
 
@@ -251,15 +266,13 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
-		uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
+	uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
 
-		// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
-		UARTMessageQ_t uartMsg = { .data = receivedByte };
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR(UARTGnssQueueHandle, &uartMsg, &xHigherPriorityTaskWoken);
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-
-
+	// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
+	UARTMessageQ_t uartMsg = { .data = receivedByte };
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueSendFromISR(UARTbyteHandle, &uartMsg, &xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
