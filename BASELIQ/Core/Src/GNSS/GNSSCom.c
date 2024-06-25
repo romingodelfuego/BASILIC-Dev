@@ -9,9 +9,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-	GNSSCom_HandleTypeDef hGNSSCom;
-	OutputType type = ASCII;
-	OutputProtocol protocol = UBX;
+GNSSCom_HandleTypeDef hGNSSCom;
+OutputType type = ASCII;
+OutputProtocol protocol = UBX;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
@@ -57,7 +57,8 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	free(bufferDynamic);
 }
 void GNSSCom_Send_SetVal(CommandnSize toTransmit){
-	if (HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY)!= HAL_OK){
+	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY);
+	if (statut!= HAL_OK){
 		Error_Handler();
 	}
 }

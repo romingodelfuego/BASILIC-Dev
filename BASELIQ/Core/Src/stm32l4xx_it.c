@@ -191,7 +191,7 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
 		//Alors on libere la semaphore pour pa
-		//osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */

@@ -46,7 +46,7 @@ void LORA_debug(char* flag, uint8_t* value)
 }
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len)
 {	char* message = (char*)malloc(sizeof(flag));
-    char hexString[len*2+1]; // Buffer to hold the hex string (2 characters per byte)
+    char hexString[2*len+1]; // Buffer to hold the hex string (2 characters per byte)
 	if (value != NULL){
 		for (int i = 0; i < len; i++) {
 		            snprintf(hexString + (i * 2), sizeof(hexString) - (i * 2), "%02X", value[i]);

@@ -206,7 +206,7 @@ void EXTI9_5_IRQHandler(void)
 	/* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(SPI1_IRQ_Pin) != RESET){
 		char debug_msg[50];
-		sprintf(debug_msg, "\r\n---MESSAGE RECEIVED --FROM-- LORA\r\n");
+		sprintf(debug_msg, "\r\n---MESSAGE RECEIVED --FROM-- LORA---\r\n");
 		HAL_UART_Transmit(hLORACom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
 		LORA_Message* LORA_Received=(LORA_Message*)malloc(sizeof(LORA_Message));

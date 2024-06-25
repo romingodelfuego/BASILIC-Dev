@@ -176,7 +176,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	LORA_Receive_Message->header->len_payload=data[3];
 
 	// Messages de débogage détaillés
-	char debug_msg[50];
+/*	char debug_msg[50];
 	sprintf(debug_msg, "\r\nRxCurAddr :  0x%02X\r\n", start);
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 
@@ -191,7 +191,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 
 	sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-
+*/
 	LORA_Receive_Message->payload = (uint8_t*)malloc(sizeof(uint8_t)*(len-4));
 	memcpy(LORA_Receive_Message->payload, data+4, len-4);
 	free(data);
