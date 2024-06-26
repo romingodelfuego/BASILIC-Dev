@@ -24,7 +24,7 @@ typedef enum {
 
 
 typedef struct {
-    uint8_t class;
+    uint8_t CLASS;
     uint8_t ID;
     void (*get_func)(UBXMessage_parsed*, void*);
     void* structAssociate;

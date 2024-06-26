@@ -31,14 +31,14 @@ void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
 }
 
 DynamicBuffer* initializeBuffer(size_t initialSize) {
-	DynamicBuffer *bufferDynamic = (DynamicBuffer *)malloc(sizeof(DynamicBuffer));
+	DynamicBuffer *bufferDynamic = (DynamicBuffer *)pvPortMalloc(sizeof(DynamicBuffer));
 	if (bufferDynamic == NULL) {
 		return NULL; // Échec de l'allocation mémoire
 	}
 
-	bufferDynamic->buffer = (uint8_t*)malloc(initialSize);
+	bufferDynamic->buffer = (uint8_t*)pvPortMalloc(initialSize);
 	if (bufferDynamic->buffer == NULL) {
-		free(bufferDynamic); // Libérer la mémoire allouée pour la structure
+		vPortFree(bufferDynamic); // Libérer la mémoire allouée pour la structure
 		return NULL; // Échec de l'allocation mémoire
 	}
 
@@ -53,11 +53,12 @@ void resizeBuffer(DynamicBuffer *bufferDynamic, size_t newSize) {
 	}
 }
 void freeBuffer(DynamicBuffer *bufferDynamic) {
-	free(bufferDynamic->buffer);
-	free(bufferDynamic);
+	vPortFree(bufferDynamic->buffer);
+	vPortFree(bufferDynamic);
 }
 void GNSSCom_Send_SetVal(CommandnSize toTransmit){
-	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size, HAL_MAX_DELAY);
+	while (hGNSSCom.huart->gState != HAL_UART_STATE_READY){}
+	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size,HAL_MAX_DELAY);
 	if (statut!= HAL_OK){
 		Error_Handler();
 	}
@@ -106,6 +107,7 @@ void GNSSCom_SetUp_Init(void){
 		}
 	}
 }
+
 GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
@@ -114,7 +116,7 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 				buffer[i +1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
 			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->class = buffer[i + 2];
+			UbxMessage->CLASS = buffer[i + 2];
 			UbxMessage->ID = buffer[i + 3];
 			UbxMessage->len_payload = (buffer[i+5] << 8) |buffer[i+4];
 			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len_payload);

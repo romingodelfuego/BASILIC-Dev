@@ -29,7 +29,7 @@ void create_message_debug(UBXMessage_parsed* UBXMessage) {
 
     // Loop through the message mappings to find a match
     for (int i = 0; i < sizeof(message_mappings) / sizeof(message_mappings[0]); i++) {
-        if (message_mappings[i].class == UBXMessage->class &&
+        if (message_mappings[i].CLASS == UBXMessage->CLASS &&
             message_mappings[i].ID == UBXMessage->ID) {
             // Retrieve the corresponding get function and associated structure and variables
             get_func = message_mappings[i].get_func;

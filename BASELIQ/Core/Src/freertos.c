@@ -25,49 +25,27 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "RTOS_subfunctions/matcher.h"
+#include "RTOS_subfunctions/receveivedLora.h"
+#include "RTOS_subfunctions/fakeuseSD.h"
+#include "RTOS_subfunctions/uartbyteToGnssMessage.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-typedef struct {
-	uint8_t CLASS;
-	uint8_t ID;
-	osSemaphoreId applicantSemaphore;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
-} GNSSRequestQ_t;
-
-typedef struct {
-	uint8_t CLASS;
-	uint8_t ID;
-	DynamicBuffer * bufferReturn;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
-} GNSSReturnQ_t;
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-int isItemMatching(UBXMessageQ_t* item,  GNSSRequestQ_t itemTarget);
-void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue);
-UBXMessage_parsed* findItemQueue(osMessageQId xQueue, GNSSRequestQ_t gnssRequest);
-UBXMessage_parsed* findItemQueueWithoutCopy(osMessageQId xQueue, GNSSRequestQ_t gnssRequest);
-void UART_Transmit_With_Color(UART_HandleTypeDef *huart,const char *data, const char *color);
-
-char* uint8_array_to_hex_string(uint8_t* array, size_t len);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define ANSI_COLOR_RED     "\033[31m"
-#define ANSI_COLOR_GREEN   "\033[32m"
-#define ANSI_COLOR_YELLOW  "\033[33m"
-#define ANSI_COLOR_BLUE    "\033[34m"
-#define ANSI_COLOR_MAGENTA "\033[35m"
-#define ANSI_COLOR_CYAN    "\033[36m"
-#define ANSI_COLOR_RESET   "\033[0m"
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -76,7 +54,7 @@ extern TIM_HandleTypeDef htim2;
 /* USER CODE END Variables */
 osThreadId InitTaskHandle;
 osThreadId ReceivedLORAHandle;
-osThreadId UARTbytet_to_GNHandle;
+osThreadId UARTbyte_to_GNHandle;
 osThreadId MatcherHandle;
 osThreadId Fake_SDuseHandle;
 osMessageQId UARTbyteHandle;
@@ -109,6 +87,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
 /* Hook prototypes */
 void configureTimerForRunTimeStats(void);
 unsigned long getRunTimeCounterValue(void);
+void vApplicationMallocFailedHook(void);
 
 /* USER CODE BEGIN 1 */
 /* Functions needed when configGENERATE_RUN_TIME_STATS is on */
@@ -122,6 +101,22 @@ __weak unsigned long getRunTimeCounterValue(void)
 	return 0;
 }
 /* USER CODE END 1 */
+
+/* USER CODE BEGIN 5 */
+__weak void vApplicationMallocFailedHook(void)
+{
+	/* vApplicationMallocFailedHook() will only be called if
+   configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h. It is a hook
+   function that will get called if a call to pvPortMalloc() fails.
+   pvPortMalloc() is called internally by the kernel whenever a task, queue,
+   timer or semaphore is created. It is also called by various parts of the
+   demo application. If heap_1.c or heap_2.c are used, then the size of the
+   heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+   FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+   to query the size of free heap space that remains (although it does not
+   provide information on how the remaining heap might be fragmented). */
+}
+/* USER CODE END 5 */
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
 static StaticTask_t xIdleTaskTCBBuffer;
@@ -150,84 +145,84 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
 /* USER CODE END GET_TIMER_TASK_MEMORY */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
 void MX_FREERTOS_Init(void) {
-	/* USER CODE BEGIN Init */
-	/* USER CODE END Init */
+  /* USER CODE BEGIN Init */
+  /* USER CODE END Init */
 
-	/* USER CODE BEGIN RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
 	/* add mutexes, ... */
-	/* USER CODE END RTOS_MUTEX */
+  /* USER CODE END RTOS_MUTEX */
 
-	/* Create the semaphores(s) */
-	/* definition and creation of xSem_LORAReceive_start */
-	osSemaphoreDef(xSem_LORAReceive_start);
-	xSem_LORAReceive_startHandle = osSemaphoreCreate(osSemaphore(xSem_LORAReceive_start), 1);
+  /* Create the semaphores(s) */
+  /* definition and creation of xSem_LORAReceive_start */
+  osSemaphoreDef(xSem_LORAReceive_start);
+  xSem_LORAReceive_startHandle = osSemaphoreCreate(osSemaphore(xSem_LORAReceive_start), 1);
 
-	/* definition and creation of SD_Access_GNSS_Return */
-	osSemaphoreDef(SD_Access_GNSS_Return);
-	SD_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(SD_Access_GNSS_Return), 1);
+  /* definition and creation of SD_Access_GNSS_Return */
+  osSemaphoreDef(SD_Access_GNSS_Return);
+  SD_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(SD_Access_GNSS_Return), 1);
 
-	/* definition and creation of LORA_Access_GNSS_Return */
-	osSemaphoreDef(LORA_Access_GNSS_Return);
-	LORA_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(LORA_Access_GNSS_Return), 1);
+  /* definition and creation of LORA_Access_GNSS_Return */
+  osSemaphoreDef(LORA_Access_GNSS_Return);
+  LORA_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(LORA_Access_GNSS_Return), 1);
 
-	/* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
 	/* add semaphores, ... */
-	/* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-	/* USER CODE BEGIN RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */
-	/* USER CODE END RTOS_TIMERS */
+  /* USER CODE END RTOS_TIMERS */
 
-	/* Create the queue(s) */
-	/* definition and creation of UARTbyte */
-	osMessageQDef(UARTbyte, 1, uint8_t);
-	UARTbyteHandle = osMessageCreate(osMessageQ(UARTbyte), NULL);
+  /* Create the queue(s) */
+  /* definition and creation of UARTbyte */
+  osMessageQDef(UARTbyte, 1, uint8_t);
+  UARTbyteHandle = osMessageCreate(osMessageQ(UARTbyte), NULL);
 
-	/* definition and creation of UBXQueue */
-	osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
-	UBXQueueHandle = osMessageCreate(osMessageQ(UBXQueue), NULL);
+  /* definition and creation of UBXQueue */
+  osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
+  UBXQueueHandle = osMessageCreate(osMessageQ(UBXQueue), NULL);
 
-	/* definition and creation of GNSS_Request */
-	osMessageQDef(GNSS_Request, 16, GNSSRequestQ_t);
-	GNSS_RequestHandle = osMessageCreate(osMessageQ(GNSS_Request), NULL);
+  /* definition and creation of GNSS_Request */
+  osMessageQDef(GNSS_Request, 16, GNSSRequestQ_t);
+  GNSS_RequestHandle = osMessageCreate(osMessageQ(GNSS_Request), NULL);
 
-	/* definition and creation of GNSS_Return */
-	osMessageQDef(GNSS_Return, 16, GNSSReturnQ_t);
-	GNSS_ReturnHandle = osMessageCreate(osMessageQ(GNSS_Return), NULL);
+  /* definition and creation of GNSS_Return */
+  osMessageQDef(GNSS_Return, 16, GNSSReturnQ_t);
+  GNSS_ReturnHandle = osMessageCreate(osMessageQ(GNSS_Return), NULL);
 
-	/* USER CODE BEGIN RTOS_QUEUES */
+  /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
-	/* USER CODE END RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
 
-	/* Create the thread(s) */
-	/* definition and creation of InitTask */
-	osThreadDef(InitTask, StartInitTask, osPriorityHigh, 0, 1024);
-	InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
+  /* Create the thread(s) */
+  /* definition and creation of InitTask */
+  osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
+  InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
-	/* definition and creation of ReceivedLORA */
-	osThreadDef(ReceivedLORA, ReceivedLORATask, osPriorityNormal, 0, 2048);
-	ReceivedLORAHandle = osThreadCreate(osThread(ReceivedLORA), NULL);
+  /* definition and creation of ReceivedLORA */
+  osThreadDef(ReceivedLORA, ReceivedLORATask, osPriorityNormal, 0, 2048);
+  ReceivedLORAHandle = osThreadCreate(osThread(ReceivedLORA), NULL);
 
-	/* definition and creation of UARTbytet_to_GN */
-	osThreadDef(UARTbytet_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityAboveNormal, 0, 512);
-	UARTbytet_to_GNHandle = osThreadCreate(osThread(UARTbytet_to_GN), NULL);
+  /* definition and creation of UARTbyte_to_GN */
+  osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 512);
+  UARTbyte_to_GNHandle = osThreadCreate(osThread(UARTbyte_to_GN), NULL);
 
-	/* definition and creation of Matcher */
-	osThreadDef(Matcher, MatcherTask, osPriorityNormal, 0, 512);
-	MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
+  /* definition and creation of Matcher */
+  osThreadDef(Matcher, MatcherTask, osPriorityNormal, 0, 1024);
+  MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
 
-	/* definition and creation of Fake_SDuse */
-	osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 512);
-	Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
+  /* definition and creation of Fake_SDuse */
+  osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 512);
+  Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
 
-	/* USER CODE BEGIN RTOS_THREADS */
+  /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
-	/* USER CODE END RTOS_THREADS */
+  /* USER CODE END RTOS_THREADS */
 
 }
 
@@ -240,7 +235,7 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartInitTask */
 void StartInitTask(void const * argument)
 {
-	/* USER CODE BEGIN StartInitTask */
+  /* USER CODE BEGIN StartInitTask */
 	/* Infinite loop */
 	//  for(;;)
 	//  {
@@ -259,7 +254,7 @@ void StartInitTask(void const * argument)
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
 	osThreadTerminate(InitTaskHandle);
 	//  }
-	/* USER CODE END StartInitTask */
+  /* USER CODE END StartInitTask */
 }
 
 /* USER CODE BEGIN Header_ReceivedLORATask */
@@ -271,81 +266,13 @@ void StartInitTask(void const * argument)
 /* USER CODE END Header_ReceivedLORATask */
 void ReceivedLORATask(void const * argument)
 {
-	/* USER CODE BEGIN ReceivedLORATask */
+  /* USER CODE BEGIN ReceivedLORATask */
 	/* Infinite loop */
 	for(;;)
 	{
-
-		osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
-		ITM_Port32(31)=11;
-
-		LORA_Message* LORA_Receive_Message = (LORA_Message*)malloc(sizeof(LORA_Message));
-		RFM9x_Receive(LORA_Receive_Message);
-		if (!LORA_Receive_Message->RxNbrBytes){ITM_Port32(31)=66;} //Si on recoit du bruit
-		else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
-					||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
-				ITM_Port32(31)=22;
-
-				LORA_Header* headerSend =(LORA_Header*) malloc(sizeof(LORA_Header));
-				switch (LORA_Receive_Message->header->type){
-
-				case PACKET_TYPE_ACK:
-					//Lora send un messsage vide
-		 *headerSend = (LORA_Header){
-						.recipient = 0xFE,
-								.sender = MODULE_SOURCE_ADDRESS,
-								.type = PACKET_TYPE_ACK,
-								.len_payload = sizeof(NULL)
-					};
-					LORA_Send(headerSend, NULL);
-					free(headerSend);
-					break;
-
-
-				case PACKET_TYPE_POLL:
-					UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
-					GNSSReturnQ_t gnssReturn;
-					CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
-							(size_t) LORA_Receive_Message->header->len_payload};
-
-					GNSSRequestQ_t requestFromLora = {
-							.CLASS = LORA_Receive_Message->payload[2],
-							.ID = LORA_Receive_Message->payload[3],
-							.applicantSemaphore = LORA_Access_GNSS_ReturnHandle,
-							.applicantName = "LORAPolling_REQUEST"};
-					xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
-					ITM_Port32(31)=33;
-					GNSSCom_Send_SetVal(poll); //On envoie un message vers GNSS
-					if (osSemaphoreWait(LORA_Access_GNSS_ReturnHandle, 100)==osOK){
-						xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-						if (gnssReturn.CLASS !=0 && gnssReturn.ID !=0){
-		 *headerSend = (LORA_Header){
-								.recipient = 0xFE,
-										.sender = MODULE_SOURCE_ADDRESS,
-										.type = PACKET_TYPE_POLL,
-										.len_payload = (size_t)gnssReturn.bufferReturn->size
-							};
-							LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
-							free(headerSend);
-
-							UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
-							UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
-							char* hexString = uint8_array_to_hex_string(gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
-							UART_Transmit_With_Color(hGNSSCom.huartDebug,hexString,ANSI_COLOR_MAGENTA);
-							free(hexString);
-							break;
-						}
-						ITM_Port32(31)=99;
-						UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
-						UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---FAILED--\r\n",ANSI_COLOR_RED);
-						break;
-					}
-				}
-			}
-		free(LORA_Receive_Message);
-		osDelay(100);
+		receivedLora();
 	}
-	/* USER CODE END ReceivedLORATask */
+  /* USER CODE END ReceivedLORATask */
 }
 
 /* USER CODE BEGIN Header_UARTbyte_to_GNSSMessage_Task */
@@ -357,104 +284,16 @@ void ReceivedLORATask(void const * argument)
 /* USER CODE END Header_UARTbyte_to_GNSSMessage_Task */
 void UARTbyte_to_GNSSMessage_Task(void const * argument)
 {
-	/* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
+  /* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
 	/* Infinite loop */
-	UARTMessageQ_t uartMsg;
-	UARTState state;
-	UBXMessage_parsed* messageUBX = (UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed)) ;
-	GenericMessage* receptionGNSS = (GenericMessage*)malloc(sizeof(GenericMessage));
-	uint16_t payloadIndex = 0;
+
 
 	/* Infinite loop */
 	for(;;)
 	{
-		if (xQueueReceive(UARTbyteHandle, &uartMsg, portMAX_DELAY) == pdTRUE) {
-			uint8_t receivedByte = uartMsg.data;
-			// Machine à états pour traiter les messages
-			switch (state) {
-			case WAIT_FOR_SYNC_1:
-				if (receivedByte == 0xB5) {
-					ITM_Port32(31)=1111;
-					state = WAIT_FOR_SYNC_2;
-				}
-				break;
-
-			case WAIT_FOR_SYNC_2:
-				if (receivedByte == 0x62)
-				{state = WAIT_FOR_CLASS;}
-				else
-				{state = WAIT_FOR_SYNC_1;}
-				break;
-
-			case WAIT_FOR_CLASS:
-				messageUBX->class = receivedByte;
-				state = WAIT_FOR_ID;
-				break;
-			case WAIT_FOR_ID:
-				messageUBX->ID = receivedByte;
-				state = WAIT_FOR_LENGTH_1;
-				break;
-
-			case WAIT_FOR_LENGTH_1:
-				messageUBX->len_payload = receivedByte;
-				state = WAIT_FOR_LENGTH_2;
-				break;
-			case WAIT_FOR_LENGTH_2:
-				messageUBX->len_payload |= receivedByte << 8;
-				if (messageUBX->len_payload > 0 && messageUBX->len_payload <= UART_MAX_BUFFER_SIZE) {
-					messageUBX->load = initializeBuffer(messageUBX->len_payload);
-					messageUBX->brute = initializeBuffer(messageUBX->len_payload+8);
-					if (messageUBX->load == NULL) {
-						// Erreur d'allocation de mémoire
-						state = WAIT_FOR_SYNC_1;
-					} else {
-						payloadIndex = 0;
-						messageUBX->brute->buffer[0]=0xb5;
-						messageUBX->brute->buffer[1]=0x62;
-						messageUBX->brute->buffer[2]=messageUBX->class;
-						messageUBX->brute->buffer[3]=messageUBX->ID;
-						messageUBX->brute->buffer[4]=messageUBX->len_payload & 0x00FF;
-						messageUBX->brute->buffer[5]=messageUBX->len_payload >> 8;
-						state = RECEIVE_MESSAGE;
-					}
-				} else {
-					// Longueur invalide
-					state = WAIT_FOR_SYNC_1;
-				}
-				break;
-			case RECEIVE_MESSAGE:
-				payloadIndex++ ;
-				if (payloadIndex < messageUBX->len_payload){
-					messageUBX->load->buffer[payloadIndex] = receivedByte;
-				}
-				if (payloadIndex <= messageUBX->len_payload + 2){
-					messageUBX->brute->buffer[6 + payloadIndex] = receivedByte;
-				}
-				if  (payloadIndex == messageUBX->len_payload + 2){ // ON perd un byte ici !
-					receptionGNSS->typeMessage=UBX;
-					receptionGNSS->Message.UBXMessage = messageUBX;
-
-					UBXMessageQ_t gnssMsg = { .receptionGNSS = receptionGNSS };
-					if (xQueueSendToBack(UBXQueueHandle, &gnssMsg, portMAX_DELAY) != pdTRUE) {
-						// Erreur d'envoi dans la queue
-						UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UARTByte --SendQueue-- FAILED...\r\n",ANSI_COLOR_RED);
-						freeBuffer(messageUBX->load);
-						freeBuffer(messageUBX->brute);
-						free(messageUBX);
-						free(receptionGNSS);
-					}
-					state = WAIT_FOR_SYNC_1;
-					ITM_Port32(31)=9999;
-
-				}
-				break;
-			default:
-				state = WAIT_FOR_SYNC_1;
-				break;
-			}
-		}
+		uartbyteToGnssMessage();
 	}
-	/* USER CODE END UARTbyte_to_GNSSMessage_Task */
+  /* USER CODE END UARTbyte_to_GNSSMessage_Task */
 }
 
 /* USER CODE BEGIN Header_MatcherTask */
@@ -466,45 +305,14 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 /* USER CODE END Header_MatcherTask */
 void MatcherTask(void const * argument)
 {
-	/* USER CODE BEGIN MatcherTask */
-	GNSSRequestQ_t gnssRequest;
+  /* USER CODE BEGIN MatcherTask */
 	/* Infinite loop */
 	for(;;)
 	{
-		if(uxQueueMessagesWaiting(UBXQueueHandle)>0){
-			xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
-
-			//Parcourir UBXQueue
-			//Matcher avec Class et ID --> sortir le payload
-			UBXMessage_parsed* ubxFromQueueMatching = findItemQueueWithoutCopy(UBXQueueHandle, gnssRequest);
-			///////
-			if (ubxFromQueueMatching != NULL){
-				ITM_Port32(31) = 159753;
-				GNSSReturnQ_t gnssReturn = {
-						.CLASS = gnssRequest.CLASS,
-						.ID = gnssRequest.ID,
-						.bufferReturn = ubxFromQueueMatching->brute,
-						.applicantName = gnssRequest.applicantName
-				};
-
-				xQueueSendToBack(GNSS_ReturnHandle,&gnssReturn,portMAX_DELAY);
-				osSemaphoreRelease(gnssRequest.applicantSemaphore);
-
-			}
-			else{
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...MATCHER... ---FAILED---\r\n",ANSI_COLOR_RED);
-				GNSSReturnQ_t gnssReturnErreur = {
-						.CLASS = 0,
-						.ID = 0,
-						.bufferReturn = NULL,
-						.applicantName = gnssRequest.applicantName};
-				xQueueSendToBack(GNSS_ReturnHandle,&gnssReturnErreur,portMAX_DELAY);
-				osSemaphoreRelease(gnssRequest.applicantSemaphore);
-
-			}
-		}
+		matcher();
+		osDelay(1);
 	}
-	/* USER CODE END MatcherTask */
+  /* USER CODE END MatcherTask */
 }
 
 /* USER CODE BEGIN Header_Fake_SDuse_Task */
@@ -516,105 +324,25 @@ void MatcherTask(void const * argument)
 /* USER CODE END Header_Fake_SDuse_Task */
 void Fake_SDuse_Task(void const * argument)
 {
-	/* USER CODE BEGIN Fake_SDuse_Task */
-	GNSSReturnQ_t gnssReturn;
-	GNSSRequestQ_t requestFromSD = {
-			.CLASS = 0x01,
-			.ID = 0x21,
-			.applicantSemaphore = SD_Access_GNSS_ReturnHandle,
-			.applicantName = "SD_REQUEST"};
-	CommandnSize pollTimeUTC = {pollUBXTimeUTC, sizeof(pollUBXTimeUTC)};
+  /* USER CODE BEGIN Fake_SDuse_Task */
+
 
 	/* Infinite loop */
 	for(;;)
 	{
-		xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
-		UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- SD Polling...\r\n",ANSI_COLOR_YELLOW);
-		GNSSCom_Send_SetVal(pollTimeUTC);
-		int32_t eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, 100);
-		if (eventSD == osOK){
-			xQueueReceive(GNSS_ReturnHandle, &gnssReturn, portMAX_DELAY);
-
-			if (gnssReturn.CLASS !=0 && gnssReturn.ID !=0){
-
-				ITM_Port32(31)=12345;
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- SD Polling...",ANSI_COLOR_YELLOW);
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
-				char* hexString = uint8_array_to_hex_string(gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,hexString,ANSI_COLOR_YELLOW);
-				vPortFree(hexString);
-				ITM_Port32(31)=56789;
-			}
-			else{
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- SD Polling...\t---NULL---\r\n",ANSI_COLOR_YELLOW);
-			}
-
-		}
-		else {
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- SD Polling...",ANSI_COLOR_YELLOW);
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---FAILED---\r\n",ANSI_COLOR_RED);
-		}
-		osDelay(1000);
+		fakeuseSD();
 	}
-	/* USER CODE END Fake_SDuse_Task */
+  /* USER CODE END Fake_SDuse_Task */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-UBXMessage_parsed* findItemQueueWithoutCopy(osMessageQId xQueue, GNSSRequestQ_t gnssRequest)
-{
-	UBXMessage_parsed* foundItem = NULL;
-	UBXMessageQ_t item ;
-	UBaseType_t queueSize = uxQueueMessagesWaiting(xQueue);
-	for (BaseType_t index = 0; index < queueSize; index++){
-		// Peek at the current item in the queue
-		if (xQueueReceive(xQueue, &item, 100) == pdPASS) {
-			if (isItemMatching(&item, gnssRequest)) {
-				// Copy the found item
-				foundItem = pvPortMalloc(sizeof(UBXMessageQ_t));
-				if (foundItem != NULL) {
-					foundItem = item.receptionGNSS->Message.UBXMessage;
-				}
-				break;
-			}
-		}
-	}
-	return foundItem;
 
-}
 
-UBXMessage_parsed* findItemQueue(osMessageQId xQueue, GNSSRequestQ_t gnssRequest){
-	UBXMessage_parsed* foundItem = NULL;
-	UBXMessageQ_t item ;
-	UBaseType_t queueSize = uxQueueMessagesWaiting(xQueue);
-	osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
-	osMessageQId xQueueCopy = osMessageCreate(osMessageQ(UBXQueue),NULL);
-	copyQueue(xQueue,xQueueCopy);
 
-	for (BaseType_t index = 0; index < queueSize; index++){
-		// Peek at the current item in the queue
-		if (xQueueReceive(xQueueCopy, &item, 100) == pdPASS) {
-			if (isItemMatching(&item, gnssRequest)) {
-				// Copy the found item
-				foundItem = pvPortMalloc(sizeof(UBXMessageQ_t));
-				if (foundItem != NULL) {
-					foundItem = item.receptionGNSS->Message.UBXMessage;
-				}
-				break;
-			}
-		}
-	}
-	osMessageDelete(xQueueCopy);
-	return foundItem;
-}
-
-int isItemMatching(UBXMessageQ_t* item,  GNSSRequestQ_t itemTarget){
-	UBXMessage_parsed* messageinQueue = item->receptionGNSS->Message.UBXMessage;
-	return messageinQueue->class == itemTarget.CLASS && messageinQueue->ID == itemTarget.ID;
-}
 
 // Fonction pour copier une queue
-void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue) {
+/*void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue) {
 	uint32_t queueSize = uxQueueMessagesWaiting(originalQueue);
 
 	osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
@@ -626,7 +354,6 @@ void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue) {
 		if (tempQueue != NULL) osMessageDelete(tempQueue);
 		return;
 	}
-
 	// Copier les éléments de la queue d'origine vers la queue temporaire et la copie
 	for (uint32_t index = 0; index < queueSize; index++) {
 		xQueueReceive(originalQueue, &item, 0); // Recevoir un message
@@ -638,39 +365,12 @@ void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue) {
 	for (uint32_t index = 0; index < queueSize; index++) {
 		xQueueReceive(tempQueue,&item, 0); // Recevoir un message de la queue temporaire
 		xQueueSendToBack(originalQueue, &item, 0); // Réinsérer dans la queue d'origine
-
 	}
-
 	// Supprimer la queue temporaire
 	osMessageDelete(tempQueue);
 
-}
-void UART_Transmit_With_Color(UART_HandleTypeDef *huart, const char *data, const char *color) {
-	char buffer[256];
-
-	snprintf(buffer, sizeof(buffer), "%s%s%s", color, data, ANSI_COLOR_RESET);
-	HAL_UART_Transmit(huart, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
-
-}
+}*/
 // Fonction pour convertir un tableau de uint8_t en une chaîne de caractères hexadécimale
 
-char* uint8_array_to_hex_string(uint8_t* array, size_t len) {
-	// Allouer de la mémoire pour la chaîne hexadécimale (2 caractères par octet + 1 pour le '\0')
-	char* hexString = (char*)pvPortMalloc(len * 2 + 1);
 
-	if (hexString == NULL) {
-		// Gérer l'échec d'allocation de mémoire
-		return NULL;
-	}
-
-	// Parcourir le tableau et convertir chaque octet en hexadécimal
-	for (size_t i = 0; i < len; i++) {
-		snprintf(hexString + (i * 2), 3, "%02X", array[i]);
-	}
-
-	// Ajouter le caractère de fin de chaîne
-	hexString[len * 2] = '\0';
-
-	return hexString;
-}
 /* USER CODE END Application */

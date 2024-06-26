@@ -34,7 +34,7 @@ typedef struct {
 	size_t size;
 } DynamicBuffer;
 typedef struct {
-	uint8_t class;
+	uint8_t CLASS;
 	uint8_t ID;
 	uint16_t len_payload;
 	char bufferDebug[UART_DEBUG_BUFFER_SIZE];

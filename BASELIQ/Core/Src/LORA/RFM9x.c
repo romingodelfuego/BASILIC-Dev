@@ -158,7 +158,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	if (len > (RFM9x_FIFO_SIZE)) len = RFM9x_FIFO_SIZE;
 
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
-	uint8_t *data = (uint8_t*)malloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
+	uint8_t *data = (uint8_t*)pvPortMalloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
 	for (int i = 0; i < len; i++)
 	{
 		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
@@ -169,7 +169,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
 	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
 
-	LORA_Receive_Message->header = (LORA_Header*)malloc(sizeof(LORA_Header));
+	LORA_Receive_Message->header = (LORA_Header*)pvPortMalloc(sizeof(uint8_t)*sizeof(LORA_Header));
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
 	LORA_Receive_Message->header->type=data[2];
@@ -192,9 +192,9 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
 	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
 */
-	LORA_Receive_Message->payload = (uint8_t*)malloc(sizeof(uint8_t)*(len-4));
+	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len-4));
 	memcpy(LORA_Receive_Message->payload, data+4, len-4);
-	free(data);
+	vPortFree(data);
 
 	// clear all the IRQ flags
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );

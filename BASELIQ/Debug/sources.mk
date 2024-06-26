@@ -40,6 +40,7 @@ CPP_DEPS :=
 SUBDIRS := \
 Core/Src/GNSS \
 Core/Src/LORA \
+Core/Src/RTOS_subfunctions \
 Core/Src \
 Core/Startup \
 Drivers/STM32L4xx_HAL_Driver/Src \
