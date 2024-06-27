@@ -13,6 +13,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "RTOS_extern.h"
+#include "commandToGNSS.h"
 
 void fakeuseSD(void);
 

@@ -29,6 +29,7 @@
 #include "RTOS_subfunctions/receveivedLora.h"
 #include "RTOS_subfunctions/fakeuseSD.h"
 #include "RTOS_subfunctions/uartbyteToGnssMessage.h"
+#include "RTOS_subfunctions/debug.h"
 
 /* USER CODE END Includes */
 
@@ -57,13 +58,18 @@ osThreadId ReceivedLORAHandle;
 osThreadId UARTbyte_to_GNHandle;
 osThreadId MatcherHandle;
 osThreadId Fake_SDuseHandle;
+osThreadId UartDebugHandle;
+osThreadId commandToGNSSHandle;
 osMessageQId UARTbyteHandle;
 osMessageQId UBXQueueHandle;
 osMessageQId GNSS_RequestHandle;
 osMessageQId GNSS_ReturnHandle;
+osMessageQId UARTdebugHandle;
+osMessageQId GNSS_toPollHandle;
 osSemaphoreId xSem_LORAReceive_startHandle;
 osSemaphoreId SD_Access_GNSS_ReturnHandle;
 osSemaphoreId LORA_Access_GNSS_ReturnHandle;
+osSemaphoreId GNSS_UART_AccessHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -75,6 +81,8 @@ void ReceivedLORATask(void const * argument);
 void UARTbyte_to_GNSSMessage_Task(void const * argument);
 void MatcherTask(void const * argument);
 void Fake_SDuse_Task(void const * argument);
+void UartDebugTask(void const * argument);
+void commandToGNSSTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -170,6 +178,10 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(LORA_Access_GNSS_Return);
   LORA_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(LORA_Access_GNSS_Return), 1);
 
+  /* definition and creation of GNSS_UART_Access */
+  osSemaphoreDef(GNSS_UART_Access);
+  GNSS_UART_AccessHandle = osSemaphoreCreate(osSemaphore(GNSS_UART_Access), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
 	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -195,6 +207,14 @@ void MX_FREERTOS_Init(void) {
   osMessageQDef(GNSS_Return, 16, GNSSReturnQ_t);
   GNSS_ReturnHandle = osMessageCreate(osMessageQ(GNSS_Return), NULL);
 
+  /* definition and creation of UARTdebug */
+  osMessageQDef(UARTdebug, 128, UARTdebugQ_t);
+  UARTdebugHandle = osMessageCreate(osMessageQ(UARTdebug), NULL);
+
+  /* definition and creation of GNSS_toPoll */
+  osMessageQDef(GNSS_toPoll, 16, GNSStoPollQ_t);
+  GNSS_toPollHandle = osMessageCreate(osMessageQ(GNSS_toPoll), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -219,6 +239,14 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of Fake_SDuse */
   osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 512);
   Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
+
+  /* definition and creation of UartDebug */
+  osThreadDef(UartDebug, UartDebugTask, osPriorityNormal, 0, 512);
+  UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
+
+  /* definition and creation of commandToGNSS */
+  osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityRealtime, 0, 512);
+  commandToGNSSHandle = osThreadCreate(osThread(commandToGNSS), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
@@ -310,7 +338,6 @@ void MatcherTask(void const * argument)
 	for(;;)
 	{
 		matcher();
-		osDelay(1);
 	}
   /* USER CODE END MatcherTask */
 }
@@ -333,6 +360,42 @@ void Fake_SDuse_Task(void const * argument)
 		fakeuseSD();
 	}
   /* USER CODE END Fake_SDuse_Task */
+}
+
+/* USER CODE BEGIN Header_UartDebugTask */
+/**
+ * @brief Function implementing the UartDebug thread.
+ * @param argument: Not used
+ * @retval None
+ */
+/* USER CODE END Header_UartDebugTask */
+void UartDebugTask(void const * argument)
+{
+  /* USER CODE BEGIN UartDebugTask */
+	/* Infinite loop */
+	for(;;)
+	{
+		debug();
+	}
+  /* USER CODE END UartDebugTask */
+}
+
+/* USER CODE BEGIN Header_commandToGNSSTask */
+/**
+* @brief Function implementing the commandToGNSS thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_commandToGNSSTask */
+void commandToGNSSTask(void const * argument)
+{
+  /* USER CODE BEGIN commandToGNSSTask */
+  /* Infinite loop */
+  for(;;)
+  {
+	  commandToGNSS();
+  }
+  /* USER CODE END commandToGNSSTask */
 }
 
 /* Private application code --------------------------------------------------*/

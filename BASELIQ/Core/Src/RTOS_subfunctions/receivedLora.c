@@ -6,12 +6,11 @@
  */
 
 #include "RTOS_subfunctions/receveivedLora.h"
-static LORA_Message* LORA_Receive_Message;
+
 void receivedLora(void){
 	osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
-	ITM_Port32(31)=11;
 
-	LORA_Receive_Message = (LORA_Message*)pvPortMalloc(sizeof(LORA_Message));
+	LORA_Message* LORA_Receive_Message = (LORA_Message*)pvPortMalloc(sizeof(LORA_Message));
 	RFM9x_Receive(LORA_Receive_Message);
 	if (!LORA_Receive_Message->RxNbrBytes){ITM_Port32(31)=66;} //Si on recoit du bruit
 
@@ -39,7 +38,7 @@ void receivedLora(void){
 
 void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 	GNSSReturnQ_t gnssReturn;
-	CommandnSize poll = {(const uint8_t*) LORA_Receive_Message->payload,
+	GNSStoPollQ_t poll = {(const uint8_t*) LORA_Receive_Message->payload,
 			(size_t) LORA_Receive_Message->header->len_payload};
 
 	GNSSRequestQ_t requestFromLora = {
@@ -49,13 +48,17 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			.applicantName = "LORAPolling_REQUEST"};
 	LORA_Header* headerSend =(LORA_Header*) pvPortMalloc(sizeof(LORA_Header));
 
-
+	if (uxQueueMessagesWaiting(GNSS_RequestHandle)>0){
+		ITM_Port32(31)=3000002; //Debug Purpose
+	}
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
 	UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
-
-	GNSSCom_Send_SetVal(poll); //On envoie un message vers GNSS
+	ITM_Port32(30)=111;
+	request_commandToGNSS(poll); //On envoie un message vers GNSS
+	ITM_Port32(30)=444;
 	if (osSemaphoreWait(LORA_Access_GNSS_ReturnHandle, 100)==osOK){
 		xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
+		ITM_Port32(30)=555;
 		if (gnssReturn.statut==OK){
 			*headerSend = (LORA_Header){
 				.recipient = 0xFE,

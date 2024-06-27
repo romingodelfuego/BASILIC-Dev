@@ -18,8 +18,9 @@
 #define ANSI_COLOR_CYAN    "\033[36m"
 #define ANSI_COLOR_RESET   "\033[0m"
 
+void debug(void);
 
-void UART_Transmit_With_Color(UART_HandleTypeDef *huart, const char *data, const char *color);
+void UART_Transmit_With_Color(UART_HandleTypeDef *huart, char *data, char *color);
 char* uint8_array_to_hex_string(uint8_t* array, size_t len);
 
 

@@ -13,6 +13,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "RTOS_extern.h"
+#include "commandToGNSS.h"
+
 
 void receivedLora(void);
 void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message);

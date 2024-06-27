@@ -57,7 +57,7 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	vPortFree(bufferDynamic);
 }
 void GNSSCom_Send_SetVal(CommandnSize toTransmit){
-	while (hGNSSCom.huart->gState != HAL_UART_STATE_READY){}
+	while (hGNSSCom.huart->gState != HAL_UART_STATE_READY){ITM_Port32(30)=99999999;}
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size,HAL_MAX_DELAY);
 	if (statut!= HAL_OK){
 		Error_Handler();
@@ -140,11 +140,3 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	return genericMessage;
 }
 
-void UART_Debug(GenericMessage* reception){
-	UBXMessage_parsed* messageUBX = (UBXMessage_parsed*)reception->Message.UBXMessage;
-	create_message_debug(messageUBX);
-	HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-	freeBuffer(reception->Message.UBXMessage->brute);
-	freeBuffer(reception->Message.UBXMessage->load);
-	free(reception->Message.UBXMessage);
-}

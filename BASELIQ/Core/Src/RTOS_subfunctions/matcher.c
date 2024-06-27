@@ -10,14 +10,20 @@ GNSSRequestQ_t gnssRequest;
 
 void matcher(void){
 	if(uxQueueMessagesWaiting(UBXQueueHandle)>0){
+		UBXMessageQ_t item;
+		UBXMessage_parsed* ubxFromQueueMatching=NULL;
 		xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
+
 		UART_Transmit_With_Color(hGNSSCom.huartDebug, "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
 		UART_Transmit_With_Color(hGNSSCom.huartDebug, gnssRequest.applicantName, ANSI_COLOR_RESET);
 		//Parcourir UBXQueue
 		//Matcher avec Class et ID --> sortir le payload
 		//UBXMessage_parsed* ubxFromQueueMatching = findItemQueueWithoutCopy(UBXQueueHandle, gnssRequest);
-		UBXMessage_parsed* ubxFromQueueMatching = findAndRemoveItemFromQueue(UBXQueueHandle, gnssRequest);
+		//UBXMessage_parsed* ubxFromQueueMatching = findAndRemoveItemFromQueue(UBXQueueHandle, gnssRequest);
+		xQueueReceive(UBXQueueHandle,&item,100);
+		ubxFromQueueMatching = item.receptionGNSS->Message.UBXMessage;
 		///////
+
 		if (ubxFromQueueMatching != NULL){
 			GNSSReturnQ_t gnssReturn_correct = {
 					.statut = OK,
@@ -27,7 +33,7 @@ void matcher(void){
 					.applicantName = gnssRequest.applicantName
 			};
 			xQueueSendToBack(GNSS_ReturnHandle,&gnssReturn_correct,portMAX_DELAY);
-			vPortFree(ubxFromQueueMatching);
+			//vPortFree(ubxFromQueueMatching);
 
 		}else{
 			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...MATCHER... ---FAILED---\t\t",ANSI_COLOR_RED);
@@ -42,9 +48,8 @@ void matcher(void){
 			xQueueSendToBack(GNSS_ReturnHandle,&gnssReturn_erreur,portMAX_DELAY);
 		}
 		osSemaphoreRelease(gnssRequest.applicantSemaphore);
-		UART_Transmit_With_Color(hGNSSCom.huartDebug, "\n\r...[INFO] ApplicantName in MATCHER...--RELEASE--\t\t", ANSI_COLOR_RESET);
+		UART_Transmit_With_Color(hGNSSCom.huartDebug, "\n\r...[INFO] Semaphore in MATCHER...--RELEASE--\t\t", ANSI_COLOR_RESET);
 		UART_Transmit_With_Color(hGNSSCom.huartDebug, gnssRequest.applicantName, ANSI_COLOR_RESET);
-
 	}
 
 }

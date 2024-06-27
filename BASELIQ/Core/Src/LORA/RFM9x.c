@@ -111,10 +111,10 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 
 	// Start the transmitter
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_TX);
-	osDelay(5);
+	vTaskDelay(5);
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
-	osDelay(1);
+	vTaskDelay(1);
 
 	//LORA_debug_hexa("\r\nRFM9x SEND", (uint8_t*)data,len);
 }
@@ -158,7 +158,7 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	if (len > (RFM9x_FIFO_SIZE)) len = RFM9x_FIFO_SIZE;
 
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
-	uint8_t *data = (uint8_t*)pvPortMalloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
+	uint8_t* data = (uint8_t*)pvPortMalloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
 	for (int i = 0; i < len; i++)
 	{
 		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);

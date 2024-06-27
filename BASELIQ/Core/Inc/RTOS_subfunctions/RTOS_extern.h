@@ -14,19 +14,18 @@
 #include "cmsis_os.h"
 #include "debug.h"
 
-
-extern osThreadId InitTaskHandle;
-extern osThreadId ReceivedLORAHandle;
-extern osThreadId UARTbytet_to_GNHandle;
-extern osThreadId MatcherHandle;
-extern osThreadId Fake_SDuseHandle;
 extern osMessageQId UARTbyteHandle;
 extern osMessageQId UBXQueueHandle;
 extern osMessageQId GNSS_RequestHandle;
 extern osMessageQId GNSS_ReturnHandle;
+extern osMessageQId UARTdebugHandle;
+extern osMessageQId GNSS_toPollHandle;
+
 extern osSemaphoreId xSem_LORAReceive_startHandle;
 extern osSemaphoreId SD_Access_GNSS_ReturnHandle;
 extern osSemaphoreId LORA_Access_GNSS_ReturnHandle;
+extern osSemaphoreId GNSS_UART_AccessHandle;
+
 
 typedef enum{
 	OK,
@@ -47,4 +46,13 @@ typedef struct {
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 } GNSSReturnQ_t;
 
+typedef struct {
+	char* message;
+	char* color;
+}UARTdebugQ_t;
+
+typedef struct{ //Copie assumer de CommandnSize
+    const uint8_t *command;
+    size_t size;
+}GNSStoPollQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

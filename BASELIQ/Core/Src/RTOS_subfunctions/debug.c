@@ -7,12 +7,21 @@
 
 #include "RTOS_subfunctions/debug.h"
 
-void UART_Transmit_With_Color(UART_HandleTypeDef *huart, const char *data, const char *color) {
-	char buffer[256];
+void debug(void){
+	char buffer[1024];
+	UARTdebugQ_t UARTdebug;
 
-	snprintf(buffer, sizeof(buffer), "%s%s%s", color, data, ANSI_COLOR_RESET);
-	HAL_UART_Transmit(huart, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	xQueueReceive(UARTdebugHandle, &UARTdebug, osWaitForever);
 
+	snprintf(buffer, sizeof(buffer), "%s%s%s", UARTdebug.color, UARTdebug.message, ANSI_COLOR_RESET);
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+
+}
+
+void UART_Transmit_With_Color(UART_HandleTypeDef *huart, char *data, char *color) {
+	UARTdebugQ_t UARTdebug = {.message = data,
+			.color=color};
+	xQueueSendToBack(UARTdebugHandle,&UARTdebug,100);
 }
 char* uint8_array_to_hex_string(uint8_t* array, size_t len) {
 	// Allouer de la mémoire pour la chaîne hexadécimale (2 caractères par octet + 1 pour le '\0')
