@@ -18,19 +18,13 @@ void debug(void){
 
 }
 
-void UART_Transmit_With_Color(UART_HandleTypeDef *huart, char *data, char *color) {
+void UART_Transmit_With_Color(char *data, char *color) {
 	UARTdebugQ_t UARTdebug = {.message = data,
 			.color=color};
-	xQueueSendToBack(UARTdebugHandle,&UARTdebug,100);
+	xQueueSendToBack(UARTdebugHandle,&UARTdebug,0);
 }
-char* uint8_array_to_hex_string(uint8_t* array, size_t len) {
+void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
 	// Allouer de la mémoire pour la chaîne hexadécimale (2 caractères par octet + 1 pour le '\0')
-	char* hexString = (char*)pvPortMalloc(len * 2 + 1);
-
-	if (hexString == NULL) {
-		// Gérer l'échec d'allocation de mémoire
-		return NULL;
-	}
 
 	// Parcourir le tableau et convertir chaque octet en hexadécimal
 	for (size_t i = 0; i < len; i++) {
@@ -40,5 +34,4 @@ char* uint8_array_to_hex_string(uint8_t* array, size_t len) {
 	// Ajouter le caractère de fin de chaîne
 	hexString[len * 2] = '\0';
 
-	return hexString;
 }

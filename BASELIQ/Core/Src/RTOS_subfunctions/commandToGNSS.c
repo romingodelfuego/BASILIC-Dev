@@ -13,7 +13,6 @@ void commandToGNSS(void){
 	//Attendre avant d'envoyer le message
 	osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever);
 	while(hGNSSCom.huart->gState != HAL_UART_STATE_READY
-			//|| hGNSSCom.huart->RxState != HAL_UART_STATE_READY
 			){
 		osDelay(1);}
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, transmitToGnss.command, transmitToGnss.size,HAL_MAX_DELAY);

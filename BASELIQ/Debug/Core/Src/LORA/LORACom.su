@@ -1,0 +1,6 @@
+../Core/Src/LORA/LORACom.c:13:6:LORACom_Init	16	static
+../Core/Src/LORA/LORACom.c:20:6:LORACom_SPIActivate	16	static
+../Core/Src/LORA/LORACom.c:23:6:LORA_Send	272	static
+../Core/Src/LORA/LORACom.c:39:6:LORA_debug	232	static
+../Core/Src/LORA/LORACom.c:50:6:LORA_debug_hexa	120	dynamic
+../Core/Src/LORA/LORACom.c:65:6:LORA_debug_val	88	static

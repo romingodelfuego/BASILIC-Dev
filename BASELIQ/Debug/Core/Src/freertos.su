@@ -1,0 +1,13 @@
+../Core/Src/freertos.c:102:13:configureTimerForRunTimeStats	8	static
+../Core/Src/freertos.c:107:22:getRunTimeCounterValue	4	static
+../Core/Src/freertos.c:114:13:vApplicationMallocFailedHook	4	static
+../Core/Src/freertos.c:133:6:vApplicationGetIdleTaskMemory	24	static
+../Core/Src/freertos.c:146:6:vApplicationGetTimerTaskMemory	24	static
+../Core/Src/freertos.c:160:6:MX_FREERTOS_Init	344	static
+../Core/Src/freertos.c:264:6:StartInitTask	56	static,ignoring_inline_asm
+../Core/Src/freertos.c:295:6:ReceivedLORATask	16	static
+../Core/Src/freertos.c:313:6:UARTbyte_to_GNSSMessage_Task	16	static
+../Core/Src/freertos.c:334:6:MatcherTask	16	static
+../Core/Src/freertos.c:352:6:Fake_SDuse_Task	16	static
+../Core/Src/freertos.c:372:6:UartDebugTask	16	static
+../Core/Src/freertos.c:390:6:commandToGNSSTask	16	static

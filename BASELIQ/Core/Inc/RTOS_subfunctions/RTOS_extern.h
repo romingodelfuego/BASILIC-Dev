@@ -32,6 +32,7 @@ typedef enum{
 	Error
 }GNSSReturnStatut;
 typedef struct {
+	TickType_t Request_TIME;
 	uint8_t CLASS;
 	uint8_t ID;
 	osSemaphoreId applicantSemaphore;
@@ -39,6 +40,8 @@ typedef struct {
 } GNSSRequestQ_t;
 
 typedef struct {
+	TickType_t Request_TIME;
+	TickType_t Return_TIME;
 	GNSSReturnStatut statut;
 	uint8_t CLASS;
 	uint8_t ID;

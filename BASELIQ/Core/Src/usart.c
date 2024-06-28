@@ -327,7 +327,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 /* USER CODE BEGIN 1 */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 	if (huart->Instance == hGNSSCom.huart->Instance){
-		UART_Transmit_With_Color(hGNSSCom.huartDebug, "[INFO]...FIN TRANSMISSION DMA GNSS...", ANSI_COLOR_RESET);
+		UART_Transmit_With_Color("[INFO]...FIN TRANSMISSION DMA GNSS...", ANSI_COLOR_RESET);
 	}
 }
 /* USER CODE END 1 */

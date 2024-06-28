@@ -42,17 +42,16 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			(size_t) LORA_Receive_Message->header->len_payload};
 
 	GNSSRequestQ_t requestFromLora = {
+			.Request_TIME= xTaskGetTickCount(),
 			.CLASS = LORA_Receive_Message->payload[2],
 			.ID = LORA_Receive_Message->payload[3],
 			.applicantSemaphore = LORA_Access_GNSS_ReturnHandle,
 			.applicantName = "LORAPolling_REQUEST"};
 	LORA_Header* headerSend =(LORA_Header*) pvPortMalloc(sizeof(LORA_Header));
 
-	if (uxQueueMessagesWaiting(GNSS_RequestHandle)>0){
-		ITM_Port32(31)=3000002; //Debug Purpose
-	}
+
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
-	UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
+	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
 	ITM_Port32(30)=111;
 	request_commandToGNSS(poll); //On envoie un message vers GNSS
 	ITM_Port32(30)=444;
@@ -69,20 +68,21 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
 			vPortFree(headerSend);
 
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
-			char* hexString = uint8_array_to_hex_string(gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,hexString,ANSI_COLOR_MAGENTA);
-			vPortFree(hexString);
+			UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
+			UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
+			char* hexString_LORA = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
+			uint8_array_to_hex_string(hexString_LORA, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
+			UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_MAGENTA);
+			vPortFree(hexString_LORA);
 		}else{
 			ITM_Port32(31)=99;
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
-			UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---NOT FOUND--\r\n",ANSI_COLOR_RED);
+			UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
+			UART_Transmit_With_Color("\t---NOT FOUND--\r\n",ANSI_COLOR_RED);
 		}
 	}
 	else{
-		UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
-		UART_Transmit_With_Color(hGNSSCom.huartDebug,"\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
+		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
+		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
 	}
 }
 void PACKET_TYPE_ACK_fct(void){

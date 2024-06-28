@@ -57,7 +57,7 @@ void uartbyteToGnssMessage(void){
 				messageUBX->brute = initializeBuffer(messageUBX->len_payload+8);
 				if (messageUBX->load == NULL) {
 					// Erreur d'allocation de mémoire
-					UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UARTByte --ALLOCATION-- FAILED...\r\n",ANSI_COLOR_RED);
+					UART_Transmit_With_Color("\r\t\t\n...UARTByte --ALLOCATION-- FAILED...\r\n",ANSI_COLOR_RED);
 					state = WAIT_FOR_SYNC_1;
 				} else {
 					payloadIndex = 0;
@@ -71,7 +71,7 @@ void uartbyteToGnssMessage(void){
 				}
 			} else {
 				// Longueur invalide
-				UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UARTByte --INVALID LENGTH-- FAILED...\r\n",ANSI_COLOR_RED);
+				UART_Transmit_With_Color("\r\t\t\n...UARTByte --INVALID LENGTH-- FAILED...\r\n",ANSI_COLOR_RED);
 				vPortFree(messageUBX);
 				state = WAIT_FOR_SYNC_1;
 			}
@@ -93,10 +93,10 @@ void uartbyteToGnssMessage(void){
 				UBXMessageQ_t gnssMsg = { .receptionGNSS = receptionGNSS };
 				if (xQueueSendToBack(UBXQueueHandle, &gnssMsg, portMAX_DELAY) != pdTRUE) {
 					// Erreur d'envoi dans la queue
-					UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\t\t\n...UARTByte --SendQueue-- FAILED...\r\n",ANSI_COLOR_RED);
+					UART_Transmit_With_Color("\r\t\t\n...UARTByte --SendQueue-- FAILED...\r\n",ANSI_COLOR_RED);
 
 				}else{
-					UART_Transmit_With_Color(hGNSSCom.huartDebug,"\r\n...[INFO] UARTByte --SendQueue-- SUCCESS...\r\n",ANSI_COLOR_RESET);
+					UART_Transmit_With_Color("\r\n...[INFO] UARTByte --SendQueue-- SUCCESS...\r\n",ANSI_COLOR_RESET);
 				}
 				osSemaphoreRelease(GNSS_UART_AccessHandle);
 				freeBuffer(messageUBX->load);
