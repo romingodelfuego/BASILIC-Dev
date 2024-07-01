@@ -45,13 +45,7 @@ DynamicBuffer* initializeBuffer(size_t initialSize) {
 	bufferDynamic->size = initialSize;
 	return bufferDynamic;
 }
-void resizeBuffer(DynamicBuffer *bufferDynamic, size_t newSize) {
-	uint8_t *newData = realloc(bufferDynamic->buffer, newSize);
-	if (newData != NULL) {
-		bufferDynamic->buffer = newData;
-		bufferDynamic->size = newSize;
-	}
-}
+
 void freeBuffer(DynamicBuffer *bufferDynamic) {
 	vPortFree(bufferDynamic->buffer);
 	vPortFree(bufferDynamic);

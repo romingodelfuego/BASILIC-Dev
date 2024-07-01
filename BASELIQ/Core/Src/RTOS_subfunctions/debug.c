@@ -14,14 +14,37 @@ void debug(void){
 	xQueueReceive(UARTdebugHandle, &UARTdebug, osWaitForever);
 
 	snprintf(buffer, sizeof(buffer), "%s%s%s", UARTdebug.color, UARTdebug.message, ANSI_COLOR_RESET);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	HAL_UART_Transmit_IT(hGNSSCom.huartDebug, (uint8_t*)buffer, strlen(buffer));
+	vPortFree(UARTdebug.message);
+	vPortFree(UARTdebug.color);
+	vTaskDelay(1);
 
 }
 
 void UART_Transmit_With_Color(char *data, char *color) {
-	UARTdebugQ_t UARTdebug = {.message = data,
-			.color=color};
-	xQueueSendToBack(UARTdebugHandle,&UARTdebug,0);
+	UARTdebugQ_t UARTdebug;
+
+	// Allouer de la mémoire pour le message et la couleur
+	UARTdebug.message = pvPortMalloc(strlen(data) + 1);
+	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
+
+	if (UARTdebug.message != NULL && UARTdebug.color != NULL) {
+		// Copier les données
+		strcpy(UARTdebug.message, data);
+		strcpy(UARTdebug.color, color);
+
+		xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
+	} else {
+		// Gérer l'erreur d'allocation de mémoire
+		if (UARTdebug.message != NULL) {
+			vPortFree(UARTdebug.message);
+			Error_Handler();
+		}
+		if (UARTdebug.color != NULL) {
+			vPortFree(UARTdebug.color);
+			Error_Handler();
+		}
+	}
 }
 void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
 	// Allouer de la mémoire pour la chaîne hexadécimale (2 caractères par octet + 1 pour le '\0')

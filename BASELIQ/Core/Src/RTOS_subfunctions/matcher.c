@@ -14,7 +14,10 @@ void matcher(void){
 		UBXMessage_parsed* ubxFromQueueMatching=NULL;
 		GNSSReturnQ_t gnssReturn;
 		char* TIME_delta = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
-
+		if(TIME_delta == NULL)
+		{
+			Error_Handler();
+		}
 		xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
 
 		UART_Transmit_With_Color( "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
@@ -27,7 +30,7 @@ void matcher(void){
 		ubxFromQueueMatching = item.receptionGNSS->Message.UBXMessage;
 		///////
 
-		if (ubxFromQueueMatching != NULL){
+		if (ubxFromQueueMatching->brute != NULL){
 			gnssReturn = (GNSSReturnQ_t){
 				.Request_TIME = gnssRequest.Request_TIME,
 						.Return_TIME = xTaskGetTickCount(),
@@ -62,10 +65,9 @@ void matcher(void){
 
 		xQueueSendToBack(GNSS_ReturnHandle,&gnssReturn,portMAX_DELAY);
 		osSemaphoreRelease(gnssRequest.applicantSemaphore);
-		//vPortFree(ubxFromQueueMatching);
-
 
 	}
+	vTaskDelay(1);
 
 
 }

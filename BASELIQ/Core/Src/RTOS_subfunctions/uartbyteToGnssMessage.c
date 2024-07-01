@@ -10,7 +10,9 @@
 UARTMessageQ_t uartMsg;
 UARTState state;
 uint16_t payloadIndex = 0;
+
 static UBXMessage_parsed* messageUBX = NULL;
+
 
 void uartbyteToGnssMessage(void){
 	if (xQueueReceive(UARTbyteHandle, &uartMsg, portMAX_DELAY) == pdTRUE) {
@@ -55,9 +57,12 @@ void uartbyteToGnssMessage(void){
 			if (messageUBX->len_payload > 0 && messageUBX->len_payload <= UART_MAX_BUFFER_SIZE) {
 				messageUBX->load = initializeBuffer(messageUBX->len_payload);
 				messageUBX->brute = initializeBuffer(messageUBX->len_payload+8);
-				if (messageUBX->load == NULL) {
+				if (messageUBX->load == NULL || messageUBX->brute == NULL) {
 					// Erreur d'allocation de mémoire
 					UART_Transmit_With_Color("\r\t\t\n...UARTByte --ALLOCATION-- FAILED...\r\n",ANSI_COLOR_RED);
+					freeBuffer(messageUBX->load);
+					freeBuffer(messageUBX->brute);
+					vPortFree(messageUBX);
 					state = WAIT_FOR_SYNC_1;
 				} else {
 					payloadIndex = 0;
@@ -98,14 +103,15 @@ void uartbyteToGnssMessage(void){
 				}else{
 					UART_Transmit_With_Color("\r\n...[INFO] UARTByte --SendQueue-- SUCCESS...\r\n",ANSI_COLOR_RESET);
 				}
-				osSemaphoreRelease(GNSS_UART_AccessHandle);
-				freeBuffer(messageUBX->load);
-				freeBuffer(messageUBX->brute);
-				vPortFree(messageUBX);
-				messageUBX = NULL;
-				vPortFree(receptionGNSS);
-				state = WAIT_FOR_SYNC_1;
 				ITM_Port32(31)=9999;
+
+				//freeBuffer(messageUBX->load);
+				//freeBuffer(messageUBX->brute);
+				//vPortFree(messageUBX);
+				//messageUBX = NULL;
+				//vPortFree(receptionGNSS);
+				state = WAIT_FOR_SYNC_1;
+				osSemaphoreRelease(GNSS_UART_AccessHandle);
 			}
 			break;
 		default:

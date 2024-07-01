@@ -20,8 +20,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "dac.h"
+#include "dma.h"
 #include "spi.h"
-#include "tim.h"
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
@@ -82,21 +82,21 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  xTraceEnable(TRC_START);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_DAC1_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  MX_USB_OTG_FS_PCD_Init();
   MX_USART3_UART_Init();
-  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  __disable_irq(); //On evite toute interruption durant l'init de FreeRTOS
+	__disable_irq(); //On evite toute interruption durant l'init de FreeRTOS
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

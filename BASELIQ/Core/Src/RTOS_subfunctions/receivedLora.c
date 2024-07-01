@@ -33,7 +33,6 @@ void receivedLora(void){
 		}
 	}
 	vPortFree(LORA_Receive_Message);
-	osDelay(100);
 }
 
 void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
@@ -79,10 +78,12 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 			UART_Transmit_With_Color("\t---NOT FOUND--\r\n",ANSI_COLOR_RED);
 		}
+		vTaskDelay(1);
 	}
 	else{
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
+		vTaskDelay(1);
 	}
 }
 void PACKET_TYPE_ACK_fct(void){

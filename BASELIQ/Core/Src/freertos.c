@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "usb_otg.h"
 #include "RTOS_subfunctions/matcher.h"
 #include "RTOS_subfunctions/receveivedLora.h"
 #include "RTOS_subfunctions/fakeuseSD.h"
@@ -52,6 +53,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern TIM_HandleTypeDef htim2;
+
 /* USER CODE END Variables */
 osThreadId InitTaskHandle;
 osThreadId ReceivedLORAHandle;
@@ -73,7 +75,13 @@ osSemaphoreId GNSS_UART_AccessHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+/******** POOL ********/
+void initPool(osPoolId* poolId, int POOL_SIZE);
 
+osPoolId poolUBX;
+osPoolId poolDebug;
+
+/******** ---- ********/
 /* USER CODE END FunctionPrototypes */
 
 void StartInitTask(void const * argument);
@@ -95,13 +103,11 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
 /* Hook prototypes */
 void configureTimerForRunTimeStats(void);
 unsigned long getRunTimeCounterValue(void);
-void vApplicationMallocFailedHook(void);
 
 /* USER CODE BEGIN 1 */
 /* Functions needed when configGENERATE_RUN_TIME_STATS is on */
 __weak void configureTimerForRunTimeStats(void)
 {
-	HAL_TIM_Base_Start(&htim2);
 }
 extern volatile unsigned long ulHighFrequencyTimerTicks;
 __weak unsigned long getRunTimeCounterValue(void)
@@ -109,22 +115,6 @@ __weak unsigned long getRunTimeCounterValue(void)
 	return 0;
 }
 /* USER CODE END 1 */
-
-/* USER CODE BEGIN 5 */
-__weak void vApplicationMallocFailedHook(void)
-{
-	/* vApplicationMallocFailedHook() will only be called if
-   configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h. It is a hook
-   function that will get called if a call to pvPortMalloc() fails.
-   pvPortMalloc() is called internally by the kernel whenever a task, queue,
-   timer or semaphore is created. It is also called by various parts of the
-   demo application. If heap_1.c or heap_2.c are used, then the size of the
-   heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-   FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-   to query the size of free heap space that remains (although it does not
-   provide information on how the remaining heap might be fragmented). */
-}
-/* USER CODE END 5 */
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
 static StaticTask_t xIdleTaskTCBBuffer;
@@ -159,6 +149,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
+
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -264,24 +255,24 @@ void MX_FREERTOS_Init(void) {
 void StartInitTask(void const * argument)
 {
   /* USER CODE BEGIN StartInitTask */
-	/* Infinite loop */
-	//  for(;;)
-	//  {
+	MX_USB_OTG_FS_PCD_Init();
+
 	const char startMessage[] = "\r\nStarting...\r\n";
 	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)startMessage, sizeof(startMessage), 10);
 
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
-	__enable_irq();
 	GNSSCom_Init(&huart3,&huart1);
 	LORACom_Init(&hspi2, &huart1);
 	RFM9x_Init();
+	initPool(&poolUBX,2048);
+	initPool(&poolDebug,2048);
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
+	__enable_irq();
 
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
 	osThreadTerminate(InitTaskHandle);
-	//  }
   /* USER CODE END StartInitTask */
 }
 
@@ -299,6 +290,8 @@ void ReceivedLORATask(void const * argument)
 	for(;;)
 	{
 		receivedLora();
+		vTaskDelay(1);
+
 	}
   /* USER CODE END ReceivedLORATask */
 }
@@ -320,6 +313,7 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 	for(;;)
 	{
 		uartbyteToGnssMessage();
+		//Surtout pas de lay ici
 	}
   /* USER CODE END UARTbyte_to_GNSSMessage_Task */
 }
@@ -338,6 +332,8 @@ void MatcherTask(void const * argument)
 	for(;;)
 	{
 		matcher();
+		vTaskDelay(1);
+
 	}
   /* USER CODE END MatcherTask */
 }
@@ -352,12 +348,14 @@ void MatcherTask(void const * argument)
 void Fake_SDuse_Task(void const * argument)
 {
   /* USER CODE BEGIN Fake_SDuse_Task */
-
-
+	TickType_t xLastWakeTime;
+	xLastWakeTime = xTaskGetTickCount();
 	/* Infinite loop */
 	for(;;)
 	{
+
 		fakeuseSD();
+		vTaskDelayUntil(&xLastWakeTime,1000);
 	}
   /* USER CODE END Fake_SDuse_Task */
 }
@@ -376,64 +374,40 @@ void UartDebugTask(void const * argument)
 	for(;;)
 	{
 		debug();
+		vTaskDelay(1);
+
 	}
   /* USER CODE END UartDebugTask */
 }
 
 /* USER CODE BEGIN Header_commandToGNSSTask */
 /**
-* @brief Function implementing the commandToGNSS thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the commandToGNSS thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_commandToGNSSTask */
 void commandToGNSSTask(void const * argument)
 {
   /* USER CODE BEGIN commandToGNSSTask */
-  /* Infinite loop */
-  for(;;)
-  {
-	  commandToGNSS();
-  }
+	/* Infinite loop */
+	for(;;)
+	{
+		commandToGNSS();
+		vTaskDelay(1);
+
+	}
   /* USER CODE END commandToGNSSTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
-
-
-
-// Fonction pour copier une queue
-/*void copyQueue(osMessageQId originalQueue, osMessageQId copyQueue) {
-	uint32_t queueSize = uxQueueMessagesWaiting(originalQueue);
-
-	osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
-	osMessageQId tempQueue = osMessageCreate(osMessageQ(UBXQueue), NULL);  // Créer une queue temporaire
-	// Créer la copie de la queue
-	UBXMessage_parsed item;
-	if (tempQueue == NULL) {
-		// Échec de la création des queues
-		if (tempQueue != NULL) osMessageDelete(tempQueue);
-		return;
-	}
-	// Copier les éléments de la queue d'origine vers la queue temporaire et la copie
-	for (uint32_t index = 0; index < queueSize; index++) {
-		xQueueReceive(originalQueue, &item, 0); // Recevoir un message
-		xQueueSendToBack(tempQueue,&item, 0); // Insérer dans la queue temporaire
-		xQueueSendToBack(copyQueue, &item, 0); // Insérer dans la copie de la queue
-	}
-
-	// Réinsérer les éléments dans la queue d'origine
-	for (uint32_t index = 0; index < queueSize; index++) {
-		xQueueReceive(tempQueue,&item, 0); // Recevoir un message de la queue temporaire
-		xQueueSendToBack(originalQueue, &item, 0); // Réinsérer dans la queue d'origine
-	}
-	// Supprimer la queue temporaire
-	osMessageDelete(tempQueue);
-
-}*/
-// Fonction pour convertir un tableau de uint8_t en une chaîne de caractères hexadécimale
-
+void initPool(osPoolId* poolId, int POOL_SIZE) {
+    osPoolDef_t poolDef = {POOL_SIZE, sizeof(UBXMessage_parsed), NULL};
+    *poolId = osPoolCreate(&poolDef);
+    if (*poolId == NULL) {
+        // Gérer l'erreur d'initialisation du pool
+    }
+}
 
 /* USER CODE END Application */

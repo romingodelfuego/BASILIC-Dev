@@ -1,3 +1,0 @@
-../Core/Src/RTOS_subfunctions/debug.c:10:6:debug	1
-../Core/Src/RTOS_subfunctions/debug.c:21:6:UART_Transmit_With_Color	1
-../Core/Src/RTOS_subfunctions/debug.c:26:6:uint8_array_to_hex_string	2

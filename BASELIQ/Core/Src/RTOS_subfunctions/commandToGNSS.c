@@ -14,7 +14,7 @@ void commandToGNSS(void){
 	osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever);
 	while(hGNSSCom.huart->gState != HAL_UART_STATE_READY
 			){
-		osDelay(1);}
+		vTaskDelay(1);}
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, transmitToGnss.command, transmitToGnss.size,HAL_MAX_DELAY);
 	ITM_Port32(28)=333;
 	if (statut!= HAL_OK){
