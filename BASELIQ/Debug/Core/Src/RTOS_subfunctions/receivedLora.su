@@ -1,0 +1,3 @@
+../Core/Src/RTOS_subfunctions/receivedLora.c:10:6:receivedLora	16	static
+../Core/Src/RTOS_subfunctions/receivedLora.c:38:6:PACKET_TYPE_POLL_fct	80	static
+../Core/Src/RTOS_subfunctions/receivedLora.c:92:6:PACKET_TYPE_ACK_fct	16	static

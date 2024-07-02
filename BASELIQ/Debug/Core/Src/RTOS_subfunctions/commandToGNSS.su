@@ -1,0 +1,2 @@
+../Core/Src/RTOS_subfunctions/commandToGNSS.c:10:6:commandToGNSS	24	static
+../Core/Src/RTOS_subfunctions/commandToGNSS.c:25:6:request_commandToGNSS	16	static

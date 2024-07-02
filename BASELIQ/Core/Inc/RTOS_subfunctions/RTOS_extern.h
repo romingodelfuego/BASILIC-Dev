@@ -26,11 +26,11 @@ extern osSemaphoreId SD_Access_GNSS_ReturnHandle;
 extern osSemaphoreId LORA_Access_GNSS_ReturnHandle;
 extern osSemaphoreId GNSS_UART_AccessHandle;
 
-
 typedef enum{
 	OK,
 	Error
 }GNSSReturnStatut;
+
 typedef struct {
 	TickType_t Request_TIME;
 	uint8_t CLASS;
@@ -40,6 +40,7 @@ typedef struct {
 } GNSSRequestQ_t;
 
 typedef struct {
+	UBXMessageQ_t itemFromUBX_Q;
 	TickType_t Request_TIME;
 	TickType_t Return_TIME;
 	GNSSReturnStatut statut;

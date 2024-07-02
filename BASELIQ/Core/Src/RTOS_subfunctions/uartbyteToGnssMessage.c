@@ -11,7 +11,7 @@ UARTMessageQ_t uartMsg;
 UARTState state;
 uint16_t payloadIndex = 0;
 
-static UBXMessage_parsed* messageUBX = NULL;
+UBXMessage_parsed* messageUBX = NULL;
 
 
 void uartbyteToGnssMessage(void){
@@ -28,16 +28,17 @@ void uartbyteToGnssMessage(void){
 			break;
 
 		case WAIT_FOR_SYNC_2:
-			if (receivedByte == HEADER_UBX_2)
-			{state = WAIT_FOR_CLASS;}
-			else
-			{state = WAIT_FOR_SYNC_1;}
+			if (receivedByte == HEADER_UBX_2) state = WAIT_FOR_CLASS;
+			else {
+				state = WAIT_FOR_SYNC_1;
+				osSemaphoreRelease(GNSS_UART_AccessHandle);
+				}
 			break;
 
 		case WAIT_FOR_CLASS:
-			if (messageUBX ==NULL){
-				messageUBX = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed)) ;
-			}
+			if(messageUBX != NULL) Error_Handler();
+			messageUBX = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed));
+			if (messageUBX == NULL) Error_Handler();
 			messageUBX->CLASS = receivedByte;
 			state = WAIT_FOR_ID;
 			break;
@@ -78,6 +79,7 @@ void uartbyteToGnssMessage(void){
 				// Longueur invalide
 				UART_Transmit_With_Color("\r\t\t\n...UARTByte --INVALID LENGTH-- FAILED...\r\n",ANSI_COLOR_RED);
 				vPortFree(messageUBX);
+				osSemaphoreRelease(GNSS_UART_AccessHandle);
 				state = WAIT_FOR_SYNC_1;
 			}
 			break;
@@ -89,13 +91,9 @@ void uartbyteToGnssMessage(void){
 			if (payloadIndex <= messageUBX->len_payload + 2){
 				messageUBX->brute->buffer[6 + payloadIndex] = receivedByte;
 			}
-			if  (payloadIndex == messageUBX->len_payload + 2){ // ON perd un byte ici !
-				GenericMessage* receptionGNSS = (GenericMessage*)pvPortMalloc(sizeof(GenericMessage));
+			if  (payloadIndex == messageUBX->len_payload + 2){
 
-				receptionGNSS->typeMessage=UBX;
-				receptionGNSS->Message.UBXMessage = messageUBX;
-
-				UBXMessageQ_t gnssMsg = { .receptionGNSS = receptionGNSS };
+				UBXMessageQ_t gnssMsg = { .UBXMessage = messageUBX };
 				if (xQueueSendToBack(UBXQueueHandle, &gnssMsg, portMAX_DELAY) != pdTRUE) {
 					// Erreur d'envoi dans la queue
 					UART_Transmit_With_Color("\r\t\t\n...UARTByte --SendQueue-- FAILED...\r\n",ANSI_COLOR_RED);
@@ -104,12 +102,12 @@ void uartbyteToGnssMessage(void){
 					UART_Transmit_With_Color("\r\n...[INFO] UARTByte --SendQueue-- SUCCESS...\r\n",ANSI_COLOR_RESET);
 				}
 				ITM_Port32(31)=9999;
-
+				messageUBX = NULL;
 				//freeBuffer(messageUBX->load);
 				//freeBuffer(messageUBX->brute);
 				//vPortFree(messageUBX);
 				//messageUBX = NULL;
-				//vPortFree(receptionGNSS);
+
 				state = WAIT_FOR_SYNC_1;
 				osSemaphoreRelease(GNSS_UART_AccessHandle);
 			}

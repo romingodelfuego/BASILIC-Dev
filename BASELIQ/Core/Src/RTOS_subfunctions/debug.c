@@ -36,11 +36,11 @@ void UART_Transmit_With_Color(char *data, char *color) {
 		xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
 	} else {
 		// Gérer l'erreur d'allocation de mémoire
-		if (UARTdebug.message != NULL) {
+		if (UARTdebug.message == NULL) {
 			vPortFree(UARTdebug.message);
 			Error_Handler();
 		}
-		if (UARTdebug.color != NULL) {
+		if (UARTdebug.color == NULL) {
 			vPortFree(UARTdebug.color);
 			Error_Handler();
 		}

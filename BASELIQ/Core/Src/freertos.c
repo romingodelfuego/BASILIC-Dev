@@ -216,11 +216,11 @@ void MX_FREERTOS_Init(void) {
   InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
   /* definition and creation of ReceivedLORA */
-  osThreadDef(ReceivedLORA, ReceivedLORATask, osPriorityNormal, 0, 2048);
+  osThreadDef(ReceivedLORA, ReceivedLORATask, osPriorityNormal, 0, 5120);
   ReceivedLORAHandle = osThreadCreate(osThread(ReceivedLORA), NULL);
 
   /* definition and creation of UARTbyte_to_GN */
-  osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 512);
+  osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 2048);
   UARTbyte_to_GNHandle = osThreadCreate(osThread(UARTbyte_to_GN), NULL);
 
   /* definition and creation of Matcher */
@@ -228,11 +228,11 @@ void MX_FREERTOS_Init(void) {
   MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
 
   /* definition and creation of Fake_SDuse */
-  osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 512);
+  osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 2048);
   Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
 
   /* definition and creation of UartDebug */
-  osThreadDef(UartDebug, UartDebugTask, osPriorityNormal, 0, 512);
+  osThreadDef(UartDebug, UartDebugTask, osPriorityNormal, 0, 2048);
   UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
 
   /* definition and creation of commandToGNSS */

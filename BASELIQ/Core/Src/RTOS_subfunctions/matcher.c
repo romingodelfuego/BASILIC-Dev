@@ -10,14 +10,12 @@ GNSSRequestQ_t gnssRequest;
 
 void matcher(void){
 	if(uxQueueMessagesWaiting(UBXQueueHandle)>0){
-		UBXMessageQ_t item;
+		UBXMessageQ_t itemFromUBX_Q;
 		UBXMessage_parsed* ubxFromQueueMatching=NULL;
 		GNSSReturnQ_t gnssReturn;
 		char* TIME_delta = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
-		if(TIME_delta == NULL)
-		{
-			Error_Handler();
-		}
+		if(TIME_delta == NULL) Error_Handler();
+
 		xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
 
 		UART_Transmit_With_Color( "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
@@ -26,13 +24,14 @@ void matcher(void){
 		//Matcher avec Class et ID --> sortir le payload
 		//UBXMessage_parsed* ubxFromQueueMatching = findItemQueueWithoutCopy(UBXQueueHandle, gnssRequest);
 		//UBXMessage_parsed* ubxFromQueueMatching = findAndRemoveItemFromQueue(UBXQueueHandle, gnssRequest);
-		xQueueReceive(UBXQueueHandle,&item,100);
-		ubxFromQueueMatching = item.receptionGNSS->Message.UBXMessage;
+		xQueueReceive(UBXQueueHandle,&itemFromUBX_Q,100);
+		ubxFromQueueMatching = itemFromUBX_Q.UBXMessage;
 		///////
 
 		if (ubxFromQueueMatching->brute != NULL){
 			gnssReturn = (GNSSReturnQ_t){
-				.Request_TIME = gnssRequest.Request_TIME,
+				.itemFromUBX_Q = itemFromUBX_Q,
+						.Request_TIME = gnssRequest.Request_TIME,
 						.Return_TIME = xTaskGetTickCount(),
 						.statut = OK,
 						.CLASS = gnssRequest.CLASS,
@@ -46,7 +45,8 @@ void matcher(void){
 			UART_Transmit_With_Color(gnssRequest.applicantName,ANSI_COLOR_RED);
 
 			gnssReturn = (GNSSReturnQ_t){
-				.Request_TIME = gnssRequest.Request_TIME,
+				.itemFromUBX_Q = itemFromUBX_Q,
+						.Request_TIME = gnssRequest.Request_TIME,
 						.Return_TIME = xTaskGetTickCount(),
 						.statut = Error,
 						.CLASS = 0,
@@ -61,9 +61,10 @@ void matcher(void){
 		UART_Transmit_With_Color( "\n\r...[INFO] Semaphore in MATCHER...--RELEASE--\t\t", ANSI_COLOR_RESET);
 		UART_Transmit_With_Color( gnssRequest.applicantName, ANSI_COLOR_RESET);
 
-		vPortFree(TIME_delta);
+		vPortFree(TIME_delta); //UART Transmit color stocke toutes les info messages ainsi que couleur
 
 		xQueueSendToBack(GNSS_ReturnHandle,&gnssReturn,portMAX_DELAY);
+
 		osSemaphoreRelease(gnssRequest.applicantSemaphore);
 
 	}
@@ -83,7 +84,7 @@ UBXMessage_parsed* findItemQueueWithoutCopy(osMessageQId xQueue, GNSSRequestQ_t 
 				// Copy the found item
 				foundItem = pvPortMalloc(sizeof(UBXMessageQ_t));
 				if (foundItem != NULL) {
-					foundItem = item.receptionGNSS->Message.UBXMessage;
+					foundItem = item.UBXMessage;
 				}
 				break;
 			}
@@ -102,7 +103,7 @@ UBXMessage_parsed* findAndRemoveItemFromQueue(osMessageQId xQueue, GNSSRequestQ_
 			if (isItemMatching(&currentItem, gnssRequest) && foundItem == NULL) {
 				// Copy the found item
 				foundItem = pvPortMalloc(sizeof(UBXMessageQ_t));
-				foundItem = currentItem.receptionGNSS->Message.UBXMessage;
+				foundItem = currentItem.UBXMessage;
 			}
 			else {
 				xQueueSendToFront(xQueue, &currentItem, 0);
@@ -112,6 +113,6 @@ UBXMessage_parsed* findAndRemoveItemFromQueue(osMessageQId xQueue, GNSSRequestQ_
 	return foundItem;
 }
 int isItemMatching(UBXMessageQ_t* item,  GNSSRequestQ_t itemTarget){
-	UBXMessage_parsed* messageinQueue = item->receptionGNSS->Message.UBXMessage;
+	UBXMessage_parsed* messageinQueue = item->UBXMessage;
 	return messageinQueue->CLASS == itemTarget.CLASS && messageinQueue->ID == itemTarget.ID;
 }

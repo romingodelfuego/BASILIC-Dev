@@ -63,7 +63,7 @@ typedef struct {
 } UARTMessageQ_t;
 
 typedef struct {
-	GenericMessage* receptionGNSS;
+	UBXMessage_parsed* UBXMessage;
 }UBXMessageQ_t;
 /******** ---- ********/
 

@@ -25,7 +25,7 @@ void receivedLora(void){
 			break;
 
 		case PACKET_TYPE_POLL:
-			PACKET_TYPE_POLL_fct( LORA_Receive_Message);
+			PACKET_TYPE_POLL_fct(LORA_Receive_Message);
 			break;
 
 		default:
@@ -45,9 +45,10 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			.CLASS = LORA_Receive_Message->payload[2],
 			.ID = LORA_Receive_Message->payload[3],
 			.applicantSemaphore = LORA_Access_GNSS_ReturnHandle,
-			.applicantName = "LORAPolling_REQUEST"};
-	LORA_Header* headerSend =(LORA_Header*) pvPortMalloc(sizeof(LORA_Header));
+			.applicantName = "LORAPolling_REQUEST"
+	};
 
+	LORA_Header* headerSend =(LORA_Header*) pvPortMalloc(sizeof(LORA_Header));
 
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
@@ -60,10 +61,10 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 		if (gnssReturn.statut==OK){
 			*headerSend = (LORA_Header){
 				.recipient = 0xFE,
-						.sender = MODULE_SOURCE_ADDRESS,
-						.type = PACKET_TYPE_POLL,
-						.len_payload = (size_t)gnssReturn.bufferReturn->size
-			};
+				.sender = MODULE_SOURCE_ADDRESS,
+				.type = PACKET_TYPE_POLL,
+				.len_payload = (size_t)gnssReturn.bufferReturn->size};
+
 			LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
 			vPortFree(headerSend);
 
@@ -73,17 +74,19 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			uint8_array_to_hex_string(hexString_LORA, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
 			UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_MAGENTA);
 			vPortFree(hexString_LORA);
+
+			freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->load);
+			freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->brute);
+			vPortFree(gnssReturn.itemFromUBX_Q.UBXMessage);
 		}else{
 			ITM_Port32(31)=99;
 			UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 			UART_Transmit_With_Color("\t---NOT FOUND--\r\n",ANSI_COLOR_RED);
 		}
-		vTaskDelay(1);
 	}
 	else{
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
-		vTaskDelay(1);
 	}
 }
 void PACKET_TYPE_ACK_fct(void){

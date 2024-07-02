@@ -34,7 +34,7 @@ void fakeuseSD(void){
 		xQueueReceive(GNSS_ReturnHandle, &gnssReturn, portMAX_DELAY);
 		ITM_Port32(29)=555;
 		char* hexString_SD = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
-		if (hexString_SD == NULL){Error_Handler();}
+		if (hexString_SD == NULL) Error_Handler();
 
 		if (gnssReturn.statut == OK)
 		{
@@ -49,6 +49,9 @@ void fakeuseSD(void){
 			UART_Transmit_With_Color("\t---NOT FOUND---\r\n",ANSI_COLOR_RED);
 		}
 		vPortFree(hexString_SD);
+		freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->load);
+		freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->brute);
+		vPortFree(gnssReturn.itemFromUBX_Q.UBXMessage);
 	}
 	else
 	{
