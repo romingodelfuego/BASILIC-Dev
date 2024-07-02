@@ -9,7 +9,10 @@
 #include "LORA/RFM9x.h"
 #include <string.h>
 
-
+#include "FreeRTOS.h"
+#include "task.h"
+#include "main.h"
+#include "cmsis_os.h"
 /* Private define ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -159,6 +162,8 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
 	uint8_t* data = (uint8_t*)pvPortMalloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
+	if (data == NULL) Error_Handler();
+
 	for (int i = 0; i < len; i++)
 	{
 		data[i] = RFM9x_ReadReg(RFM9x_REG_00_FIFO);
@@ -170,32 +175,19 @@ void RFM9x_Receive(LORA_Message* LORA_Receive_Message){
 	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
 
 	LORA_Receive_Message->header = (LORA_Header*)pvPortMalloc(sizeof(uint8_t)*sizeof(LORA_Header));
+	if (LORA_Receive_Message->header == NULL) Error_Handler();
+	////On copie  la valeur de data[i] a l'adresse recipient,sender...
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
 	LORA_Receive_Message->header->type=data[2];
 	LORA_Receive_Message->header->len_payload=data[3];
-
-	// Messages de débogage détaillés
-/*	char debug_msg[50];
-	sprintf(debug_msg, "\r\nRxCurAddr :  0x%02X\r\n", start);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-
-	sprintf(debug_msg, "Received Recipient: 0x%02X\r\n", LORA_Receive_Message->header->recipient);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-
-	sprintf(debug_msg, "Received Sender: 0x%02X\r\n", LORA_Receive_Message->header->sender);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-
-	sprintf(debug_msg, "Received Type: 0x%02X\r\n", LORA_Receive_Message->header->type);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-
-	sprintf(debug_msg, "Received Payload Length: %d\r\n", LORA_Receive_Message->header->len_payload);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)debug_msg, strlen(debug_msg), HAL_MAX_DELAY);
-*/
+	//---------//
 	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len-4));
-	memcpy(LORA_Receive_Message->payload, data+4, len-4);
-	vPortFree(data);
+	if (LORA_Receive_Message->payload == NULL) Error_Handler();
 
+	memcpy(LORA_Receive_Message->payload, data+4, len-4);
+
+	vPortFree(data);
 	// clear all the IRQ flags
 	RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 	RFM9x_SetMode_Receive();
@@ -248,7 +240,7 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 	}
 	else
 	{
-		LORA_debug("*HAL_ERROR*", NULL);
+		print1("*HAL_ERROR*", 99);
 
 	}
 

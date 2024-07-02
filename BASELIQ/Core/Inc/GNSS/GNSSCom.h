@@ -14,7 +14,6 @@
 #include <time.h>
 #include <string.h>
 #include "command.h"
-#include "traductor.h"
 #include "shared.h"
 
 
@@ -33,9 +32,6 @@ extern OutputType type;
 typedef struct {
 	UART_HandleTypeDef* huart;
 	UART_HandleTypeDef* huartDebug;
-
-	DynamicBuffer* Rx;
-	uint8_t DebugBuffer[UART_DEBUG_BUFFER_SIZE];
 
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;

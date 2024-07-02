@@ -7,24 +7,27 @@
 
 #include "RTOS_subfunctions/commandToGNSS.h"
 
+/************************ TASK ************************/
 void commandToGNSS(void){
 	GNSStoPollQ_t transmitToGnss;
+
 	xQueueReceive(GNSS_toPollHandle, &transmitToGnss, osWaitForever);
-	//Attendre avant d'envoyer le message
-	osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever);
-	while(hGNSSCom.huart->gState != HAL_UART_STATE_READY
-			){
-		vTaskDelay(1);}
+	osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever);	//Attendre avant de pouvoir utiliser le TX
+
+	while(hGNSSCom.huart->gState != HAL_UART_STATE_READY) vTaskDelay(1);
+
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, transmitToGnss.command, transmitToGnss.size,HAL_MAX_DELAY);
 	ITM_Port32(28)=333;
-	if (statut!= HAL_OK){
-		Error_Handler();
-	}
+	if (statut!= HAL_OK) Error_Handler();
+
 	osSemaphoreRelease(GNSS_UART_AccessHandle);
 }
+/************************ ---- ************************/
+/************************ FUNCTIONS ************************/
 void request_commandToGNSS(GNSStoPollQ_t transmitToGnss){
-	xQueueSendToBack(GNSS_toPollHandle,&transmitToGnss,100);
+	xQueueSendToBack(GNSS_toPollHandle,&transmitToGnss,osWaitForever);
 	ITM_Port32(28)=222;
 }
+/************************ -------- ************************/
 
 

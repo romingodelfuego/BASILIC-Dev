@@ -20,5 +20,4 @@
 
 void uartbyteToGnssMessage(void);
 
-
 #endif /* INC_RTOS_SUBFUNCTIONS_UARTBYTETOGNSSMESSAGE_H_ */

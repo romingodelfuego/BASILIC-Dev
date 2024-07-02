@@ -1,4 +1,0 @@
-../Core/Src/RTOS_subfunctions/matcher.c:11:6:matcher	4
-../Core/Src/RTOS_subfunctions/matcher.c:75:20:findItemQueueWithoutCopy	5
-../Core/Src/RTOS_subfunctions/matcher.c:96:20:findAndRemoveItemFromQueue	5
-../Core/Src/RTOS_subfunctions/matcher.c:115:5:isItemMatching	3

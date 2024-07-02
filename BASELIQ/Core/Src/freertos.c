@@ -72,6 +72,8 @@ osSemaphoreId xSem_LORAReceive_startHandle;
 osSemaphoreId SD_Access_GNSS_ReturnHandle;
 osSemaphoreId LORA_Access_GNSS_ReturnHandle;
 osSemaphoreId GNSS_UART_AccessHandle;
+osSemaphoreId xSem_GNSS_InitHandle;
+osSemaphoreId STARTUP_INIT_doneHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -173,6 +175,14 @@ void MX_FREERTOS_Init(void) {
   osSemaphoreDef(GNSS_UART_Access);
   GNSS_UART_AccessHandle = osSemaphoreCreate(osSemaphore(GNSS_UART_Access), 1);
 
+  /* definition and creation of xSem_GNSS_Init */
+  osSemaphoreDef(xSem_GNSS_Init);
+  xSem_GNSS_InitHandle = osSemaphoreCreate(osSemaphore(xSem_GNSS_Init), 1);
+
+  /* definition and creation of STARTUP_INIT_done */
+  osSemaphoreDef(STARTUP_INIT_done);
+  STARTUP_INIT_doneHandle = osSemaphoreCreate(osSemaphore(STARTUP_INIT_done), 1);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
 	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -212,7 +222,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of InitTask */
-  osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
+  osThreadDef(InitTask, StartInitTask, osPriorityAboveNormal, 0, 1024);
   InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
   /* definition and creation of ReceivedLORA */
@@ -224,7 +234,7 @@ void MX_FREERTOS_Init(void) {
   UARTbyte_to_GNHandle = osThreadCreate(osThread(UARTbyte_to_GN), NULL);
 
   /* definition and creation of Matcher */
-  osThreadDef(Matcher, MatcherTask, osPriorityNormal, 0, 1024);
+  osThreadDef(Matcher, MatcherTask, osPriorityHigh, 0, 1024);
   MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
 
   /* definition and creation of Fake_SDuse */
@@ -236,7 +246,7 @@ void MX_FREERTOS_Init(void) {
   UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
 
   /* definition and creation of commandToGNSS */
-  osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityRealtime, 0, 512);
+  osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityHigh, 0, 512);
   commandToGNSSHandle = osThreadCreate(osThread(commandToGNSS), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -266,12 +276,12 @@ void StartInitTask(void const * argument)
 	GNSSCom_Init(&huart3,&huart1);
 	LORACom_Init(&hspi2, &huart1);
 	RFM9x_Init();
-	initPool(&poolUBX,2048);
-	initPool(&poolDebug,2048);
+	HAL_Delay(5000);
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
-	__enable_irq();
+	//__enable_irq();
 
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
+	osSemaphoreRelease(STARTUP_INIT_doneHandle);
 	osThreadTerminate(InitTaskHandle);
   /* USER CODE END StartInitTask */
 }
@@ -287,11 +297,13 @@ void ReceivedLORATask(void const * argument)
 {
   /* USER CODE BEGIN ReceivedLORATask */
 	/* Infinite loop */
-	for(;;)
-	{
-		receivedLora();
-		vTaskDelay(1);
+	if (osSemaphoreWait(STARTUP_INIT_doneHandle, osWaitForever)==pdPASS){
+		for(;;)
+		{
+			receivedLora();
+			vTaskDelay(1);
 
+		}
 	}
   /* USER CODE END ReceivedLORATask */
 }
@@ -307,13 +319,10 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 {
   /* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
 	/* Infinite loop */
-
-
-	/* Infinite loop */
 	for(;;)
 	{
 		uartbyteToGnssMessage();
-		//Surtout pas de lay ici
+		//Surtout pas delay ici
 	}
   /* USER CODE END UARTbyte_to_GNSSMessage_Task */
 }
@@ -350,12 +359,14 @@ void Fake_SDuse_Task(void const * argument)
   /* USER CODE BEGIN Fake_SDuse_Task */
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
-	/* Infinite loop */
-	for(;;)
-	{
+	if (osSemaphoreWait(STARTUP_INIT_doneHandle, osWaitForever)==pdPASS){
 
-		fakeuseSD();
-		vTaskDelayUntil(&xLastWakeTime,1000);
+		/* Infinite loop */
+		for(;;)
+		{
+			fakeuseSD();
+			vTaskDelayUntil(&xLastWakeTime,1000);
+		}
 	}
   /* USER CODE END Fake_SDuse_Task */
 }
@@ -391,23 +402,24 @@ void commandToGNSSTask(void const * argument)
 {
   /* USER CODE BEGIN commandToGNSSTask */
 	/* Infinite loop */
-	for(;;)
-	{
-		commandToGNSS();
-		vTaskDelay(1);
+		for(;;)
+		{
+			commandToGNSS();
+			vTaskDelay(1);
 
-	}
+		}
+
   /* USER CODE END commandToGNSSTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-void initPool(osPoolId* poolId, int POOL_SIZE) {
+/*void initPool(osPoolId* poolId, int POOL_SIZE) {
     osPoolDef_t poolDef = {POOL_SIZE, sizeof(UBXMessage_parsed), NULL};
-    *poolId = osPoolCreate(&poolDef);
+ *poolId = osPoolCreate(&poolDef);
     if (*poolId == NULL) {
         // Gérer l'erreur d'initialisation du pool
     }
-}
+}*/
 
 /* USER CODE END Application */

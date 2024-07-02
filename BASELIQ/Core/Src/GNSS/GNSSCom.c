@@ -8,6 +8,8 @@
 #include "LORA/RFM9x.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "RTOS_subfunctions/RTOS_extern.h"
+#include "RTOS_subfunctions/commandToGNSS.h"
 
 GNSSCom_HandleTypeDef hGNSSCom;
 OutputType type = ASCII;
@@ -17,30 +19,15 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
 
-	hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
-	memset(hGNSSCom.DebugBuffer, 0, UART_DEBUG_BUFFER_SIZE);
-
-	GNSSCom_UartActivate(&hGNSSCom);
-	HAL_Delay(5000); //En theorie il suffit d attendre la reception du premier msg UART pour envoyer
 	GNSSCom_SetUp_Init();
-
-
-}
-void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
-	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
 
 DynamicBuffer* initializeBuffer(size_t initialSize) {
 	DynamicBuffer *bufferDynamic = (DynamicBuffer *)pvPortMalloc(sizeof(DynamicBuffer));
-	if (bufferDynamic == NULL) {
-		return NULL; // Échec de l'allocation mémoire
-	}
+	if (bufferDynamic == NULL) Error_Handler();
 
 	bufferDynamic->buffer = (uint8_t*)pvPortMalloc(initialSize);
-	if (bufferDynamic->buffer == NULL) {
-		vPortFree(bufferDynamic); // Libérer la mémoire allouée pour la structure
-		return NULL; // Échec de l'allocation mémoire
-	}
+	if (bufferDynamic->buffer == NULL) Error_Handler();
 
 	bufferDynamic->size = initialSize;
 	return bufferDynamic;
@@ -53,84 +40,40 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 void GNSSCom_Send_SetVal(CommandnSize toTransmit){
 	while (hGNSSCom.huart->gState != HAL_UART_STATE_READY){ITM_Port32(30)=99999999;}
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, toTransmit.command, toTransmit.size,HAL_MAX_DELAY);
-	if (statut!= HAL_OK){
-		Error_Handler();
-	}
+	if (statut!= HAL_OK) Error_Handler();
 }
 void GNSSCom_SetUp_Init(void){
+	GNSSReturnQ_t gnssReturn;
 
-	CommandnSize commands[] = {
+	GNSStoPollQ_t commands[] = {
+			{commandUart1Ouput, sizeof(commandUart1Ouput)},
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
-
 			{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
 			{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
-			{commandUart1Ouput, sizeof(commandUart1Ouput)},
+
 			//{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
 	};
+	GNSSRequestQ_t requestFromSD = {
+			.Request_TIME = xTaskGetTickCount(),
+			.CLASS = 0x05,
+			.ID = 0x01,
+			.applicantSemaphore = xSem_GNSS_InitHandle,
+			.applicantName = "GNSS_INIT"
+	};
+	__enable_irq();
+	osDelay(100);
+	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
 	char message[50];
-
-	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i) {
-		// Transmit debug message
+	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i){
 		sprintf(message, "\r\t\t\n...UBXMessage%d...\r\n", i + 1);
-		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
-
-		// Transmit command
-		GNSSCom_Send_SetVal(commands[i]);
-
-		// On fais croire que la commande a ete recu par le RX buffer : TIPS pour print en debug la commande
-		memcpy(hGNSSCom.Rx->buffer, commands[i].command, commands[i].size);
-
-		GenericMessage* command_debug = GNSSCom_Receive(hGNSSCom.Rx->buffer,hGNSSCom.Rx->size);
-		if (command_debug->typeMessage == UBX){
-			UBXMessage_parsed* messageUBX=(UBXMessage_parsed*) command_debug->Message.UBXMessage;
-			create_message_debug(messageUBX);
-			HAL_UART_Transmit(hGNSSCom.huartDebug,(uint8_t*) messageUBX->bufferDebug, sizeof(messageUBX->bufferDebug), HAL_MAX_DELAY);
-			freeBuffer(command_debug->Message.UBXMessage->brute);
-			freeBuffer(command_debug->Message.UBXMessage->load);
-			free(command_debug->Message.UBXMessage);
-			free(command_debug);
-		}
-		else{
-			sprintf(message, "\r\t\t\n...UBXMessage%d - FAILED...\r\n", i + 1);
-			HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message, strlen(message), HAL_MAX_DELAY);
-			if (command_debug->typeMessage == NMEA){
-				free(command_debug->Message.NMEAMessage);
-				free(command_debug);
-			}
-		}
+		UART_Transmit_With_Color(message,ANSI_COLOR_RESET);
+		request_commandToGNSS(commands[i]);
+		osSemaphoreWait(xSem_GNSS_InitHandle, osWaitForever);
+		xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
+		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- INIT...",ANSI_COLOR_RESET);
+		UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
 	}
 }
 
-GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
-	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
-
-	for (int i = 0; i < size; i++) {
-		if (buffer[i] == HEADER_UBX_1 &&
-				buffer[i +1] == HEADER_UBX_2 ){
-			genericMessage->typeMessage=UBX;
-			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->CLASS = buffer[i + 2];
-			UbxMessage->ID = buffer[i + 3];
-			UbxMessage->len_payload = (buffer[i+5] << 8) |buffer[i+4];
-			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len_payload);
-
-			memcpy(UbxMessage->load->buffer, buffer + i + 6, UbxMessage->load->size);
-
-			UbxMessage->brute=initializeBuffer((size_t)UbxMessage->len_payload + 8);
-			memcpy(UbxMessage->brute->buffer, buffer + i, UbxMessage->brute->size);
-
-			genericMessage->Message.UBXMessage = UbxMessage;
-			return genericMessage;
-		}
-
-		else if(buffer[i] == HEADER_NMEA) {
-			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) malloc(sizeof(NMEAMessage_parsed));
-			genericMessage->typeMessage= NMEA;
-			genericMessage->Message.NMEAMessage = NMEAMessage;
-			return genericMessage; //Temporaire
-		}
-	}
-	return genericMessage;
-}
 

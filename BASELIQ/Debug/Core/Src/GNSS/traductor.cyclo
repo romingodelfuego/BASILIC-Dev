@@ -1,6 +1,0 @@
-../Core/Src/GNSS/traductor.c:11:6:debug_UBX_NAV_TIMEUTC	1
-../Core/Src/GNSS/traductor.c:67:6:debug_SetVal	1
-../Core/Src/GNSS/traductor.c:95:6:debug_PollMessage	1
-../Core/Src/GNSS/traductor.c:123:14:bytes_to_endian	8
-../Core/Src/GNSS/traductor.c:144:6:fill_unuse_memory	2
-../Core/Src/GNSS/traductor.c:149:7:array_to_hex_string	2

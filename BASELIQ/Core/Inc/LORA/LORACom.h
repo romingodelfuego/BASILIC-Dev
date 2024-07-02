@@ -34,11 +34,6 @@ typedef struct {
 	SPI_HandleTypeDef* hspi;
 	UART_HandleTypeDef* huartDebug;
 
-	uint8_t RxBuffer[MAX_SPI_SIZE];
-	uint8_t TxBuffer[MAX_SPI_SIZE];
-
-	uint8_t DebugBuffer[UART_DEBUG_BUFFER_SIZE];
-
 } LORACom_HandleTypeDef;
 extern LORACom_HandleTypeDef hLORACom;
 

@@ -14,6 +14,8 @@
 #include "cmsis_os.h"
 #include "debug.h"
 
+
+
 extern osMessageQId UARTbyteHandle;
 extern osMessageQId UBXQueueHandle;
 extern osMessageQId GNSS_RequestHandle;
@@ -25,11 +27,22 @@ extern osSemaphoreId xSem_LORAReceive_startHandle;
 extern osSemaphoreId SD_Access_GNSS_ReturnHandle;
 extern osSemaphoreId LORA_Access_GNSS_ReturnHandle;
 extern osSemaphoreId GNSS_UART_AccessHandle;
+extern osSemaphoreId xSem_GNSS_InitHandle;
+
 
 typedef enum{
 	OK,
 	Error
 }GNSSReturnStatut;
+typedef enum {
+    WAIT_FOR_SYNC_1,
+    WAIT_FOR_SYNC_2,
+	WAIT_FOR_CLASS,
+	WAIT_FOR_ID,
+    WAIT_FOR_LENGTH_1,
+    WAIT_FOR_LENGTH_2,
+    RECEIVE_MESSAGE
+} UARTState;
 
 typedef struct {
 	TickType_t Request_TIME;

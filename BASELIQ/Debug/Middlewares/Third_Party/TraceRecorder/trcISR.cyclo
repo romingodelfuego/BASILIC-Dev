@@ -1,5 +1,0 @@
-../Middlewares/Third_Party/TraceRecorder/trcISR.c:17:13:xTraceISRInitialize	3
-../Middlewares/Third_Party/TraceRecorder/trcISR.c:47:13:xTraceISRRegister	6
-../Middlewares/Third_Party/TraceRecorder/trcISR.c:94:13:xTraceISRBegin	3
-../Middlewares/Third_Party/TraceRecorder/trcISR.c:137:13:xTraceISREnd	4
-../Middlewares/Third_Party/TraceRecorder/trcISR.c:225:18:xTraceSetISRProperties	1
