@@ -32,7 +32,7 @@ extern OutputType type;
 typedef struct {
 	UART_HandleTypeDef* huart;
 	UART_HandleTypeDef* huartDebug;
-
+	DynamicBuffer* Rx;
 } GNSSCom_HandleTypeDef;
 extern GNSSCom_HandleTypeDef hGNSSCom;
 

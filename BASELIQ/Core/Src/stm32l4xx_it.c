@@ -174,7 +174,7 @@ void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
-		//osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */
@@ -236,16 +236,16 @@ void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
 	uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
-
 	// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
 	UARTMessageQ_t uartMsg = { .data = receivedByte };
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	xQueueSendFromISR(UARTbyteHandle, &uartMsg, &xHigherPriorityTaskWoken);
+	xQueueSendFromISR(UARTbyteHandle,&uartMsg,&xHigherPriorityTaskWoken);
 	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-
+	__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   /* USER CODE END USART3_IRQn 1 */
 }
 

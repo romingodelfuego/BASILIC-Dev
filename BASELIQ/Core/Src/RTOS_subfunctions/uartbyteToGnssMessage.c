@@ -17,11 +17,12 @@ UBXMessage_parsed* messageUBX = NULL;
 void uartbyteToGnssMessage(void){
 	if (xQueueReceive(UARTbyteHandle, &uartMsg, portMAX_DELAY) == pdTRUE) { //On recoit un byte d'un ISR de lhuart du GNSS
 		uint8_t receivedByte = uartMsg.data;
+
 		// Machine à états pour traiter les messages
 		switch (state) {
 		case WAIT_FOR_SYNC_1:
+			ITM_Port32(31)=1111;
 			if (receivedByte == HEADER_UBX_1) {
-				ITM_Port32(31)=1111;
 				osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever); //On empeche l'utilisation du TX
 				state = WAIT_FOR_SYNC_2;
 			}
@@ -29,8 +30,9 @@ void uartbyteToGnssMessage(void){
 
 		case WAIT_FOR_SYNC_2:
 			if (receivedByte == HEADER_UBX_2) state = WAIT_FOR_CLASS;
+			else{
 			state = WAIT_FOR_SYNC_1;
-			osSemaphoreRelease(GNSS_UART_AccessHandle);
+			osSemaphoreRelease(GNSS_UART_AccessHandle);}
 			break;
 
 		case WAIT_FOR_CLASS:
@@ -70,13 +72,13 @@ void uartbyteToGnssMessage(void){
 			//----//
 			payloadIndex = 0;
 			state = RECEIVE_MESSAGE;
-
-
 			break;
-		case RECEIVE_MESSAGE:
 
+		case RECEIVE_MESSAGE:
+			ITM_Port32(31)=777;
 			if (payloadIndex < messageUBX->len_payload) messageUBX->load->buffer[payloadIndex] = receivedByte;
 			if (payloadIndex <= messageUBX->len_payload + 2) messageUBX->brute->buffer[6 + payloadIndex] = receivedByte;
+			payloadIndex++ ;
 
 			if  (payloadIndex == messageUBX->len_payload + 2){
 				UBXMessageQ_t gnssMsg = { .UBXMessage = messageUBX };
@@ -90,7 +92,6 @@ void uartbyteToGnssMessage(void){
 				state = WAIT_FOR_SYNC_1;
 				osSemaphoreRelease(GNSS_UART_AccessHandle); //On reautorise le TX
 			}
-			payloadIndex++ ;
 			break;
 		default:
 			state = WAIT_FOR_SYNC_1;

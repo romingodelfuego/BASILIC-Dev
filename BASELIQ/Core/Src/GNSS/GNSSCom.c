@@ -18,8 +18,8 @@ OutputProtocol protocol = UBX;
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
-
-	GNSSCom_SetUp_Init();
+	hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
+	GNSSCom_UartActivate(&hGNSSCom);
 }
 
 DynamicBuffer* initializeBuffer(size_t initialSize) {
@@ -43,37 +43,38 @@ void GNSSCom_Send_SetVal(CommandnSize toTransmit){
 	if (statut!= HAL_OK) Error_Handler();
 }
 void GNSSCom_SetUp_Init(void){
-	GNSSReturnQ_t gnssReturn;
-
 	GNSStoPollQ_t commands[] = {
-			{commandUart1Ouput, sizeof(commandUart1Ouput)},
+
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
 			{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
 			{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
-
+			{commandUart1Ouput, sizeof(commandUart1Ouput)},
 			//{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
 	};
-	GNSSRequestQ_t requestFromSD = {
-			.Request_TIME = xTaskGetTickCount(),
-			.CLASS = 0x05,
-			.ID = 0x01,
-			.applicantSemaphore = xSem_GNSS_InitHandle,
-			.applicantName = "GNSS_INIT"
-	};
-	__enable_irq();
-	osDelay(100);
-	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
+
+
 	char message[50];
 	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i){
-		sprintf(message, "\r\t\t\n...UBXMessage%d...\r\n", i + 1);
-		UART_Transmit_With_Color(message,ANSI_COLOR_RESET);
-		request_commandToGNSS(commands[i]);
-		osSemaphoreWait(xSem_GNSS_InitHandle, osWaitForever);
-		xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- INIT...",ANSI_COLOR_RESET);
-		UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
+		sprintf(message, "\r\t\t\n %s%s%d...%s \r\n",ANSI_COLOR_RESET,"...UBXMessage", i + 1,ANSI_COLOR_RESET);
+		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
+
+		HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
+
+		sprintf(message, "\r\t\t\n %s%s%s \r\n",ANSI_COLOR_RESET,"...UBXMessage --FROM-- INIT...",ANSI_COLOR_RESET);
+		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
+
+		sprintf(message, "\r\t\t\n %s%s%s \r\n",ANSI_COLOR_GREEN,"\t---SUCCESS---\r\n",ANSI_COLOR_RESET);
+		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
+
+		HAL_Delay(500);
+		ITM_Port32(31)=1;
 	}
 }
 
+void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
+	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
+}
+/*
 
+*/

@@ -193,7 +193,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of UARTbyte */
-  osMessageQDef(UARTbyte, 1, uint8_t);
+  osMessageQDef(UARTbyte, 50, uint8_t);
   UARTbyteHandle = osMessageCreate(osMessageQ(UARTbyte), NULL);
 
   /* definition and creation of UBXQueue */
@@ -222,7 +222,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of InitTask */
-  osThreadDef(InitTask, StartInitTask, osPriorityAboveNormal, 0, 1024);
+  osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
   InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
   /* definition and creation of ReceivedLORA */
@@ -265,8 +265,6 @@ void MX_FREERTOS_Init(void) {
 void StartInitTask(void const * argument)
 {
   /* USER CODE BEGIN StartInitTask */
-	MX_USB_OTG_FS_PCD_Init();
-
 	const char startMessage[] = "\r\nStarting...\r\n";
 	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
@@ -275,14 +273,18 @@ void StartInitTask(void const * argument)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
 	GNSSCom_Init(&huart3,&huart1);
 	LORACom_Init(&hspi2, &huart1);
-	RFM9x_Init();
-	HAL_Delay(5000);
-	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
-	//__enable_irq();
 
+	RFM9x_Init();
+	GNSSCom_SetUp_Init();
+
+	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
-	osSemaphoreRelease(STARTUP_INIT_doneHandle);
+	osSignalSet(ReceivedLORAHandle, 0x01);
+	osSignalSet(Fake_SDuseHandle, 0x01);
+	osSignalSet(MatcherHandle, 0x01);
 	osThreadTerminate(InitTaskHandle);
+
+    __HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   /* USER CODE END StartInitTask */
 }
 
@@ -297,7 +299,8 @@ void ReceivedLORATask(void const * argument)
 {
   /* USER CODE BEGIN ReceivedLORATask */
 	/* Infinite loop */
-	if (osSemaphoreWait(STARTUP_INIT_doneHandle, osWaitForever)==pdPASS){
+	osEvent event = osSignalWait(0x01, osWaitForever);
+	if (event.status==osEventSignal){
 		for(;;)
 		{
 			receivedLora();
@@ -338,11 +341,12 @@ void MatcherTask(void const * argument)
 {
   /* USER CODE BEGIN MatcherTask */
 	/* Infinite loop */
+	osEvent event = osSignalWait(0x01, osWaitForever);
+	if (event.status==osEventSignal){
 	for(;;)
 	{
 		matcher();
-		vTaskDelay(1);
-
+	}
 	}
   /* USER CODE END MatcherTask */
 }
@@ -359,7 +363,8 @@ void Fake_SDuse_Task(void const * argument)
   /* USER CODE BEGIN Fake_SDuse_Task */
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
-	if (osSemaphoreWait(STARTUP_INIT_doneHandle, osWaitForever)==pdPASS){
+	osEvent event = osSignalWait(0x01, osWaitForever);
+	if (event.status==osEventSignal){
 
 		/* Infinite loop */
 		for(;;)
@@ -385,7 +390,6 @@ void UartDebugTask(void const * argument)
 	for(;;)
 	{
 		debug();
-		vTaskDelay(1);
 
 	}
   /* USER CODE END UartDebugTask */
@@ -402,12 +406,11 @@ void commandToGNSSTask(void const * argument)
 {
   /* USER CODE BEGIN commandToGNSSTask */
 	/* Infinite loop */
-		for(;;)
-		{
-			commandToGNSS();
-			vTaskDelay(1);
+	for(;;)
+	{
+		commandToGNSS();
 
-		}
+	}
 
   /* USER CODE END commandToGNSSTask */
 }

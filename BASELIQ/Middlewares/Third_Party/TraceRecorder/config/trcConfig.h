@@ -145,7 +145,7 @@ extern "C" {
  * In snapshot mode, the TzCtrl task is only used for stack monitoring and is
  * not created unless this is enabled.
  */
-#define TRC_CFG_ENABLE_STACK_MONITOR 0
+#define TRC_CFG_ENABLE_STACK_MONITOR 1
 
 /**
  * @def TRC_CFG_STACK_MONITOR_MAX_TASKS
@@ -156,7 +156,7 @@ extern "C" {
  *
  * Default value is 10.
  */
-#define TRC_CFG_STACK_MONITOR_MAX_TASKS 10
+#define TRC_CFG_STACK_MONITOR_MAX_TASKS 15
 
 /**
  * @def TRC_CFG_STACK_MONITOR_MAX_REPORTS
@@ -215,7 +215,7 @@ extern "C" {
  * @brief The stack size of the Tracealyzer Control (TzCtrl) task.
  * See TRC_CFG_CTRL_TASK_PRIORITY for further information about TzCtrl.
  */
-#define TRC_CFG_CTRL_TASK_STACK_SIZE 1024
+#define TRC_CFG_CTRL_TASK_STACK_SIZE 2048
 
 /**
  * @def TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -232,7 +232,7 @@ extern "C" {
  * The custom mode allows you to control how and where the allocation is made,
  * for details see TRC_ALLOC_CUSTOM_BUFFER and vTraceSetRecorderDataBuffer().
  */
-#define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_STATIC
+#define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC
 
 /**
  * @def TRC_CFG_MAX_ISR_NESTING

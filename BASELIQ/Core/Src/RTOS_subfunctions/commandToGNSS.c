@@ -25,8 +25,8 @@ void commandToGNSS(void){
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void request_commandToGNSS(GNSStoPollQ_t transmitToGnss){
-	xQueueSendToBack(GNSS_toPollHandle,&transmitToGnss,osWaitForever);
 	ITM_Port32(28)=222;
+	xQueueSendToBack(GNSS_toPollHandle,&transmitToGnss,osWaitForever);
 }
 /************************ -------- ************************/
 

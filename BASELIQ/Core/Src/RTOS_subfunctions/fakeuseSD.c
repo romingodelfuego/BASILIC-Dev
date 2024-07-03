@@ -27,6 +27,7 @@ void fakeuseSD(void){
 
 	ITM_Port32(29)=444;
 	int32_t eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
+	ITM_Port32(29)=555;
 
 	if (eventSD != osOK){
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...",ANSI_COLOR_YELLOW);
@@ -35,7 +36,7 @@ void fakeuseSD(void){
 	}
 
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-	ITM_Port32(29)=555;
+	ITM_Port32(29)=666;
 
 	if (gnssReturn.statut != OK)
 	{
@@ -46,7 +47,7 @@ void fakeuseSD(void){
 	char* hexString_SD = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
 	if (hexString_SD == NULL) Error_Handler();
 
-	UART_Transmit_With_Color("\n\r\t\t...UBXMessage --SEND-- SD Polling...",ANSI_COLOR_YELLOW);
+	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- SD Polling...",ANSI_COLOR_YELLOW);
 	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
 	uint8_array_to_hex_string(hexString_SD, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
 	UART_Transmit_With_Color(hexString_SD,ANSI_COLOR_YELLOW);

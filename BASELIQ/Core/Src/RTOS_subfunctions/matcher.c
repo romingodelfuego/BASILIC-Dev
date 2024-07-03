@@ -11,13 +11,12 @@ GNSSRequestQ_t gnssRequest;
 /************************ TASK ************************/
 void matcher(void){
 
-	if(uxQueueMessagesWaiting(UBXQueueHandle)==0) vTaskDelay(1); //On attend qu'un message UBX sooit recu car nous avons prealablement envoyer une requete au GNSS
-
+	while(uxQueueMessagesWaiting(UBXQueueHandle)==0){
+		vTaskDelay(1); //On attend qu'un message UBX soit recu car nous avons prealablement envoyer une requete au GNSS
+	}
 	UBXMessageQ_t itemFromUBX_Q;
 	UBXMessage_parsed* ubxFromQueueMatching=NULL;
 	GNSSReturnQ_t gnssReturn;
-
-
 
 	xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
 
