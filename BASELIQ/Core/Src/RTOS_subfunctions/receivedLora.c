@@ -53,7 +53,7 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			.applicantName = "LORAPolling_REQUEST"
 	};
 
-
+	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
 	ITM_Port32(30)=111;
@@ -81,27 +81,40 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 
 	*headerSend = (LORA_Header){
 		.recipient = 0xFE,
-		.sender = MODULE_SOURCE_ADDRESS,
-		.type = PACKET_TYPE_POLL,
-		.len_payload = (size_t)gnssReturn.bufferReturn->size
+				.sender = MODULE_SOURCE_ADDRESS,
+				.type = PACKET_TYPE_POLL,
+				.len_payload = (size_t)gnssReturn.bufferReturn->size
 	};
 	LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
 
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
 
-	char* hexString_LORA = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
-	if (hexString_LORA == NULL) Error_Handler();
+	if (gnssReturn.bufferReturn->size<= 512){
+		char* hexString_LORA = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
+		if (hexString_LORA == NULL) Error_Handler();
 
-	uint8_array_to_hex_string(hexString_LORA, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
-	UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_MAGENTA);
+		uint8_array_to_hex_string(hexString_LORA, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
+		UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_MAGENTA);
+		vPortFree(hexString_LORA);
+
+	}else{
+		char* len = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
+		if (len == NULL) Error_Handler();
+
+		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling --TOO LONG FOR DEBUG...\t",ANSI_COLOR_MAGENTA);
+		sprintf(len, "%u",gnssReturn.bufferReturn->size);
+		UART_Transmit_With_Color(len, ANSI_COLOR_RED);
+		vPortFree(len);
+	}
 
 	// Reinitialisation de la trame
-	vPortFree(hexString_LORA);
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->load);
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->brute);
 	vPortFree(gnssReturn.itemFromUBX_Q.UBXMessage);
 	vPortFree(headerSend);
+	osSemaphoreRelease(LORA_Access_GNSS_ReturnHandle);
+
 	// --- //
 }
 

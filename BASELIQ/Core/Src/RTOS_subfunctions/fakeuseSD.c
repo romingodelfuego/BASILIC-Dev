@@ -17,7 +17,7 @@ void fakeuseSD(void){
 			.applicantSemaphore = SD_Access_GNSS_ReturnHandle,
 			.applicantName = "SD_REQUEST"
 	};
-
+	osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); //On verrouille la semaphore
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
 
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...\r\n",ANSI_COLOR_YELLOW);
@@ -26,6 +26,7 @@ void fakeuseSD(void){
 	request_commandToGNSS(pollTimeUTC);
 
 	ITM_Port32(29)=444;
+
 	osStatus eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
 	ITM_Port32(29)=555;
 
@@ -34,7 +35,6 @@ void fakeuseSD(void){
 		UART_Transmit_With_Color("\t---SEMAPHORE ISSUE---\r\n\n",ANSI_COLOR_RED);
 		return;
 	}
-	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...\t\t--WAITING--\r\n",ANSI_COLOR_YELLOW);
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
 	ITM_Port32(29)=666;
 
@@ -44,18 +44,32 @@ void fakeuseSD(void){
 		UART_Transmit_With_Color("\t---NOT FOUND---\r\n",ANSI_COLOR_RED);
 	}
 
-	char* hexString_SD = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
-	if (hexString_SD == NULL) Error_Handler();
 
-	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- SD Polling...",ANSI_COLOR_YELLOW);
-	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
-	uint8_array_to_hex_string(hexString_SD, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
-	UART_Transmit_With_Color(hexString_SD,ANSI_COLOR_YELLOW);
+	if (gnssReturn.bufferReturn->size<= 512){
+		char* hexString_SD = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
+		if (hexString_SD == NULL) Error_Handler();
 
-	vPortFree(hexString_SD);
+		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- SD Polling...",ANSI_COLOR_YELLOW);
+		UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
+		uint8_array_to_hex_string(hexString_SD, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
+		UART_Transmit_With_Color(hexString_SD,ANSI_COLOR_YELLOW);
+
+		vPortFree(hexString_SD);
+	}
+
+	else{
+		char* len = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
+		if (len == NULL) Error_Handler();
+
+		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- SD Polling --TOO LONG FOR DEBUG...\t",ANSI_COLOR_MAGENTA);
+		sprintf(len, "%u",gnssReturn.bufferReturn->size);
+		UART_Transmit_With_Color(len, ANSI_COLOR_RED);
+		vPortFree(len);
+	}
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->load);
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->brute);
 	vPortFree(gnssReturn.itemFromUBX_Q.UBXMessage);
+	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);
 
 }
 
