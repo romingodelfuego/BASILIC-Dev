@@ -12,6 +12,7 @@ void receivedLora(void){
 	osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever); //On attend de recevoir un ISR depuis un EXTI
 
 	LORA_Message* LORA_Receive_Message = (LORA_Message*)pvPortMalloc(sizeof(LORA_Message)); // On pointe vers une partie de la memoire HEAP protégée
+	if (LORA_Receive_Message == NULL) Error_Handler();
 
 	RFM9x_Receive(LORA_Receive_Message);
 
@@ -58,8 +59,9 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 	ITM_Port32(30)=111;
 	request_commandToGNSS(poll); //On envoie un message vers GNSS
 	ITM_Port32(30)=444;
+	osStatus eventLORA = osSemaphoreWait(LORA_Access_GNSS_ReturnHandle, osWaitForever);
 
-	if (osSemaphoreWait(LORA_Access_GNSS_ReturnHandle, 100)!=osOK){
+	if (eventLORA !=osOK){
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
 		return;

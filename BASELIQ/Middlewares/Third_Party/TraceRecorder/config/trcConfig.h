@@ -52,7 +52,7 @@ extern "C" {
  *
  * Default value is 0 (= include additional events).
  */
-#define TRC_CFG_SCHEDULING_ONLY 0
+#define TRC_CFG_SCHEDULING_ONLY 1
 
 /**
  * @def TRC_CFG_INCLUDE_MEMMANG_EVENTS
@@ -87,7 +87,7 @@ extern "C" {
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_USER_EVENTS 1
+#define TRC_CFG_INCLUDE_USER_EVENTS 0
 
 /**
  * @def TRC_CFG_INCLUDE_ISR_TRACING
@@ -134,7 +134,7 @@ extern "C" {
  *
  * Default value is 1.
  */
-#define TRC_CFG_INCLUDE_OSTICK_EVENTS 1
+#define TRC_CFG_INCLUDE_OSTICK_EVENTS 0
 
 /**
  * @def TRC_CFG_ENABLE_STACK_MONITOR
@@ -176,7 +176,7 @@ extern "C" {
  *
  * Default value is 1.
  */
-#define TRC_CFG_STACK_MONITOR_MAX_REPORTS 1
+#define TRC_CFG_STACK_MONITOR_MAX_REPORTS 5
 
 /**
  * @def TRC_CFG_CTRL_TASK_PRIORITY
@@ -215,7 +215,7 @@ extern "C" {
  * @brief The stack size of the Tracealyzer Control (TzCtrl) task.
  * See TRC_CFG_CTRL_TASK_PRIORITY for further information about TzCtrl.
  */
-#define TRC_CFG_CTRL_TASK_STACK_SIZE 2048
+#define TRC_CFG_CTRL_TASK_STACK_SIZE 10240
 
 /**
  * @def TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -232,7 +232,7 @@ extern "C" {
  * The custom mode allows you to control how and where the allocation is made,
  * for details see TRC_ALLOC_CUSTOM_BUFFER and vTraceSetRecorderDataBuffer().
  */
-#define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC
+#define TRC_CFG_RECORDER_BUFFER_ALLOCATION TRC_RECORDER_BUFFER_ALLOCATION_STATIC
 
 /**
  * @def TRC_CFG_MAX_ISR_NESTING

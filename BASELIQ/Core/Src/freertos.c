@@ -283,8 +283,7 @@ void StartInitTask(void const * argument)
 	osSignalSet(Fake_SDuseHandle, 0x01);
 	osSignalSet(MatcherHandle, 0x01);
 	osThreadTerminate(InitTaskHandle);
-
-    __HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
+    //__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   /* USER CODE END StartInitTask */
 }
 

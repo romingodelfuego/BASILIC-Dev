@@ -26,7 +26,7 @@ void fakeuseSD(void){
 	request_commandToGNSS(pollTimeUTC);
 
 	ITM_Port32(29)=444;
-	int32_t eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
+	osStatus eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
 	ITM_Port32(29)=555;
 
 	if (eventSD != osOK){

@@ -245,7 +245,7 @@ void USART3_IRQHandler(void)
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-	__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
+	//__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   /* USER CODE END USART3_IRQn 1 */
 }
 

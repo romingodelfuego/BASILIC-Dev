@@ -57,6 +57,7 @@
 "./Middlewares/Third_Party/FreeRTOS/Source/timers.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o"
+"./Middlewares/Third_Party/TraceRecorder/streamports/ARM_ITM/trcStreamPort.o"
 "./Middlewares/Third_Party/TraceRecorder/streamports/RingBuffer/trcStreamPort.o"
 "./Middlewares/Third_Party/TraceRecorder/trcAssert.o"
 "./Middlewares/Third_Party/TraceRecorder/trcCounter.o"

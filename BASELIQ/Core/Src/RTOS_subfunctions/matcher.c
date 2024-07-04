@@ -20,7 +20,7 @@ void matcher(void){
 
 	xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
 
-	UART_Transmit_With_Color( "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
+	 UART_Transmit_With_Color( "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
 	UART_Transmit_With_Color(gnssRequest.applicantName, ANSI_COLOR_RESET);
 	//Parcourir UBXQueue
 	//Matcher avec Class et ID --> sortir le payload
@@ -40,20 +40,7 @@ void matcher(void){
 			.applicantName = gnssRequest.applicantName
 		};
 	}
-	/*else{
-		gnssReturn = (GNSSReturnQ_t){
-			.itemFromUBX_Q = itemFromUBX_Q,
-			.Request_TIME = gnssRequest.Request_TIME,
-			.Return_TIME = xTaskGetTickCount(),
-			.statut = Error,
-			.CLASS = 0,
-			.ID = 0,
-			.bufferReturn = (DynamicBuffer*)NULL,
-			.applicantName = gnssRequest.applicantName
-		};
-		UART_Transmit_With_Color("\r\t\t\n...MATCHER... ---FAILED---\t\t",ANSI_COLOR_RED);
-		UART_Transmit_With_Color(gnssRequest.applicantName,ANSI_COLOR_RED);
-	}*/
+
 	char* TIME_delta = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
 	if(TIME_delta == NULL) Error_Handler();
 

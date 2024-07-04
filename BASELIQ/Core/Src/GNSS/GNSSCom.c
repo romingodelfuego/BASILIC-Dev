@@ -26,7 +26,7 @@ DynamicBuffer* initializeBuffer(size_t initialSize) {
 	DynamicBuffer *bufferDynamic = (DynamicBuffer *)pvPortMalloc(sizeof(DynamicBuffer));
 	if (bufferDynamic == NULL) Error_Handler();
 
-	bufferDynamic->buffer = (uint8_t*)pvPortMalloc(initialSize);
+	bufferDynamic->buffer = (uint8_t*)pvPortMalloc(initialSize * sizeof(uint8_t));
 	if (bufferDynamic->buffer == NULL) Error_Handler();
 
 	bufferDynamic->size = initialSize;
