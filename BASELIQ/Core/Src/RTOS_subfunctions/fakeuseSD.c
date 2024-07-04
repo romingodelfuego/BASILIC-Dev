@@ -34,7 +34,7 @@ void fakeuseSD(void){
 		UART_Transmit_With_Color("\t---SEMAPHORE ISSUE---\r\n\n",ANSI_COLOR_RED);
 		return;
 	}
-
+	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...\t\t--WAITING--\r\n",ANSI_COLOR_YELLOW);
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
 	ITM_Port32(29)=666;
 

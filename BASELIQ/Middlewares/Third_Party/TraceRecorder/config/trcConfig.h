@@ -215,7 +215,7 @@ extern "C" {
  * @brief The stack size of the Tracealyzer Control (TzCtrl) task.
  * See TRC_CFG_CTRL_TASK_PRIORITY for further information about TzCtrl.
  */
-#define TRC_CFG_CTRL_TASK_STACK_SIZE 10240
+#define TRC_CFG_CTRL_TASK_STACK_SIZE 1024
 
 /**
  * @def TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -270,7 +270,7 @@ extern "C" {
  * Note: This setting has separate definitions in trcSnapshotConfig.h and
  * trcStreamingConfig.h, since it is affected by the recorder mode.
  */
-#define TRC_CFG_ISR_TAILCHAINING_THRESHOLD 0
+#define TRC_CFG_ISR_TAILCHAINING_THRESHOLD 1
 
 /**
  * @def TRC_CFG_RECORDER_DATA_INIT
