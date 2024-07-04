@@ -85,7 +85,7 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 		.type = PACKET_TYPE_POLL,
 		.len_payload = (size_t)gnssReturn.bufferReturn->size
 	};
-	//LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
+	LORA_Send(headerSend, (uint8_t*)gnssReturn.bufferReturn->buffer);
 
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);

@@ -51,6 +51,8 @@
 									<listOptionValue builtIn="false" value="STM32L496xx"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.638040949" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Middlewares/Third_Party/TraceRecorder/streamports/ARM_ITM/config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Middlewares/Third_Party/TraceRecorder/streamports/ARM_ITM/include}&quot;"/>
 									<listOptionValue builtIn="false" value="../Core/Inc"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Middlewares/Third_Party/TraceRecorder/config}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Middlewares/Third_Party/TraceRecorder/include}&quot;"/>
@@ -107,7 +109,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="Third_Party/TraceRecorder/streamports/ARM_ITM|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry excluding="Third_Party/TraceRecorder/streamports/RingBuffer|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -203,7 +205,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="Third_Party/TraceRecorder/streamports/ARM_ITM|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File|TraceRecorder/streamports/XMOS_xScope|TraceRecorder/streamports/UDP|TraceRecorder/streamports/TCPIP_Win32|TraceRecorder/streamports/TCPIP|TraceRecorder/streamports/STM32_USB_CDC|TraceRecorder/streamports/Jlink_RTT|TraceRecorder/streamports/File|TraceRecorder/streamports/ARM_ITM" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry excluding="Third_Party/TraceRecorder/streamports/RingBuffer|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File|TraceRecorder/streamports/XMOS_xScope|TraceRecorder/streamports/UDP|TraceRecorder/streamports/TCPIP_Win32|TraceRecorder/streamports/TCPIP|TraceRecorder/streamports/STM32_USB_CDC|TraceRecorder/streamports/Jlink_RTT|TraceRecorder/streamports/File|TraceRecorder/streamports/ARM_ITM" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

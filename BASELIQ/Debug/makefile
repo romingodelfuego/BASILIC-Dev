@@ -9,7 +9,6 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include Middlewares/Third_Party/TraceRecorder/streamports/RingBuffer/subdir.mk
 -include Middlewares/Third_Party/TraceRecorder/streamports/ARM_ITM/subdir.mk
 -include Middlewares/Third_Party/TraceRecorder/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/subdir.mk
