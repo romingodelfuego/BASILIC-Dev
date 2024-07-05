@@ -75,8 +75,7 @@ void uartbyteToGnssMessage(void){
 			break;
 
 		case RECEIVE_MESSAGE:
-			//ITM_Port32(31)=777;
-			ITM_Port32(31)=payloadIndex;
+			//ITM_Port32(31)=payloadIndex;
 
 			if (payloadIndex < messageUBX->len_payload) messageUBX->load->buffer[payloadIndex] = receivedByte;
 			if (payloadIndex <= messageUBX->len_payload + 2) messageUBX->brute->buffer[6 + payloadIndex] = receivedByte;

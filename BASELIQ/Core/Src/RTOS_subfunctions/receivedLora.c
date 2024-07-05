@@ -43,7 +43,8 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 	GNSSReturnQ_t gnssReturn;
 	GNSStoPollQ_t poll = {
 			(const uint8_t*) LORA_Receive_Message->payload,
-			(size_t) LORA_Receive_Message->header->len_payload
+			(size_t) LORA_Receive_Message->header->len_payload,
+			"LORA_POLLING"
 	};
 	GNSSRequestQ_t requestFromLora = {
 			.Request_TIME= xTaskGetTickCount(),
@@ -53,8 +54,10 @@ void PACKET_TYPE_POLL_fct(LORA_Message* LORA_Receive_Message){
 			.applicantName = "LORAPolling_REQUEST"
 	};
 
-	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
+
+	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
+
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
 	ITM_Port32(30)=111;
 	request_commandToGNSS(poll); //On envoie un message vers GNSS

@@ -72,7 +72,7 @@ typedef struct{
 	uint8_t recipient;
 	uint8_t sender;
 	uint8_t type;
-	uint8_t len_payload;
+	size_t len_payload;
 }LORA_Header;
 
 typedef struct {

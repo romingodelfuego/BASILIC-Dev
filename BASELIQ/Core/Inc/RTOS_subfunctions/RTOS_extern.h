@@ -71,5 +71,6 @@ typedef struct {
 typedef struct{ //Copie assumer de CommandnSize
     const uint8_t *command;
     size_t size;
+	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 }GNSStoPollQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

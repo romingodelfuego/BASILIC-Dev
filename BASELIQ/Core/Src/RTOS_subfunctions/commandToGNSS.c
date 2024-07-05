@@ -10,12 +10,12 @@
 /************************ TASK ************************/
 void commandToGNSS(void){
 	GNSStoPollQ_t transmitToGnss;
-
 	xQueueReceive(GNSS_toPollHandle, &transmitToGnss, osWaitForever);
+	UART_Transmit_With_Color("\r\n...[INFO] TRANSMIT COMMAND for \t\t\t\t",ANSI_COLOR_RESET);
+	UART_Transmit_With_Color(transmitToGnss.applicantName,ANSI_COLOR_RESET);
+
 	osSemaphoreWait(GNSS_UART_AccessHandle, osWaitForever);	//Attendre avant de pouvoir utiliser le TX
-
 	while(hGNSSCom.huart->gState != HAL_UART_STATE_READY) vTaskDelay(1);
-
 	HAL_StatusTypeDef statut = HAL_UART_Transmit(hGNSSCom.huart, transmitToGnss.command, transmitToGnss.size,HAL_MAX_DELAY);
 	ITM_Port32(28)=333;
 	if (statut!= HAL_OK) Error_Handler();

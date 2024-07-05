@@ -20,15 +20,22 @@ void matcher(void){
 
 	xQueueReceive(GNSS_RequestHandle, &gnssRequest, osWaitForever);
 
-	 UART_Transmit_With_Color( "\r...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
+	UART_Transmit_With_Color( "\r\n...[INFO] Semaphore in MATCHER...--TAKE--\t\t", ANSI_COLOR_RESET);
 	UART_Transmit_With_Color(gnssRequest.applicantName, ANSI_COLOR_RESET);
 	//Parcourir UBXQueue
 	//Matcher avec Class et ID --> sortir le payload
 	//UBXMessage_parsed* ubxFromQueueMatching = findItemQueueWithoutCopy(UBXQueueHandle, gnssRequest);
 	//UBXMessage_parsed* ubxFromQueueMatching = findAndRemoveItemFromQueue(UBXQueueHandle, gnssRequest);
 	if (xQueueReceive(UBXQueueHandle,&itemFromUBX_Q,osWaitForever)==pdPASS){
+
+		/*UBXMessage_parsed* ubxFromQueueMatching = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed));
+		if (ubxFromQueueMatching == NULL ) Error_Handler();*/
+
 		ubxFromQueueMatching = itemFromUBX_Q.UBXMessage;
 		///////
+		//GNSSReturnQ_t* gnssReturn = pvPortMalloc(sizeof(GNSSReturnQ_t));
+		//if (gnssReturn == NULL) Error_Handler();
+
 		gnssReturn = (GNSSReturnQ_t){
 			.itemFromUBX_Q = itemFromUBX_Q,
 			.Request_TIME = gnssRequest.Request_TIME,
@@ -44,11 +51,13 @@ void matcher(void){
 	char* TIME_delta = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
 	if(TIME_delta == NULL) Error_Handler();
 
+
+	UART_Transmit_With_Color( "\n\r...[INFO] Semaphore in MATCHER...--RELEASE--\t\t", ANSI_COLOR_RESET);
+	UART_Transmit_With_Color( gnssRequest.applicantName, ANSI_COLOR_RESET);
+
 	sprintf(TIME_delta, "%lu",((gnssReturn.Return_TIME-gnssReturn.Request_TIME)*(uint32_t)(1000.000/configTICK_RATE_HZ)));
 	UART_Transmit_With_Color( "\n\r...[INFO] Delta Time: Request & Return (ms)...\t\t", ANSI_COLOR_RESET);
 	UART_Transmit_With_Color(TIME_delta,ANSI_COLOR_GREEN);
-	UART_Transmit_With_Color( "\n\r...[INFO] Semaphore in MATCHER...--RELEASE--\t\t", ANSI_COLOR_RESET);
-	UART_Transmit_With_Color( gnssRequest.applicantName, ANSI_COLOR_RESET);
 
 	vPortFree(TIME_delta); //UART Transmit color stocke toutes les info messages ainsi que couleur
 

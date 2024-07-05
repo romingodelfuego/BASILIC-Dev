@@ -81,7 +81,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  xTraceInitialize();
+  //xTraceInitialize();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -94,7 +94,7 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  xTraceEnable(TRC_START);
+  //xTraceEnable(TRC_START);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -200,6 +200,7 @@ void Error_Handler(void)
 	__disable_irq();
 	while (1)
 	{
+		vTaskDelay(100);
 	}
   /* USER CODE END Error_Handler_Debug */
 }

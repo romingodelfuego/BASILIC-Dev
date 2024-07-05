@@ -7,7 +7,7 @@
 #include "RTOS_subfunctions/fakeuseSD.h"
 
 GNSSReturnQ_t gnssReturn;
-GNSStoPollQ_t pollTimeUTC = {pollUBXTimeUTC, sizeof(pollUBXTimeUTC)};
+GNSStoPollQ_t pollTimeUTC = {pollUBXTimeUTC, sizeof(pollUBXTimeUTC),"SD_POLLING"};
 
 void fakeuseSD(void){
 	GNSSRequestQ_t requestFromSD = {
@@ -17,9 +17,9 @@ void fakeuseSD(void){
 			.applicantSemaphore = SD_Access_GNSS_ReturnHandle,
 			.applicantName = "SD_REQUEST"
 	};
-	osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); //On verrouille la semaphore
-	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
 
+	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
+	osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); //On verrouille la semaphore
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...\r\n",ANSI_COLOR_YELLOW);
 	ITM_Port32(29)=111;
 
@@ -69,6 +69,8 @@ void fakeuseSD(void){
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->load);
 	freeBuffer(gnssReturn.itemFromUBX_Q.UBXMessage->brute);
 	vPortFree(gnssReturn.itemFromUBX_Q.UBXMessage);
+	//vPortFree(&gnssReturn);
+
 	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);
 
 }
