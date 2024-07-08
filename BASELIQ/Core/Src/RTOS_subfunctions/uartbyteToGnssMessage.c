@@ -58,9 +58,8 @@ void uartbyteToGnssMessage(void){
 			messageUBX->len_payload |= receivedByte << 8;
 			if (messageUBX->len_payload == 0 || messageUBX->len_payload > UART_MAX_BUFFER_SIZE) Error_Handler(); //On checke que le message ne dépasse pas une certaine longueur
 			ITM_Port32(31)=messageUBX->len_payload;
-			messageUBX->load = initializeBuffer(messageUBX->len_payload); //On fait pointer un buffer sur une partie protege de la mémoire HEAP
 			messageUBX->brute = initializeBuffer(messageUBX->len_payload + 8); //On fait pointer un buffer sur une partie protege de la mémoire HEAP
-			if (messageUBX->load == NULL || messageUBX->brute == NULL) Error_Handler();
+			if (messageUBX->brute == NULL) Error_Handler();
 
 			//On rempli un de nos buffer
 			messageUBX->brute->buffer[0]=0xb5;
@@ -77,7 +76,6 @@ void uartbyteToGnssMessage(void){
 		case RECEIVE_MESSAGE:
 			//ITM_Port32(31)=payloadIndex;
 
-			if (payloadIndex < messageUBX->len_payload) messageUBX->load->buffer[payloadIndex] = receivedByte;
 			if (payloadIndex <= messageUBX->len_payload + 2) messageUBX->brute->buffer[6 + payloadIndex] = receivedByte;
 			payloadIndex++ ;
 			if  (payloadIndex == messageUBX->len_payload + 2){

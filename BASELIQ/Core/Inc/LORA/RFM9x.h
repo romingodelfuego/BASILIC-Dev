@@ -25,7 +25,7 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data );
 void Delay_ms( uint32_t delay_ms );
 
 
-void RFM9x_Receive(LORA_Message* LORA_Receive_Message);
+void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message);
 /* Public define -------------------------------------------------------------*/
 
 // Max number of octets the LORA Rx/Tx FIFO can hold

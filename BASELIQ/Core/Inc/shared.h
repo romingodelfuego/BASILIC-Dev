@@ -37,8 +37,6 @@ typedef struct {
 	uint8_t CLASS;
 	uint8_t ID;
 	uint16_t len_payload;
-	char bufferDebug[UART_DEBUG_BUFFER_SIZE];
-	DynamicBuffer* load; // Pointeur de tableau
 	DynamicBuffer* brute; // Pointeur de tableau de longeur variable
 }UBXMessage_parsed ;
 
@@ -72,18 +70,30 @@ typedef struct{
 	uint8_t recipient;
 	uint8_t sender;
 	uint8_t type;
-	size_t len_payload;
-}LORA_Header;
+	uint8_t identifier;// Pas sure de l'utilité
+	uint8_t nbOf_packet;// Le nombre total de paquet qui vont etre send
 
+	uint8_t num_packet;// Le numero du paquet send
+	size_t 	len_payload;
+
+}LORA_HeaderforSending;
+
+typedef struct{
+	uint8_t recipient;
+	uint8_t sender;
+	uint8_t type;
+	size_t 	len_payload;
+
+}LORA_HeaderforReception;
 typedef struct {
 	uint8_t IRQFlags;
 	uint8_t RxCurrAddr;
 	uint8_t RxNbrBytes;
 	uint8_t SNR;
 	uint8_t RSSI;
-	LORA_Header* header;
+	LORA_HeaderforReception* header;
 	uint8_t* payload;
-}LORA_Message;
+}LORA_MessageReception;
 /******** ---- ********/
 
 typedef struct {

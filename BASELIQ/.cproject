@@ -107,9 +107,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry excluding="Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/RingBuffer|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/TCPIP_Win32" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="Third_Party/TraceRecorder/streamports/RingBuffer|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -203,9 +203,9 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry excluding="Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File|TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/extras|TraceRecorder/streamports/File|TraceRecorder/streamports/Jlink_RTT|TraceRecorder/streamports/UDP|TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/RingBuffer|TraceRecorder/streamports/STM32_USB_CDC|TraceRecorder/streamports/ARM_ITM|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/TCPIP|TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/TCPIP_Win32" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="Third_Party/TraceRecorder/streamports/RingBuffer|Third_Party/TraceRecorder/extras|Third_Party/TraceRecorder/streamports/XMOS_xScope|Third_Party/TraceRecorder/streamports/UDP|Third_Party/TraceRecorder/streamports/TCPIP_Win32|Third_Party/TraceRecorder/streamports/TCPIP|Third_Party/TraceRecorder/streamports/STM32_USB_CDC|Third_Party/TraceRecorder/streamports/Jlink_RTT|Third_Party/TraceRecorder/streamports/File|TraceRecorder/streamports/XMOS_xScope|TraceRecorder/streamports/UDP|TraceRecorder/streamports/TCPIP_Win32|TraceRecorder/streamports/TCPIP|TraceRecorder/streamports/STM32_USB_CDC|TraceRecorder/streamports/Jlink_RTT|TraceRecorder/streamports/File|TraceRecorder/streamports/ARM_ITM" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

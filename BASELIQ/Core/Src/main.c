@@ -81,7 +81,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  //xTraceInitialize();
+  //xTraceInitialize(); //Percepio Trace Analyser
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -200,7 +200,11 @@ void Error_Handler(void)
 	__disable_irq();
 	while (1)
 	{
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
+
 		vTaskDelay(100);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
+
 	}
   /* USER CODE END Error_Handler_Debug */
 }

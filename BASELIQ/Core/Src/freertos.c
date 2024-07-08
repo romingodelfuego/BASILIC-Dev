@@ -27,10 +27,11 @@
 /* USER CODE BEGIN Includes */
 #include "usb_otg.h"
 #include "RTOS_subfunctions/matcher.h"
-#include "RTOS_subfunctions/receveivedLora.h"
 #include "RTOS_subfunctions/fakeuseSD.h"
 #include "RTOS_subfunctions/uartbyteToGnssMessage.h"
+#include "RTOS_subfunctions/receiverLoRA.h"
 #include "RTOS_subfunctions/debug.h"
+#include "RTOS_subfunctions/senderLoRA.h"
 
 /* USER CODE END Includes */
 
@@ -56,18 +57,20 @@ extern TIM_HandleTypeDef htim2;
 
 /* USER CODE END Variables */
 osThreadId InitTaskHandle;
-osThreadId ReceivedLORAHandle;
+osThreadId ReceiverLoRAHandle;
 osThreadId UARTbyte_to_GNHandle;
 osThreadId MatcherHandle;
 osThreadId Fake_SDuseHandle;
 osThreadId UartDebugHandle;
 osThreadId commandToGNSSHandle;
+osThreadId SenderLoRaHandle;
 osMessageQId UARTbyteHandle;
 osMessageQId UBXQueueHandle;
 osMessageQId GNSS_RequestHandle;
 osMessageQId GNSS_ReturnHandle;
 osMessageQId UARTdebugHandle;
 osMessageQId GNSS_toPollHandle;
+osMessageQId LoRA_toSendHandle;
 osSemaphoreId xSem_LORAReceive_startHandle;
 osSemaphoreId SD_Access_GNSS_ReturnHandle;
 osSemaphoreId LORA_Access_GNSS_ReturnHandle;
@@ -87,12 +90,13 @@ osPoolId poolDebug;
 /* USER CODE END FunctionPrototypes */
 
 void StartInitTask(void const * argument);
-void ReceivedLORATask(void const * argument);
+void ReceiverLoRA_Task(void const * argument);
 void UARTbyte_to_GNSSMessage_Task(void const * argument);
 void MatcherTask(void const * argument);
 void Fake_SDuse_Task(void const * argument);
 void UartDebugTask(void const * argument);
 void commandToGNSSTask(void const * argument);
+void SenderLoRa_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -216,6 +220,10 @@ void MX_FREERTOS_Init(void) {
   osMessageQDef(GNSS_toPoll, 16, GNSStoPollQ_t);
   GNSS_toPollHandle = osMessageCreate(osMessageQ(GNSS_toPoll), NULL);
 
+  /* definition and creation of LoRA_toSend */
+  osMessageQDef(LoRA_toSend, 16, LoRAtoSendQ_t);
+  LoRA_toSendHandle = osMessageCreate(osMessageQ(LoRA_toSend), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -225,9 +233,9 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
   InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
-  /* definition and creation of ReceivedLORA */
-  osThreadDef(ReceivedLORA, ReceivedLORATask, osPriorityNormal, 0, 5120);
-  ReceivedLORAHandle = osThreadCreate(osThread(ReceivedLORA), NULL);
+  /* definition and creation of ReceiverLoRA */
+  osThreadDef(ReceiverLoRA, ReceiverLoRA_Task, osPriorityNormal, 0, 2048);
+  ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
   /* definition and creation of UARTbyte_to_GN */
   osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 2048);
@@ -242,12 +250,16 @@ void MX_FREERTOS_Init(void) {
   Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
 
   /* definition and creation of UartDebug */
-  osThreadDef(UartDebug, UartDebugTask, osPriorityNormal, 0, 2048);
+  osThreadDef(UartDebug, UartDebugTask, osPriorityBelowNormal, 0, 2048);
   UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
 
   /* definition and creation of commandToGNSS */
   osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityHigh, 0, 512);
   commandToGNSSHandle = osThreadCreate(osThread(commandToGNSS), NULL);
+
+  /* definition and creation of SenderLoRa */
+  osThreadDef(SenderLoRa, SenderLoRa_Task, osPriorityBelowNormal, 0, 2048);
+  SenderLoRaHandle = osThreadCreate(osThread(SenderLoRa), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
@@ -279,7 +291,7 @@ void StartInitTask(void const * argument)
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
-	osSignalSet(ReceivedLORAHandle, 0x01);
+	osSignalSet(ReceiverLoRAHandle, 0x01);
 	osSignalSet(Fake_SDuseHandle, 0x01);
 	osSignalSet(MatcherHandle, 0x01);
 
@@ -288,20 +300,20 @@ void StartInitTask(void const * argument)
 	//osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
 
 	osThreadTerminate(InitTaskHandle);
-    //__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
+	//__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   /* USER CODE END StartInitTask */
 }
 
-/* USER CODE BEGIN Header_ReceivedLORATask */
+/* USER CODE BEGIN Header_ReceiverLoRA_Task */
 /**
- * @brief Function implementing the ReceivedLORA thread.
+ * @brief Function implementing the ReceiverLoRA thread.
  * @param argument: Not used
  * @retval None
  */
-/* USER CODE END Header_ReceivedLORATask */
-void ReceivedLORATask(void const * argument)
+/* USER CODE END Header_ReceiverLoRA_Task */
+void ReceiverLoRA_Task(void const * argument)
 {
-  /* USER CODE BEGIN ReceivedLORATask */
+  /* USER CODE BEGIN ReceiverLoRA_Task */
 	/* Infinite loop */
 	osEvent event = osSignalWait(0x01, osWaitForever);
 	if (event.status==osEventSignal){
@@ -309,10 +321,9 @@ void ReceivedLORATask(void const * argument)
 		{
 			receivedLora();
 			vTaskDelay(1);
-
 		}
 	}
-  /* USER CODE END ReceivedLORATask */
+  /* USER CODE END ReceiverLoRA_Task */
 }
 
 /* USER CODE BEGIN Header_UARTbyte_to_GNSSMessage_Task */
@@ -347,10 +358,10 @@ void MatcherTask(void const * argument)
 	/* Infinite loop */
 	osEvent event = osSignalWait(0x01, osWaitForever);
 	if (event.status==osEventSignal){
-	for(;;)
-	{
-		matcher();
-	}
+		for(;;)
+		{
+			matcher();
+		}
 	}
   /* USER CODE END MatcherTask */
 }
@@ -373,7 +384,7 @@ void Fake_SDuse_Task(void const * argument)
 		/* Infinite loop */
 		for(;;)
 		{
-			fakeuseSD();
+			//fakeuseSD();
 			vTaskDelayUntil(&xLastWakeTime,1000);
 		}
 	}
@@ -413,10 +424,28 @@ void commandToGNSSTask(void const * argument)
 	for(;;)
 	{
 		commandToGNSS();
-
+		vTaskDelay(200);//Pas terrible
 	}
 
   /* USER CODE END commandToGNSSTask */
+}
+
+/* USER CODE BEGIN Header_SenderLoRa_Task */
+/**
+ * @brief Function implementing the SenderLoRa thread.
+ * @param argument: Not used
+ * @retval None
+ */
+/* USER CODE END Header_SenderLoRa_Task */
+void SenderLoRa_Task(void const * argument)
+{
+  /* USER CODE BEGIN SenderLoRa_Task */
+	/* Infinite loop */
+	for(;;)
+	{
+		senderLoRA();
+	}
+  /* USER CODE END SenderLoRa_Task */
 }
 
 /* Private application code --------------------------------------------------*/

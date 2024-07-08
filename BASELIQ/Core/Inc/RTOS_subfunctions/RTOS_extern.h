@@ -22,6 +22,7 @@ extern osMessageQId GNSS_RequestHandle;
 extern osMessageQId GNSS_ReturnHandle;
 extern osMessageQId UARTdebugHandle;
 extern osMessageQId GNSS_toPollHandle;
+extern osMessageQId LoRA_toSendHandle;
 
 extern osSemaphoreId xSem_LORAReceive_startHandle;
 extern osSemaphoreId SD_Access_GNSS_ReturnHandle;
@@ -53,13 +54,13 @@ typedef struct {
 } GNSSRequestQ_t;
 
 typedef struct {
-	UBXMessageQ_t itemFromUBX_Q;
 	TickType_t Request_TIME;
 	TickType_t Return_TIME;
 	GNSSReturnStatut statut;
 	uint8_t CLASS;
 	uint8_t ID;
 	DynamicBuffer * bufferReturn;
+	UBXMessageQ_t* itemFromUBXtoFree;
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 } GNSSReturnQ_t;
 
@@ -73,4 +74,12 @@ typedef struct{ //Copie assumer de CommandnSize
     size_t size;
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 }GNSStoPollQ_t;
+
+typedef struct {
+	LORA_HeaderforSending* header;
+	DynamicBuffer* payload;
+	UBXMessageQ_t* itemFromUBXtoFree;
+	GNSSReturnQ_t* gnssReturntoFree;
+	LORA_MessageReception* LoRAreceivetoFree;
+}LoRAtoSendQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

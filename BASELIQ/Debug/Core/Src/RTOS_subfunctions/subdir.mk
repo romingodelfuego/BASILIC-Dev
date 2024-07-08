@@ -9,7 +9,8 @@ C_SRCS += \
 ../Core/Src/RTOS_subfunctions/debug.c \
 ../Core/Src/RTOS_subfunctions/fakeuseSD.c \
 ../Core/Src/RTOS_subfunctions/matcher.c \
-../Core/Src/RTOS_subfunctions/receivedLora.c \
+../Core/Src/RTOS_subfunctions/receiverLoRA.c \
+../Core/Src/RTOS_subfunctions/senderLoRA.c \
 ../Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.c 
 
 C_DEPS += \
@@ -17,7 +18,8 @@ C_DEPS += \
 ./Core/Src/RTOS_subfunctions/debug.d \
 ./Core/Src/RTOS_subfunctions/fakeuseSD.d \
 ./Core/Src/RTOS_subfunctions/matcher.d \
-./Core/Src/RTOS_subfunctions/receivedLora.d \
+./Core/Src/RTOS_subfunctions/receiverLoRA.d \
+./Core/Src/RTOS_subfunctions/senderLoRA.d \
 ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.d 
 
 OBJS += \
@@ -25,7 +27,8 @@ OBJS += \
 ./Core/Src/RTOS_subfunctions/debug.o \
 ./Core/Src/RTOS_subfunctions/fakeuseSD.o \
 ./Core/Src/RTOS_subfunctions/matcher.o \
-./Core/Src/RTOS_subfunctions/receivedLora.o \
+./Core/Src/RTOS_subfunctions/receiverLoRA.o \
+./Core/Src/RTOS_subfunctions/senderLoRA.o \
 ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.o 
 
 
@@ -36,7 +39,7 @@ Core/Src/RTOS_subfunctions/%.o Core/Src/RTOS_subfunctions/%.su Core/Src/RTOS_sub
 clean: clean-Core-2f-Src-2f-RTOS_subfunctions
 
 clean-Core-2f-Src-2f-RTOS_subfunctions:
-	-$(RM) ./Core/Src/RTOS_subfunctions/commandToGNSS.cyclo ./Core/Src/RTOS_subfunctions/commandToGNSS.d ./Core/Src/RTOS_subfunctions/commandToGNSS.o ./Core/Src/RTOS_subfunctions/commandToGNSS.su ./Core/Src/RTOS_subfunctions/debug.cyclo ./Core/Src/RTOS_subfunctions/debug.d ./Core/Src/RTOS_subfunctions/debug.o ./Core/Src/RTOS_subfunctions/debug.su ./Core/Src/RTOS_subfunctions/fakeuseSD.cyclo ./Core/Src/RTOS_subfunctions/fakeuseSD.d ./Core/Src/RTOS_subfunctions/fakeuseSD.o ./Core/Src/RTOS_subfunctions/fakeuseSD.su ./Core/Src/RTOS_subfunctions/matcher.cyclo ./Core/Src/RTOS_subfunctions/matcher.d ./Core/Src/RTOS_subfunctions/matcher.o ./Core/Src/RTOS_subfunctions/matcher.su ./Core/Src/RTOS_subfunctions/receivedLora.cyclo ./Core/Src/RTOS_subfunctions/receivedLora.d ./Core/Src/RTOS_subfunctions/receivedLora.o ./Core/Src/RTOS_subfunctions/receivedLora.su ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.cyclo ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.d ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.o ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.su
+	-$(RM) ./Core/Src/RTOS_subfunctions/commandToGNSS.cyclo ./Core/Src/RTOS_subfunctions/commandToGNSS.d ./Core/Src/RTOS_subfunctions/commandToGNSS.o ./Core/Src/RTOS_subfunctions/commandToGNSS.su ./Core/Src/RTOS_subfunctions/debug.cyclo ./Core/Src/RTOS_subfunctions/debug.d ./Core/Src/RTOS_subfunctions/debug.o ./Core/Src/RTOS_subfunctions/debug.su ./Core/Src/RTOS_subfunctions/fakeuseSD.cyclo ./Core/Src/RTOS_subfunctions/fakeuseSD.d ./Core/Src/RTOS_subfunctions/fakeuseSD.o ./Core/Src/RTOS_subfunctions/fakeuseSD.su ./Core/Src/RTOS_subfunctions/matcher.cyclo ./Core/Src/RTOS_subfunctions/matcher.d ./Core/Src/RTOS_subfunctions/matcher.o ./Core/Src/RTOS_subfunctions/matcher.su ./Core/Src/RTOS_subfunctions/receiverLoRA.cyclo ./Core/Src/RTOS_subfunctions/receiverLoRA.d ./Core/Src/RTOS_subfunctions/receiverLoRA.o ./Core/Src/RTOS_subfunctions/receiverLoRA.su ./Core/Src/RTOS_subfunctions/senderLoRA.cyclo ./Core/Src/RTOS_subfunctions/senderLoRA.d ./Core/Src/RTOS_subfunctions/senderLoRA.o ./Core/Src/RTOS_subfunctions/senderLoRA.su ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.cyclo ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.d ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.o ./Core/Src/RTOS_subfunctions/uartbyteToGnssMessage.su
 
 .PHONY: clean-Core-2f-Src-2f-RTOS_subfunctions
 
