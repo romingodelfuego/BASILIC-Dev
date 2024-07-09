@@ -80,13 +80,7 @@ osSemaphoreId STARTUP_INIT_doneHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-/******** POOL ********/
-void initPool(osPoolId* poolId, int POOL_SIZE);
 
-osPoolId poolUBX;
-osPoolId poolDebug;
-
-/******** ---- ********/
 /* USER CODE END FunctionPrototypes */
 
 void StartInitTask(void const * argument);
@@ -115,7 +109,7 @@ unsigned long getRunTimeCounterValue(void);
 __weak void configureTimerForRunTimeStats(void)
 {
 }
-extern volatile unsigned long ulHighFrequencyTimerTicks;
+//extern volatile unsigned long ulHighFrequencyTimerTicks;
 __weak unsigned long getRunTimeCounterValue(void)
 {
 	return 0;
@@ -316,11 +310,11 @@ void ReceiverLoRA_Task(void const * argument)
   /* USER CODE BEGIN ReceiverLoRA_Task */
 	/* Infinite loop */
 	osEvent event = osSignalWait(0x01, osWaitForever);
-	if (event.status==osEventSignal){
+	if (event.status == osEventSignal){
 		for(;;)
 		{
-			receivedLora();
-			vTaskDelay(1);
+			osEvent eventFromISR = osSignalWait(0x02, osWaitForever); //On attend de recevoir un ISR depuis un EXTI
+			if (eventFromISR.status == osEventSignal) receivedLora();
 		}
 	}
   /* USER CODE END ReceiverLoRA_Task */
@@ -360,6 +354,8 @@ void MatcherTask(void const * argument)
 	if (event.status==osEventSignal){
 		for(;;)
 		{
+			//On attend qu'un message UBX soit recu car nous avons prealablement envoyer une requete au GNSS}
+			while(uxQueueMessagesWaiting(UBXQueueHandle)==0){vTaskDelay(1);}
 			matcher();
 		}
 	}
@@ -384,7 +380,7 @@ void Fake_SDuse_Task(void const * argument)
 		/* Infinite loop */
 		for(;;)
 		{
-			//fakeuseSD();
+			fakeuseSD();
 			vTaskDelayUntil(&xLastWakeTime,1000);
 		}
 	}
@@ -424,7 +420,7 @@ void commandToGNSSTask(void const * argument)
 	for(;;)
 	{
 		commandToGNSS();
-		vTaskDelay(200);//Pas terrible
+		//vTaskDelay(200);//Pas terrible
 	}
 
   /* USER CODE END commandToGNSSTask */

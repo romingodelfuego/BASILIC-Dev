@@ -9,14 +9,15 @@
 
 /************************ TASK ************************/
 void receivedLora(void){
-	osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever); //On attend de recevoir un ISR depuis un EXTI
 
 	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
 	if (LORA_Receive_Message == NULL) Error_Handler();
-
+	ITM_Port32(30)=357951;
 	RFM9x_Receive(LORA_Receive_Message);
 
-	if (!LORA_Receive_Message->RxNbrBytes)ITM_Port32(31)=66; //Si on recoit du bruit
+	if (!LORA_Receive_Message->RxNbrBytes){
+		ITM_Port32(30)=66; //Si on recoit du bruit
+	}
 
 	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
 			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
@@ -32,10 +33,10 @@ void receivedLora(void){
 			break;
 
 		default:
-			vPortFree(LORA_Receive_Message);
 			break;
 		}
 	}
+	ITM_Port32(30)=159753;
 	vPortFree(LORA_Receive_Message); //contient des attribut aui sont pvPortMalloc et qui sont free de facon asynchrone
 }
 /************************ ---- ************************/
@@ -54,7 +55,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 			.applicantSemaphore = LORA_Access_GNSS_ReturnHandle,
 			.applicantName = "LORAPolling_REQUEST"
 	};
-
+	/*--------------- COMMAND PART ---------------*/
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
 
 	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
@@ -72,7 +73,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	}
 
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-	//gnssRetrun est pvPortMalloc
+	/*--------------- SEND PART ---------------*/
 	ITM_Port32(30)=555;
 
 	if (gnssReturn.statut!=OK){
@@ -91,12 +92,10 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	};
 	LoRAtoSendQ_t LoRAtoSend= {.header = headerSend,
 			.payload = gnssReturn.bufferReturn,
-			.itemFromUBXtoFree = gnssReturn.itemFromUBXtoFree,
-			.gnssReturntoFree=&gnssReturn,
-			.LoRAreceivetoFree = LORA_Receive_Message};
-
+			.UBXMessage=gnssReturn.UBXMessage,
+	};
 	xQueueSendToBack(LoRA_toSendHandle,&LoRAtoSend,osWaitForever);
-
+	/*--------------- ________ ---------------*/
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
 

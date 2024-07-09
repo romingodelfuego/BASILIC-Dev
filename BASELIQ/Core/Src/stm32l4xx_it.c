@@ -45,6 +45,7 @@
 /* USER CODE BEGIN PV */
 extern osSemaphoreId xSem_LORAReceive_startHandle;
 extern osMessageQId UARTbyteHandle;
+extern osThreadId ReceiverLoRAHandle;
 
 volatile unsigned long ulHighFrequencyTimerTicks = 0;
 /* USER CODE END PV */
@@ -174,7 +175,7 @@ void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
-		osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		osSignalSet(ReceiverLoRAHandle, 0x02);
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */

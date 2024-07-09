@@ -13,6 +13,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "debug.h"
+#include "shared.h"
 
 
 
@@ -59,8 +60,8 @@ typedef struct {
 	GNSSReturnStatut statut;
 	uint8_t CLASS;
 	uint8_t ID;
+	UBXMessage_parsed* UBXMessage;
 	DynamicBuffer * bufferReturn;
-	UBXMessageQ_t* itemFromUBXtoFree;
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 } GNSSReturnQ_t;
 
@@ -75,11 +76,11 @@ typedef struct{ //Copie assumer de CommandnSize
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 }GNSStoPollQ_t;
 
+
 typedef struct {
 	LORA_HeaderforSending* header;
 	DynamicBuffer* payload;
 	UBXMessageQ_t* itemFromUBXtoFree;
-	GNSSReturnQ_t* gnssReturntoFree;
-	LORA_MessageReception* LoRAreceivetoFree;
+	UBXMessage_parsed* UBXMessage;
 }LoRAtoSendQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */
