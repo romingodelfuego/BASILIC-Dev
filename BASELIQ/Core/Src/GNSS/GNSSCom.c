@@ -67,7 +67,7 @@ void GNSSCom_SetUp_Init(void){
 		sprintf(message, "\r\t\t\n %s%s%s \r\n",ANSI_COLOR_GREEN,"\t---SUCCESS---\r\n",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
-		HAL_Delay(500);
+		vTaskDelay(500);
 		ITM_Port32(31)=1;
 	}
 }

@@ -21,6 +21,7 @@ void commandToGNSS(void){
 	ITM_Port32(28)=333;
 	if (statut!= HAL_OK) Error_Handler();
 	vTaskDelay(1000);//On attend que le module aie le temps de rep
+	//C'est evidemment a modifier
 	//osSemaphoreRelease(GNSS_UART_AccessHandle);
 }
 /************************ ---- ************************/

@@ -198,11 +198,11 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
 	while (1)
 	{
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
 
-		vTaskDelay(100);
+		vTaskDelay(250);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
 
 	}
