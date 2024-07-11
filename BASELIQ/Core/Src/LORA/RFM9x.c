@@ -159,7 +159,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	if (len_RFM9x > (RFM9x_FIFO_SIZE)) len_RFM9x = RFM9x_FIFO_SIZE; //Pas sure de lutilité
 
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
-	uint8_t* data = (uint8_t*)pvPortMalloc(RFM9x_FIFO_SIZE * sizeof(uint8_t));
+	uint8_t* data = (uint8_t*)pvPortMalloc(len_RFM9x * sizeof(uint8_t));
 	if (data == NULL) Error_Handler();
 
 	for (int i = 0; i < len_RFM9x; i++)
@@ -183,7 +183,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len_RFM9x-sizeof(LORA_HeaderforReception)));
 	if (LORA_Receive_Message->payload == NULL) Error_Handler();
 
-	memcpy(LORA_Receive_Message->payload, data+4, len_RFM9x-4);
+	memcpy(LORA_Receive_Message->payload, data+sizeof(LORA_HeaderforReception), len_RFM9x-sizeof(LORA_HeaderforReception));
 
 	vPortFree(data);
 	// clear all the IRQ flags

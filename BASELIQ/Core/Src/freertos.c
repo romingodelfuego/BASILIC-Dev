@@ -286,13 +286,9 @@ void StartInitTask(void const * argument)
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
 	osSignalSet(ReceiverLoRAHandle, 0x01);
 	osSignalSet(Fake_SDuseHandle, 0x01);
+	osSignalSet(UARTbyte_to_GNHandle, 0x01);
 	osSignalSet(MatcherHandle, 0x01);
-
-	//On prend les semaphores
-	//osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
-	//osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
-	initDone_ISRcanRun = 1;
-
+	logMemoryUsage("INITIALISATION");
 	osThreadTerminate(InitTaskHandle);
 	//__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
 	/* USER CODE END StartInitTask */
@@ -314,8 +310,7 @@ void ReceiverLoRA_Task(void const * argument)
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
 		{
-			//On attend de recevoir un ISR depuis un EXTI
-			ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+			osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
 			receivedLora();
 		}
 	}
@@ -333,10 +328,13 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 {
 	/* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
 	/* Infinite loop */
-	for(;;)
-	{
-		uartbyteToGnssMessage();
-		//Surtout pas delay ici
+	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
+	if (eventFromStart.status == osEventSignal){
+		for(;;)
+		{
+			uartbyteToGnssMessage();
+			//Surtout pas delay ici
+		}
 	}
 	/* USER CODE END UARTbyte_to_GNSSMessage_Task */
 }
@@ -382,7 +380,7 @@ void Fake_SDuse_Task(void const * argument)
 		/* Infinite loop */
 		for(;;)
 		{
-			fakeuseSD();
+			//fakeuseSD();
 			vTaskDelayUntil(&xLastWakeTime,1000);
 		}
 	}
@@ -422,7 +420,6 @@ void commandToGNSSTask(void const * argument)
 	for(;;)
 	{
 		commandToGNSS();
-		//vTaskDelay(200);//Pas terrible
 	}
 
 	/* USER CODE END commandToGNSSTask */
@@ -441,8 +438,7 @@ void SenderLoRa_Task(void const * argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		//senderLoRA();
-		vTaskDelay(portMAX_DELAY);
+		senderLoRA();
 	}
 	/* USER CODE END SenderLoRa_Task */
 }

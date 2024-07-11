@@ -175,15 +175,9 @@ void EXTI9_5_IRQHandler(void)
 	/* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	ITM_Port32(20)=111;
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
-		ITM_Port32(20)=222;
-		if (initDone_ISRcanRun){
-			ITM_Port32(20)=333;
-			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-			vTaskNotifyGiveFromISR(ReceiverLoRAHandle, &xHigherPriorityTaskWoken);
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-		}
-		__HAL_GPIO_EXTI_CLEAR_IT(RFM_IRQ_Pin);
+		osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
+
 	/* USER CODE END EXTI9_5_IRQn 0 */
 	HAL_GPIO_EXTI_IRQHandler(PROC_FPGA_BUSY_Pin);
 	HAL_GPIO_EXTI_IRQHandler(UI_WakeUp_Pin);
@@ -242,16 +236,14 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
 	/* USER CODE BEGIN USART3_IRQn 0 */
-	if (initDone_ISRcanRun){
-		uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
-		// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
-		UARTMessageQ_t uartMsg = { .data = receivedByte };
-		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR(UARTbyteHandle,&uartMsg,&xHigherPriorityTaskWoken);
-		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
+	// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
+	UARTMessageQ_t uartMsg = { .data = receivedByte };
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueSendFromISR(UARTbyteHandle,&uartMsg,&xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
-	}
-	GNSSCom_UartActivate(&hGNSSCom);
+
 	/* USER CODE END USART3_IRQn 0 */
 	HAL_UART_IRQHandler(&huart3);
 	/* USER CODE BEGIN USART3_IRQn 1 */

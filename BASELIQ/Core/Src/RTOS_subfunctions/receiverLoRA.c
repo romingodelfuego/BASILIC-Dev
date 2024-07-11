@@ -9,9 +9,10 @@
 
 /************************ TASK ************************/
 void receivedLora(void){
-
+	logMemoryUsage("BEFORE - LoRA - PortMalloc");
 	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
 	if (LORA_Receive_Message == NULL) Error_Handler();
+	logMemoryUsage("AFTER - LoRA - PortMalloc");
 	ITM_Port32(30)=357951;
 	RFM9x_Receive(LORA_Receive_Message);
 
@@ -37,7 +38,9 @@ void receivedLora(void){
 		}
 	}
 	ITM_Port32(30)=159753;
-	vPortFree(LORA_Receive_Message); //contient des attribut aui sont pvPortMalloc et qui sont free de facon asynchrone
+	logMemoryUsage("BEFORE - LoRA - PortFree");
+	vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
+	logMemoryUsage("AFTER - LoRA - PortFree");
 }
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
@@ -69,20 +72,25 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	if (eventLORA !=osOK){
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
-		return;
+		Error_Handler();
 	}
-
+	/*--------------- RECEIVE RESPONSE PART ---------------*/
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-	/*--------------- SEND PART ---------------*/
+
 	ITM_Port32(30)=555;
 
 	if (gnssReturn.statut!=OK){
 		ITM_Port32(31)=99;
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 		UART_Transmit_With_Color("\t---NOT FOUND--\r\n",ANSI_COLOR_RED);
-		return;
+		Error_Handler();
 	}
+
+	/*--------------- SEND PART ---------------*/
+	logMemoryUsage(" BEFORE - headerSend - PortMalloc");
 	LORA_HeaderforSending* headerSend =(LORA_HeaderforSending*) pvPortMalloc(sizeof(LORA_HeaderforSending));
+	logMemoryUsage("AFTER - headerSend - PortMalloc");
+
 	if (headerSend == NULL) Error_Handler();
 
 	*headerSend = (LORA_HeaderforSending){
@@ -95,7 +103,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 			.UBXMessage=gnssReturn.UBXMessage,
 	};
 	xQueueSendToBack(LoRA_toSendHandle,&LoRAtoSend,osWaitForever);
-	/*--------------- ________ ---------------*/
+	/*--------------- ENDING PART MOSTLY DEBUG---------------*/
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling...",ANSI_COLOR_MAGENTA);
 	UART_Transmit_With_Color("\t---SUCCESS---\r\n",ANSI_COLOR_GREEN);
 

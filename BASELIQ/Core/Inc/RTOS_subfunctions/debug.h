@@ -22,5 +22,5 @@ void debug(void);
 
 void UART_Transmit_With_Color(char *data, char *color);
 void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len);
-
+void logMemoryUsage(char* phase);
 #endif /* INC_RTOS_SUBFUNCTIONS_DEBUG_H_ */

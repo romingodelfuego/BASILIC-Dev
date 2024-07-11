@@ -76,11 +76,9 @@ typedef struct{ //Copie assumer de CommandnSize
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 }GNSStoPollQ_t;
 
-
 typedef struct {
 	LORA_HeaderforSending* header;
 	DynamicBuffer* payload;
-	UBXMessageQ_t* itemFromUBXtoFree;
 	UBXMessage_parsed* UBXMessage;
 }LoRAtoSendQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

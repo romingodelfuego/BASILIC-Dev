@@ -74,7 +74,7 @@ typedef struct{
 	uint8_t nbOf_packet;// Le nombre total de paquet qui vont etre send
 
 	uint8_t num_packet;// Le numero du paquet send
-	size_t 	len_payload;
+	uint8_t	len_payload;
 
 }LORA_HeaderforSending;
 
@@ -82,7 +82,7 @@ typedef struct{
 	uint8_t recipient;
 	uint8_t sender;
 	uint8_t type;
-	size_t 	len_payload;
+	uint8_t	len_payload;
 
 }LORA_HeaderforReception;
 typedef struct {

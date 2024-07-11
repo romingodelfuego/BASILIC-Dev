@@ -69,8 +69,10 @@ void fakeuseSD(void){
 	}
 
 	// Reinitialisation de la trame
+	logMemoryUsage("BEFORE - gnssRetrun - PortFree x freeBuffer");
 	freeBuffer(gnssReturn.bufferReturn);
 	vPortFree(gnssReturn.UBXMessage);
+	logMemoryUsage("AFTER - gnssRetrun - PortFree x freeBuffer");
 
 	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);
 
