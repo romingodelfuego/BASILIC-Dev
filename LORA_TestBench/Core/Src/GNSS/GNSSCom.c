@@ -6,6 +6,9 @@
  */
 #include <GNSS/GNSSCom.h>
 #include "LORA/RFM9x.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "RTOS_subfunctions/RTOS_extern.h"
 
 
 GNSSCom_HandleTypeDef hGNSSCom;
@@ -16,23 +19,18 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
 
-	hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
-	memset(hGNSSCom.TxBuffer, 0, UART_TX_BUFFER_SIZE);
-	memset(hGNSSCom.DebugBuffer, 0, UART_DEBUG_BUFFER_SIZE);
+	//hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
 
-	GNSSCom_UartActivate(&hGNSSCom);
-	HAL_Delay(5000); //En theorie il suffit d attendre la reception du premier msg UART pour envoyer
-	GNSSCom_Send_SetVal();
 }
 DynamicBuffer* initializeBuffer(size_t initialSize) {
-	DynamicBuffer *bufferDynamic = malloc(sizeof(DynamicBuffer));
+	DynamicBuffer *bufferDynamic = pvPortMalloc(sizeof(DynamicBuffer));
 	if (bufferDynamic == NULL) {
 		return NULL; // Échec de l'allocation mémoire
 	}
 
-	bufferDynamic->buffer = malloc(initialSize);
+	bufferDynamic->buffer = pvPortMalloc(initialSize);
 	if (bufferDynamic->buffer == NULL) {
-		free(bufferDynamic); // Libérer la mémoire allouée pour la structure
+		vPortFree(bufferDynamic); // Libérer la mémoire allouée pour la structure
 		return NULL; // Échec de l'allocation mémoire
 	}
 
@@ -47,12 +45,10 @@ void resizeBuffer(DynamicBuffer *bufferDynamic, size_t newSize) {
 	}
 }
 void freeBuffer(DynamicBuffer *bufferDynamic) {
-	free(bufferDynamic->buffer);
-	free(bufferDynamic);
+	vPortFree(bufferDynamic->buffer);
+	vPortFree(bufferDynamic);
 }
-void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
-	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
-}
+
 GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
@@ -61,14 +57,13 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 				buffer[i +1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
 			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->msgClass = buffer[i + 2];
-			UbxMessage->msgID = buffer[i + 3];
-			UbxMessage->len = (buffer[i+5] << 8) |buffer[i+4];
-			UbxMessage->load=initializeBuffer((size_t)UbxMessage->len);
-			memcpy(UbxMessage->load->buffer, buffer + i + 6, UbxMessage->load->size);
+			UbxMessage->CLASS = buffer[i + 2];
+			UbxMessage->ID = buffer[i + 3];
+			UbxMessage->len_payload= (buffer[i+5] << 8) |buffer[i+4];
 
-			UbxMessage->UBX_Brute=initializeBuffer((size_t)UbxMessage->len + 8);
-			memcpy(UbxMessage->UBX_Brute->buffer, buffer + i, UbxMessage->UBX_Brute->size);
+
+			UbxMessage->brute=initializeBuffer((size_t)UbxMessage->len_payload + 8);
+			memcpy(UbxMessage->brute->buffer, buffer + i, UbxMessage->brute->size);
 
 			genericMessage->Message.UBXMessage = UbxMessage;
 			return genericMessage;

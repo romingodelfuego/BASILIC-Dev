@@ -46,11 +46,6 @@ int __io_putchar(int ch) {
 	ITM_SendChar(ch);
 	return ch;
 }
-void ITM_SendString(char* str) {
-    while (*str) {
-        ITM_SendChar(*str++);
-    }
-}
 
 void updateMemoryUsage(void) {
 	vPortGetHeapStats(&heapStats);

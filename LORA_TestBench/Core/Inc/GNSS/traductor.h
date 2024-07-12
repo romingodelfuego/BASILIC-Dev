@@ -13,7 +13,6 @@
 #include <stddef.h>  // Pour size_t
 #include <stdlib.h>
 #include <string.h> // Pour memcpy
-#include "constants.h"
 #include "UBXParser.h"
 
 typedef struct {

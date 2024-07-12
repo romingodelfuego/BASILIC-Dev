@@ -16,6 +16,7 @@ void receivedLora(void){
 	if (LORA_Receive_Message->header == NULL)Error_Handler();
 	updateMemoryUsage();
 	ITM_Port32(30)=357951;
+
 	RFM9x_Receive(LORA_Receive_Message);
 
 	if (!LORA_Receive_Message->RxNbrBytes){

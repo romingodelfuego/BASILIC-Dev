@@ -27,6 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "RTOS_subfunctions/debug.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

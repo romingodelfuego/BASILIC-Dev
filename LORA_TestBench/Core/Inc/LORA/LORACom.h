@@ -10,38 +10,37 @@
 
 
 
+#include <shared.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdint.h> // Incluez les bibliothèques standard nécessaires
 #include "spi.h"
 #include "usart.h"
 #include "shared.h"
 
-#define BROADCAST_ADDRESS 0xFF
-#define MODULE_SOURCE_ADDRESS 0xFE//WHO AM I
-// PAQUET TYPE
+//WHO AM I
+#define MODULE_SOURCE_ADDRESS 0x01
+#define MODULE_BROADCAST_ADDRESS 0xFF
+// PAQUE TYPE
 #define PACKET_TYPE_DATA 0x01
 #define PACKET_TYPE_ACK  0x02
 #define PACKET_TYPE_POLL 0x03
 
-#define UART_DEBUG_BUFFER_SIZE 200
+#define MAX_SPI_SIZE 300
 
 typedef struct {
 	SPI_HandleTypeDef* hspi;
 	UART_HandleTypeDef* huartDebug;
 
-	uint8_t DebugBuffer[UART_DEBUG_BUFFER_SIZE];
-
 } LORACom_HandleTypeDef;
 extern LORACom_HandleTypeDef hLORACom;
-typedef enum {
-	RECEIVER,
-	TRANSMITTER,
-}MODE;
+
+
 void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug);
+void LORACom_SPIActivate(LORACom_HandleTypeDef* hLORA);
 void LORA_debug(char* flag, uint8_t* value);
-void LORA_Send(Header* header, uint8_t* payload);
 void LORA_debug_val(const char* flag, uint8_t value);
 void LORA_debug_hexa(char* flag, uint8_t* value, uint8_t len);
 void RF_TestSpi( void );

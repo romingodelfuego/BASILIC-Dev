@@ -11,22 +11,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "debug.h"
-#include "constants.h"
-//#include "GNSS/GNSSCom.h"
-
-typedef struct {
-    uint8_t *buffer;
-    size_t size;
-} DynamicBuffer;
-
-typedef enum {
-    NMEA,
-    UBX,
-} OutputProtocol;
+#include "shared.h"
 
 extern OutputProtocol protocol;
 
-typedef struct {
+/*typedef struct {
 	uint8_t msgClass;
 	uint8_t msgID;
 	uint16_t len;
@@ -34,26 +23,12 @@ typedef struct {
 	DynamicBuffer* load; // Pointeur de tableau
 	DynamicBuffer* UBX_Brute; // Pointeur de tableau de longeur variable
 
-}UBXMessage_parsed ;
+}UBXMessage_parsed ;*/
+
 
 typedef struct {
-
-	char* NMEA_Brute;
-}NMEAMessage_parsed;
-
-typedef union {
-	NMEAMessage_parsed* NMEAMessage;
-	UBXMessage_parsed* UBXMessage;
-}MessageStruct;
-
-typedef struct{
-	OutputProtocol typeMessage;
-	MessageStruct Message;
-}GenericMessage;
-
-typedef struct {
-    uint8_t msgClass;
-    uint8_t msgID;
+    uint8_t CLASS;
+    uint8_t ID;
     void (*get_func)(UBXMessage_parsed*, void*);
     void* structAssociate;
 } MessageMapping;

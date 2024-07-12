@@ -44,7 +44,6 @@
 extern osSemaphoreId xSem_LORAReceive_startHandle;
 extern osMessageQId UARTbyteHandle;
 extern osThreadId ReceiverLoRAHandle;
-extern volatile int initDone_ISRcanRun;
 
 volatile unsigned long ulHighFrequencyTimerTicks = 0;
 /* USER CODE END PV */
