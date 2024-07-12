@@ -9,11 +9,11 @@
 /************************ TASK ************************/
 void senderLoRA(){
 	LoRAtoSendQ_t LoRAtoSend;
-
+	logMemoryUsage("START - Lora Sender");
 	//RECEVOIR D UNE QUEUE : format :{Header, DynamicBuffer}
 	//Allouer memoire ou pas
 	xQueueReceive(LoRA_toSendHandle, &LoRAtoSend, osWaitForever);
-/*
+
 	LoRAtoSend.header->nbOf_packet = LoRAtoSend.payload->size / (size_t)(RFM9x_FIFO_SIZE - sizeof(LORA_HeaderforSending)) +1;
 	LoRAtoSend.header->identifier= 42; // A generer aleatoirement mais de facon unique pour chaque payload
 	ITM_Port32(30)=LoRAtoSend.header->nbOf_packet;
@@ -28,9 +28,10 @@ void senderLoRA(){
 				remaining_size  ;
 
 		LoRAtoSend.header->len_payload = len_payload;
-		logMemoryUsage("BEFORE - Lora-buffer - PortMalloc ");
+		updateMemoryUsage();
 		uint8_t* buffer = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len_payload +sizeof(LORA_HeaderforSending)));
 		if(buffer == NULL) Error_Handler();
+		updateMemoryUsage();
 
 
 		//On rempli la premiere partie du buffer
@@ -46,20 +47,22 @@ void senderLoRA(){
 		memcpy(buffer + sizeof(LORA_HeaderforSending),
 				LoRAtoSend.payload->buffer + i * (RFM9x_FIFO_SIZE-sizeof(LORA_HeaderforSending)),
 				len_payload );
+		updateMemoryUsage();
 
 		//SEMAPHORE D ATTENTE DE RFM SEND
 		RFM9x_Send(buffer, len_payload); //Pour l'instant on s'oblige a faire comme cela,
 		ITM_Port32(30)=len_payload;
 
 		vPortFree(buffer);
-		logMemoryUsage("AFTER - Lora-buffer - PortFree ");
+		updateMemoryUsage();
+
 	}
-*/
+
 	//Liberer memoire
 	freeBuffer(LoRAtoSend.payload);
 	vPortFree(LoRAtoSend.UBXMessage);
 	vPortFree(LoRAtoSend.header);
-	logMemoryUsage("AFTER - Lora-payload x UBXMessage x header- PortFree ");
+	logMemoryUsage("END - Lora Sender");
 	RFM9x_SetMode_Receive();
 }
 /************************ ---- ************************/

@@ -22,7 +22,7 @@ void debug(void){
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void UART_Transmit_With_Color(char *data, char *color) {
-	/*UARTdebugQ_t UARTdebug;
+	UARTdebugQ_t UARTdebug;
 
 	// Allouer de la mémoire pour le message et la couleur
 	UARTdebug.message = pvPortMalloc(strlen(data) + 1);
@@ -34,7 +34,7 @@ void UART_Transmit_With_Color(char *data, char *color) {
 	strcpy(UARTdebug.message, data);
 	strcpy(UARTdebug.color, color);
 	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
-	*/
+
 }
 void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
 	for (size_t i = 0; i < len; i++) {	// Parcourir le tableau et convertir chaque octet en hexadécimal
@@ -50,6 +50,10 @@ void ITM_SendString(char* str) {
     while (*str) {
         ITM_SendChar(*str++);
     }
+}
+
+void updateMemoryUsage(void) {
+	vPortGetHeapStats(&heapStats);
 }
 void logMemoryUsage(char*phase) {
 	// Obtenir les statistiques de la mémoire

@@ -145,6 +145,8 @@ int waitCAD() {
 	return 1;  // No activity detected
 }*/
 void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
+	logMemoryUsage("START - RFM9x Reception");
+
 	// Number of bytes received
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len_RFM9x = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
@@ -172,8 +174,6 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	LORA_Receive_Message->SNR=RFM9x_ReadReg(RFM9x_REG_19_PKT_SNR_VALUE);
 	LORA_Receive_Message->RSSI = RFM9x_ReadReg(RFM9x_REG_1A_PKT_RSSI_VALUE);
 
-	LORA_Receive_Message->header = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
-	if (LORA_Receive_Message->header == NULL) Error_Handler();
 	////On copie  la valeur de data[i] a l'adresse recipient,sender...
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
@@ -189,6 +189,8 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	// clear all the IRQ flags
 	RFM9x_WriteReg(RFM9x_REG_12_IRQ_FLAGS, 0xFF);
 	RFM9x_SetMode_Receive();
+	logMemoryUsage("END - RFM9x Reception");
+
 }
 void RFM9x_SetMode_Receive(void){
 	// Set sleep mode, so we can also set RFM9x mode:

@@ -38,10 +38,10 @@ void uartbyteToGnssMessage(void){
 
 		case WAIT_FOR_CLASS:
 			if(UBXMessage != NULL) Error_Handler();
-			logMemoryUsage("BEFORE - UBXMessage - PortMalloc");
+			updateMemoryUsage();
 			UBXMessage = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed)); //UBXMessage utilise une partie de la memoire HEAP
 			if (UBXMessage == NULL) Error_Handler();
-			logMemoryUsage("AFTER - UBXMessage - PortMalloc");
+			updateMemoryUsage();
 			UBXMessage->CLASS = receivedByte;
 			state = WAIT_FOR_ID;
 			break;
@@ -61,11 +61,10 @@ void uartbyteToGnssMessage(void){
 			UBXMessage->len_payload |= receivedByte << 8;
 			if (UBXMessage->len_payload == 0 || UBXMessage->len_payload > UART_MAX_BUFFER_SIZE) Error_Handler(); //On checke que le message ne dépasse pas une certaine longueur
 			ITM_Port32(31)=UBXMessage->len_payload;
-			logMemoryUsage("BEFORE - UBXMessage->brute - PortMalloc");
+			updateMemoryUsage();
 			UBXMessage->brute = initializeBuffer(UBXMessage->len_payload + 8); //On fait pointer un buffer sur une partie protege de la mémoire HEAP
 			if (UBXMessage->brute == NULL) Error_Handler();
-			logMemoryUsage("AFTER - UBXMessage->brute - PortMalloc");
-			//On rempli un de nos buffer
+			updateMemoryUsage();			//On rempli un de nos buffer
 			UBXMessage->brute->buffer[0]=0xb5;
 			UBXMessage->brute->buffer[1]=0x62;
 			UBXMessage->brute->buffer[2]=UBXMessage->CLASS;

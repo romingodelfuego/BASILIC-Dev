@@ -420,6 +420,7 @@ void commandToGNSSTask(void const * argument)
 	for(;;)
 	{
 		commandToGNSS();
+
 	}
 
 	/* USER CODE END commandToGNSSTask */

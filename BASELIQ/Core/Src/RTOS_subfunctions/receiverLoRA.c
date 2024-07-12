@@ -9,10 +9,12 @@
 
 /************************ TASK ************************/
 void receivedLora(void){
-	logMemoryUsage("BEFORE - LoRA - PortMalloc");
+	logMemoryUsage("START - LoRA Reception");
 	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
 	if (LORA_Receive_Message == NULL) Error_Handler();
-	logMemoryUsage("AFTER - LoRA - PortMalloc");
+	LORA_Receive_Message->header = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
+	if (LORA_Receive_Message->header == NULL)Error_Handler();
+	updateMemoryUsage();
 	ITM_Port32(30)=357951;
 	RFM9x_Receive(LORA_Receive_Message);
 
@@ -38,13 +40,16 @@ void receivedLora(void){
 		}
 	}
 	ITM_Port32(30)=159753;
-	logMemoryUsage("BEFORE - LoRA - PortFree");
+	updateMemoryUsage();
+
+	vPortFree(LORA_Receive_Message->header);
 	vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
-	logMemoryUsage("AFTER - LoRA - PortFree");
+	logMemoryUsage("END -LoRA Reception");
 }
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
+	logMemoryUsage("START - LoRA Reception - PackePoll");
 	GNSSReturnQ_t gnssReturn;
 	GNSStoPollQ_t poll = {
 			(const uint8_t*) LORA_Receive_Message->payload,
@@ -74,9 +79,9 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 		UART_Transmit_With_Color("\t---ISSUE SEMAPHORE--\r\n",ANSI_COLOR_RED);
 		Error_Handler();
 	}
+	vPortFree(LORA_Receive_Message->payload);
 	/*--------------- RECEIVE RESPONSE PART ---------------*/
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-
 	ITM_Port32(30)=555;
 
 	if (gnssReturn.statut!=OK){
@@ -87,9 +92,9 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	}
 
 	/*--------------- SEND PART ---------------*/
-	logMemoryUsage(" BEFORE - headerSend - PortMalloc");
+	updateMemoryUsage();
 	LORA_HeaderforSending* headerSend =(LORA_HeaderforSending*) pvPortMalloc(sizeof(LORA_HeaderforSending));
-	logMemoryUsage("AFTER - headerSend - PortMalloc");
+	updateMemoryUsage();
 
 	if (headerSend == NULL) Error_Handler();
 
@@ -128,6 +133,8 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	// Reinitialisation de la trame
 	ITM_Port32(30)=666;
 	osSemaphoreRelease(LORA_Access_GNSS_ReturnHandle);
+
+	logMemoryUsage("END - LoRA Reception - PackePoll");
 	// --- //
 }
 

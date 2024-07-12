@@ -10,6 +10,8 @@ GNSSReturnQ_t gnssReturn;
 GNSStoPollQ_t pollTimeUTC = {pollUBXTimeUTC, sizeof(pollUBXTimeUTC),"SD_POLLING"};
 
 void fakeuseSD(void){
+	logMemoryUsage("START - fakeUseSD");
+
 	GNSSRequestQ_t requestFromSD = {
 			.Request_TIME = xTaskGetTickCount(),
 			.CLASS = 0x01,
@@ -69,10 +71,9 @@ void fakeuseSD(void){
 	}
 
 	// Reinitialisation de la trame
-	logMemoryUsage("BEFORE - gnssRetrun - PortFree x freeBuffer");
 	freeBuffer(gnssReturn.bufferReturn);
 	vPortFree(gnssReturn.UBXMessage);
-	logMemoryUsage("AFTER - gnssRetrun - PortFree x freeBuffer");
+	logMemoryUsage("END - fakeUseSD");
 
 	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);
 
