@@ -172,7 +172,6 @@ void DebugMon_Handler(void)
 void EXTI9_5_IRQHandler(void)
 {
 	/* USER CODE BEGIN EXTI9_5_IRQn 0 */
-	ITM_Port32(20)=111;
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
 		osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}

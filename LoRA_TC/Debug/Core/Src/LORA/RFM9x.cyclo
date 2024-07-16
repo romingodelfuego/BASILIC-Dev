@@ -1,0 +1,14 @@
+../Core/Src/LORA/RFM9x.c:26:6:RFM9x_Init	1
+../Core/Src/LORA/RFM9x.c:94:6:RFM9x_Send	2
+../Core/Src/LORA/RFM9x.c:124:6:waitPacketSent	1
+../Core/Src/LORA/RFM9x.c:128:6:setModeIdle	1
+../Core/Src/LORA/RFM9x.c:149:6:RFM9x_Receive	5
+../Core/Src/LORA/RFM9x.c:197:6:RFM9x_SetMode_Receive	1
+../Core/Src/LORA/RFM9x.c:205:9:RFM9x_GetMode	1
+../Core/Src/LORA/RFM9x.c:211:6:RFM9x_ClearInt	1
+../Core/Src/LORA/RFM9x.c:217:9:RFM9x_ReadReg	2
+../Core/Src/LORA/RFM9x.c:255:6:RFM9x_WriteReg	2
+../Core/Src/LORA/RFM9x.c:287:6:Delay_ms	2
+../Core/Src/LORA/RFM9x.c:303:6:RF_TestSpi	2
+../Core/Src/LORA/RFM9x.c:321:6:print1	1
+../Core/Src/LORA/RFM9x.c:326:6:print	1

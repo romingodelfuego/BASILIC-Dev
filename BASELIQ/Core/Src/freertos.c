@@ -53,9 +53,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-extern TIM_HandleTypeDef htim2;
-volatile int initDone_ISRcanRun = 0;
-
 /* USER CODE END Variables */
 osThreadId InitTaskHandle;
 osThreadId ReceiverLoRAHandle;

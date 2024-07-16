@@ -1,0 +1,5 @@
+../Core/Src/GNSS/traductor.c:12:6:debug_UBX_NAV_TIMEUTC	1128	static
+../Core/Src/GNSS/traductor.c:71:6:debug_SetVal	1064	static
+../Core/Src/GNSS/traductor.c:99:6:debug_PollMessage	1064	static
+../Core/Src/GNSS/traductor.c:124:14:bytes_to_endian	120	static
+../Core/Src/GNSS/traductor.c:146:7:array_to_hex_string	24	static

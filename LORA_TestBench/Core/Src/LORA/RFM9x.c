@@ -8,6 +8,7 @@
 #include "LORA/LORACom.h"
 #include "LORA/RFM9x.h"
 #include <string.h>
+#include "RTOS_subfunctions/RTOS_extern.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -117,7 +118,7 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 	vTaskDelay(5);
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
-	vTaskDelay(1);
+	//vTaskDelay(5);
 	RFM9x_SetMode_Receive();
 }
 void waitPacketSent() {
