@@ -19,6 +19,8 @@ void debug(void){
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer),HAL_MAX_DELAY); //Le IT ne met pas les messages dans le bon ordre
 	vPortFree(UARTdebug.message);
 	vPortFree(UARTdebug.color);
+	updateMemoryUsage();
+
 }
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
@@ -34,6 +36,7 @@ void UART_Transmit_With_Color(char *data, char *color) {
 	// Copier les données
 	strcpy(UARTdebug.message, data);
 	strcpy(UARTdebug.color, color);
+	updateMemoryUsage();
 	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
 
 }
@@ -65,19 +68,5 @@ void logMemoryUsage(char*phase) {
 	printf("Minimum Ever Free Bytes Remaining: %u bytes\n", (unsigned int)heapStats.xMinimumEverFreeBytesRemaining);
 	printf("Number of Successful Allocations: %u\n", (unsigned int)heapStats.xNumberOfSuccessfulAllocations);
 	printf("Number of Successful Frees: %u\n\n", (unsigned int)heapStats.xNumberOfSuccessfulFrees);
-}
-
-
-void ITM_Init(void) {
-   CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;  // Enable the DWT and ITM units
-    ITM->LAR = 0xC5ACCE55;                          // Unlock ITM
-    ITM->TCR = ITM_TCR_ITMENA_Msk                   // Enable ITM
-             | ITM_TCR_SWOENA_Msk                   // Enable SWO output
-             | ITM_TCR_SYNCENA_Msk                  // Enable sync packets
-             | ITM_TCR_TSENA_Msk;                   // Enable ITM transmission
-
-    ITM->TER = 0xFFFFFFFF;                          // Enable all stimulus ports
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;            // Enable the cycle counter (optional)
-
 }
 /************************ -------- ************************/

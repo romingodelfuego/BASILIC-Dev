@@ -17,8 +17,8 @@
 #include "LORA/RFM9x.h"
 
 void receivedLora(void);
-void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message);
-void PACKET_TYPE_ACK_fct(void);
-
-
+void messageLoRATreatment(LORA_MessageReception*);
+uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate, size_t* total_length);
+void processQueueAndStoreIdentifiers(osMessageQId xQueue, uint8_t identifierToFind ,LoRAinReceptionQ_t* correspondingIdentifiers);
+int isIdentifierMatching(LoRAinReceptionQ_t* item, uint8_t identifier);
 #endif /* INC_RTOS_SUBFUNCTIONS_RECEVEIVEDLORA_H_ */

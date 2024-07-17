@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * File Name          : freertos.c
-  * Description        : Code for freertos applications
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * File Name          : freertos.c
+ * Description        : Code for freertos applications
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -56,6 +56,7 @@ osThreadId ReceiverLoRAHandle;
 osThreadId DebugHandle;
 osMessageQId LoRA_toSendHandle;
 osMessageQId UARTdebugHandle;
+osMessageQId LoRA_inReceptionHandle;
 osSemaphoreId xSem_LORAReceive_startHandle;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,7 +87,7 @@ __weak void configureTimerForRunTimeStats(void)
 
 __weak unsigned long getRunTimeCounterValue(void)
 {
-return 0;
+	return 0;
 }
 /* USER CODE END 1 */
 
@@ -96,10 +97,10 @@ static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
 
 void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
 {
-  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
-  *ppxIdleTaskStackBuffer = &xIdleStack[0];
-  *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-  /* place for user code */
+	*ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
+	*ppxIdleTaskStackBuffer = &xIdleStack[0];
+	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+	/* place for user code */
 }
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
@@ -114,7 +115,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
+	/* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* Create the semaphores(s) */
@@ -123,24 +124,28 @@ void MX_FREERTOS_Init(void) {
   xSem_LORAReceive_startHandle = osSemaphoreCreate(osSemaphore(xSem_LORAReceive_start), 1);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
+	/* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
   /* definition and creation of LoRA_toSend */
-  osMessageQDef(LoRA_toSend, 16, LoRAtoSendQ_t);
+  osMessageQDef(LoRA_toSend, 4, LoRAtoSendQ_t);
   LoRA_toSendHandle = osMessageCreate(osMessageQ(LoRA_toSend), NULL);
 
   /* definition and creation of UARTdebug */
   osMessageQDef(UARTdebug, 16, UARTdebugQ_t);
   UARTdebugHandle = osMessageCreate(osMessageQ(UARTdebug), NULL);
 
+  /* definition and creation of LoRA_inReception */
+  osMessageQDef(LoRA_inReception, 48, LoRAinReceptionQ_t);
+  LoRA_inReceptionHandle = osMessageCreate(osMessageQ(LoRA_inReception), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -157,26 +162,26 @@ void MX_FREERTOS_Init(void) {
   ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
   /* definition and creation of Debug */
-  osThreadDef(Debug, Debug_TASK, osPriorityBelowNormal, 0, 512);
+  osThreadDef(Debug, Debug_TASK, osPriorityBelowNormal, 0, 256);
   DebugHandle = osThreadCreate(osThread(Debug), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
 }
 
 /* USER CODE BEGIN Header_StartInitHandle_TASK */
 /**
-  * @brief  Function implementing the StartInit thread.
-  * @param  argument: Not used
-  * @retval None
-  */
+ * @brief  Function implementing the StartInit thread.
+ * @param  argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_StartInitHandle_TASK */
 void StartInitHandle_TASK(void const * argument)
 {
   /* USER CODE BEGIN StartInitHandle_TASK */
-  /* Infinite loop */
+	/* Infinite loop */
 	const char startMessage[] = "\r\nStarting...\r\n";
 	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
@@ -199,31 +204,33 @@ void StartInitHandle_TASK(void const * argument)
 
 /* USER CODE BEGIN Header_SenderLoRA_TASK */
 /**
-* @brief Function implementing the SenderLoRA thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the SenderLoRA thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_SenderLoRA_TASK */
 void SenderLoRA_TASK(void const * argument)
 {
   /* USER CODE BEGIN SenderLoRA_TASK */
 	/* Infinite loop */
+	uint8_t pollingStatutCommand [] = {0xb5, 0x62, 0x01, 0x43, 0x00, 0x00, 0x44, 0xcd};
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
 		{
-			uint8_t pollingStatutCommand [] = {0xb5, 0x62, 0x01, 0x43, 0x00, 0x00, 0x44, 0xcd};
+			logMemoryUsage("START - Lora Sender TASK");
 			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(pollingStatutCommand));
-			memcpy(payloadForPolling->buffer, pollingStatutCommand, sizeof(pollingStatutCommand));
-
 			LORA_HeaderforReception* headerForPolling = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
 			if (headerForPolling == NULL) Error_Handler();
+			logMemoryUsage("MEMCPY - Lora Sender TASK");
+
+			memcpy(payloadForPolling->buffer, pollingStatutCommand, payloadForPolling->size);
 
 			*headerForPolling = (LORA_HeaderforReception){
 				.recipient = MODULE_BROADCAST_ADDRESS,
 						.sender = MODULE_SOURCE_ADDRESS,
 						.type = PACKET_TYPE_POLL,
-						.len_payload = payloadForPolling->size
+						.len_payload = (uint8_t)payloadForPolling->size
 			};
 
 			LoRAtoSendQ_t pollingStatutGNSS = (LoRAtoSendQ_t){
@@ -231,10 +238,14 @@ void SenderLoRA_TASK(void const * argument)
 						.payload = payloadForPolling
 			};
 			xQueueSendToBack(LoRA_toSendHandle,&pollingStatutGNSS,osWaitForever);
+
 			senderLoRA();
+
 			freeBuffer(payloadForPolling);
 			vPortFree(headerForPolling);
-			vTaskDelay(2000);
+			logMemoryUsage("END - Lora Sender TASK");
+
+			vTaskDelay(10000);
 		}
 	}
   /* USER CODE END SenderLoRA_TASK */
@@ -242,15 +253,15 @@ void SenderLoRA_TASK(void const * argument)
 
 /* USER CODE BEGIN Header_ReceiverLoRA_TASK */
 /**
-* @brief Function implementing the ReceiverLoRA thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the ReceiverLoRA thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_ReceiverLoRA_TASK */
 void ReceiverLoRA_TASK(void const * argument)
 {
   /* USER CODE BEGIN ReceiverLoRA_TASK */
-  /* Infinite loop */
+	/* Infinite loop */
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
@@ -264,19 +275,19 @@ void ReceiverLoRA_TASK(void const * argument)
 
 /* USER CODE BEGIN Header_Debug_TASK */
 /**
-* @brief Function implementing the Debug thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the Debug thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_Debug_TASK */
 void Debug_TASK(void const * argument)
 {
   /* USER CODE BEGIN Debug_TASK */
-  /* Infinite loop */
-  for(;;)
-  {
-	debug();
-  }
+	/* Infinite loop */
+	for(;;)
+	{
+		debug();
+	}
   /* USER CODE END Debug_TASK */
 }
 

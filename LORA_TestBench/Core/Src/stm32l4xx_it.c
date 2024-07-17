@@ -169,7 +169,7 @@ void DebugMon_Handler(void)
 void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
-	if (__HAL_GPIO_EXTI_GET_IT(SPI2_IRQ_Pin) != RESET){
+	if (__HAL_GPIO_EXTI_GET_IT(SPI1_IRQ_Pin) != RESET){
 	osSemaphoreRelease(xSem_LORAReceive_startHandle);
 	}
   /* USER CODE END EXTI9_5_IRQn 0 */

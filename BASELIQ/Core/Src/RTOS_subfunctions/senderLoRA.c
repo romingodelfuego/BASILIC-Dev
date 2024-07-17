@@ -50,12 +50,18 @@ void senderLoRA(){
 		updateMemoryUsage();
 
 		//SEMAPHORE D ATTENTE DE RFM SEND
-		RFM9x_Send(buffer, len_payload); //Pour l'instant on s'oblige a faire comme cela,
-		ITM_Port32(30)=len_payload;
+		RFM9x_Send(buffer, len_payload + sizeof(LORA_HeaderforSending));
+
+		char* hexString_LORA = (char*)pvPortMalloc((len_payload + sizeof(LORA_HeaderforSending))*2 + 1);
+		if (hexString_LORA == NULL) Error_Handler();
+		uint8_array_to_hex_string(hexString_LORA, buffer, len_payload + sizeof(LORA_HeaderforSending));
+		UART_Transmit_With_Color("\r\nMESSAGE RFM9x Send: \r\n",ANSI_COLOR_RESET);
+		UART_Transmit_With_Color(hexString_LORA, ANSI_COLOR_GREEN);
+		vPortFree(hexString_LORA);
 
 		vPortFree(buffer);
 		updateMemoryUsage();
-
+		vTaskDelay(1000); // A remplacer par un message de reception ?
 	}
 
 	//Liberer memoire

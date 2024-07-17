@@ -8,6 +8,7 @@
 #include "LORA/LORACom.h"
 #include "LORA/RFM9x.h"
 #include <string.h>
+#include "RTOS_subfunctions/RTOS_extern.h"
 
 #include "FreeRTOS.h"
 #include "task.h"

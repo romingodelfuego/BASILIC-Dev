@@ -8,6 +8,15 @@
 #ifndef INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_
 #define INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_
 
+//WHO AM I
+#define MODULE_SOURCE_ADDRESS 0xFE
+#define MODULE_BROADCAST_ADDRESS 0xFF
+// PAQUET TYPE
+#define PACKET_TYPE_DATA 0x01
+#define PACKET_TYPE_ACK  0x02
+#define PACKET_TYPE_POLL 0x03
+
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
@@ -23,6 +32,7 @@ extern osThreadId ReceiverLoRAHandle;
 
 extern osMessageQId LoRA_toSendHandle;
 extern osMessageQId UARTdebugHandle;
+extern osMessageQId LoRA_inReceptionHandle;
 
 extern osSemaphoreId xSem_LORAReceive_startHandleHandle;
 
@@ -32,13 +42,13 @@ typedef enum{
 	Error
 }GNSSReturnStatut;
 typedef enum {
-    WAIT_FOR_SYNC_1,
-    WAIT_FOR_SYNC_2,
+	WAIT_FOR_SYNC_1,
+	WAIT_FOR_SYNC_2,
 	WAIT_FOR_CLASS,
 	WAIT_FOR_ID,
-    WAIT_FOR_LENGTH_1,
-    WAIT_FOR_LENGTH_2,
-    RECEIVE_MESSAGE
+	WAIT_FOR_LENGTH_1,
+	WAIT_FOR_LENGTH_2,
+	RECEIVE_MESSAGE
 } UARTState;
 
 typedef struct {
@@ -66,8 +76,8 @@ typedef struct {
 }UARTdebugQ_t;
 
 typedef struct{ //Copie assumer de CommandnSize
-    const uint8_t *command;
-    size_t size;
+	const uint8_t *command;
+	size_t size;
 	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
 }GNSStoPollQ_t;
 
@@ -75,4 +85,9 @@ typedef struct {
 	LORA_HeaderforReception* header;
 	DynamicBuffer* payload;
 }LoRAtoSendQ_t;
+
+typedef struct {
+	LORA_HeaderforSending* header;
+	uint8_t* payload;
+}LoRAinReceptionQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

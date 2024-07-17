@@ -377,7 +377,7 @@ void Fake_SDuse_Task(void const * argument)
 		/* Infinite loop */
 		for(;;)
 		{
-			fakeuseSD();
+			//fakeuseSD();
 			vTaskDelayUntil(&xLastWakeTime,1000);
 		}
 	}

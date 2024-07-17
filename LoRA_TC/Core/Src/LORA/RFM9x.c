@@ -36,7 +36,7 @@ void RFM9x_Init( void )
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
 	// Wait for sleep mode to take over from say, CAD
-	//HDelay_ms(10);
+	vTaskDelay(10);
 
 	// Check we are in sleep mode, with RFM9x set
 	if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
@@ -118,8 +118,7 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 	vTaskDelay(5);
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
-	//vTaskDelay(5);
-	RFM9x_SetMode_Receive();
+	vTaskDelay(1);
 }
 void waitPacketSent() {
 	// Implement this function to wait until the packet has been sent
@@ -163,7 +162,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	if (len_RFM9x > (RFM9x_FIFO_SIZE)) len_RFM9x = RFM9x_FIFO_SIZE; //Pas sure de lutilité
 
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, start);
-	uint8_t* data = (uint8_t*)pvPortMalloc(len_RFM9x * sizeof(uint8_t));
+	uint8_t* data = (uint8_t*)pvPortMalloc(len_RFM9x);
 	if (data == NULL) Error_Handler();
 
 	for (int i = 0; i < len_RFM9x; i++)
@@ -180,13 +179,16 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	LORA_Receive_Message->header->recipient=data[0];
 	LORA_Receive_Message->header->sender=data[1];
 	LORA_Receive_Message->header->type=data[2];
-	LORA_Receive_Message->header->len_payload=data[3];
+	LORA_Receive_Message->header->identifier=data[3];
+	LORA_Receive_Message->header->nbOf_packet=data[4];
+	LORA_Receive_Message->header->num_packet=data[5];
+	LORA_Receive_Message->header->len_payload=data[6];
 	//---------//
-	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len_RFM9x-sizeof(LORA_HeaderforReception)));
+	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len_RFM9x - sizeof(LORA_HeaderforSending)));
 	if (LORA_Receive_Message->payload == NULL) Error_Handler();
 
-	memcpy(LORA_Receive_Message->payload, data+sizeof(LORA_HeaderforReception), len_RFM9x-sizeof(LORA_HeaderforReception));
-
+	memcpy(LORA_Receive_Message->payload, data + sizeof(LORA_HeaderforSending), len_RFM9x - sizeof(LORA_HeaderforSending));
+	updateMemoryUsage();
 	vPortFree(data);
 	// clear all the IRQ flags
 	RFM9x_WriteReg(RFM9x_REG_12_IRQ_FLAGS, 0xFF);

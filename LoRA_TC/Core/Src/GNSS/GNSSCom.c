@@ -49,7 +49,7 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	vPortFree(bufferDynamic);
 }
 
-GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
+/*GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
 
 	for (int i = 0; i < size; i++) {
@@ -78,4 +78,4 @@ GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
 	}
 
 	return genericMessage;
-}
+}*/
