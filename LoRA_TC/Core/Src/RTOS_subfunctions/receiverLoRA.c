@@ -22,7 +22,6 @@ void receivedLora(void){
 	RFM9x_Receive(LORA_Receive_Message); //PvPortMalloc LORA_Receive_Message->payload
 
 	if (!LORA_Receive_Message->RxNbrBytes){
-		vPortFree(LORA_Receive_Message->payload);
 		ITM_Port32(30)=66; //Si on recoit du bruit
 	}
 
@@ -40,7 +39,7 @@ void receivedLora(void){
 	}
 	updateMemoryUsage();
 	//vPortFree(LORA_Receive_Message->header);
-	vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
+	//vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
 
 
 
@@ -62,20 +61,18 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 	//Si non on ajoute à la queue LoRAinReception
 	LoRAinReceptionQ_t LoRAinReceptionQ;
 
-	LoRAinReceptionQ =(LoRAinReceptionQ_t){
-		.header = LORA_Receive_Message->header,
-				.payload = LORA_Receive_Message->payload};
+	LoRAinReceptionQ =(LoRAinReceptionQ_t){.LMR = LORA_Receive_Message};
 
-
+	updateMemoryUsage();
 
 	char* nbpacketdebug = (char*)pvPortMalloc(sizeof(char));
 	UART_Transmit_With_Color("\r\nPACKET n°",ANSI_COLOR_RESET);
-	sprintf(nbpacketdebug,"%u",LoRAinReceptionQ.header->num_packet);
+	sprintf(nbpacketdebug,"%u",LoRAinReceptionQ.LMR->header->num_packet);
 	UART_Transmit_With_Color(nbpacketdebug,ANSI_COLOR_RESET);
 	vPortFree(nbpacketdebug);
 
-	char* hexString_LORA = (char*)pvPortMalloc(LoRAinReceptionQ.header->len_payload * 2 + 1);
-	uint8_array_to_hex_string(hexString_LORA, LoRAinReceptionQ.payload, LoRAinReceptionQ.header->len_payload);
+	char* hexString_LORA = (char*)pvPortMalloc(LoRAinReceptionQ.LMR->header->len_payload * 2 + 1);
+	uint8_array_to_hex_string(hexString_LORA, LoRAinReceptionQ.LMR->payload, LoRAinReceptionQ.LMR->header->len_payload);
 	UART_Transmit_With_Color("\r\n-->\t",ANSI_COLOR_RESET);
 	UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_RESET);
 	vPortFree(hexString_LORA);
@@ -113,6 +110,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 
 		vPortFree(hexString_LORA);
 		vPortFree(synthesisPayload);
+		updateMemoryUsage();
 	}
 }
 /*
@@ -135,7 +133,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate,size_t* total_length){
 	*total_length=0;
 	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		*total_length += structsToConcatenate[i].header->len_payload;
+		*total_length += structsToConcatenate[i].LMR->header->len_payload;
 	}
 
 	// Allouer de la mémoire pour le tableau concaténé
@@ -145,10 +143,13 @@ uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfs
 	// Copier chaque payload dans le tableau concaténé
 	size_t offset = 0;
 	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		memcpy(result + offset, structsToConcatenate[i].payload, structsToConcatenate[i].header->len_payload);
-		offset += (size_t)structsToConcatenate[i].header->len_payload;
-		vPortFree(structsToConcatenate[i].payload);
-		vPortFree(structsToConcatenate[i].header);
+		memcpy(result + offset, structsToConcatenate[i].LMR->payload, structsToConcatenate[i].LMR->header->len_payload);
+		offset += (size_t)structsToConcatenate[i].LMR->header->len_payload;
+		vPortFree(structsToConcatenate[i].LMR->payload);
+		vPortFree(structsToConcatenate[i].LMR->header);
+		vPortFree(structsToConcatenate[i].LMR);
+		updateMemoryUsage();
+
 	}
 	return result;
 }
@@ -172,6 +173,6 @@ void processQueueAndStoreIdentifiers(osMessageQId xQueue, uint8_t identifierToFi
 }
 
 int isIdentifierMatching(LoRAinReceptionQ_t* item, uint8_t identifier){
-	return item->header->identifier == identifier;
+	return item->LMR->header->identifier == identifier;
 }
 /************************ -------- ************************/

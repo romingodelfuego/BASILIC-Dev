@@ -86,8 +86,11 @@ typedef struct {
 	DynamicBuffer* payload;
 }LoRAtoSendQ_t;
 
-typedef struct {
+/*typedef struct {
 	LORA_HeaderforSending* header;
 	uint8_t* payload;
+}LoRAinReceptionQ_t;*/
+typedef struct {
+	LORA_MessageReception* LMR;
 }LoRAinReceptionQ_t;
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

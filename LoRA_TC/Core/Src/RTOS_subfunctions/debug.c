@@ -8,14 +8,17 @@
 #include "RTOS_subfunctions/debug.h"
 #include "shared.h"
 HeapStats_t heapStats;
+#define MAX_SIZE_BUFFER_DEBUG 512
 /************************ TASK ************************/
 void debug(void){
-	char buffer[512];
+
 	UARTdebugQ_t UARTdebug;
+	char buffer[MAX_SIZE_BUFFER_DEBUG];
 
 	xQueueReceive(UARTdebugHandle, &UARTdebug, osWaitForever);
-
-	snprintf(buffer, sizeof(buffer), "%s%s%s", UARTdebug.color, UARTdebug.message, ANSI_COLOR_RESET);
+	snprintf(buffer, sizeof(buffer),
+			"%s%s%s",
+			UARTdebug.color, UARTdebug.message, ANSI_COLOR_RESET);
 	HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer),HAL_MAX_DELAY); //Le IT ne met pas les messages dans le bon ordre
 	vPortFree(UARTdebug.message);
 	vPortFree(UARTdebug.color);
@@ -25,10 +28,17 @@ void debug(void){
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void UART_Transmit_With_Color(char *data, char *color) {
-	UARTdebugQ_t UARTdebug;
+	//UARTdebugQ_t UARTdebug;
+
+    //size_t dataSize = strlen(data);
+    /*if(dataSize > MAX_SIZE_BUFFER_DEBUG ){
+    	dataSize = MAX_SIZE_BUFFER_DEBUG ;
+    	//strncpy(data + MAX_SIZE_BUFFER_DEBUG -5,"[...]",5);
+
+    }*/
 
 	// Allouer de la mémoire pour le message et la couleur
-	UARTdebug.message = pvPortMalloc(strlen(data) + 1);
+	/*UARTdebug.message = pvPortMalloc(dataSize + 1);
 	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
 
 	if (UARTdebug.message == NULL || UARTdebug.color == NULL) Error_Handler();
@@ -37,7 +47,7 @@ void UART_Transmit_With_Color(char *data, char *color) {
 	strcpy(UARTdebug.message, data);
 	strcpy(UARTdebug.color, color);
 	updateMemoryUsage();
-	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
+	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);*/
 
 }
 void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
