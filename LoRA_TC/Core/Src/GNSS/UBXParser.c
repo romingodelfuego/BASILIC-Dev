@@ -18,6 +18,7 @@ MessageMapping message_mappings[] = {
     {0x01, 0x21, (void (*)(UBXMessage_parsed *, void *)) debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance}, //A la place de la fonction debug on peut penser a ecrire sur la SD
 	{0x06, 0x8a,(void (*)(UBXMessage_parsed *, void *)) debug_SetVal, &UBX_CFG_SETVAL_instance},
 	{0x06, 0x01,(void (*)(UBXMessage_parsed *, void *)) debug_PollMessage, &UBX_CFG_MSG_instance},
+	{0x01,0x43,(void (*)(UBXMessage_parsed *, void *)) debug_PollMessage,NULL},
     // Add other mappings for other message types if necessary
 };
 

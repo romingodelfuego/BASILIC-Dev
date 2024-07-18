@@ -20,7 +20,6 @@ void senderLoRA(){
 	if(buffer == NULL) Error_Handler();
 	updateMemoryUsage();
 
-
 	//On rempli la premiere partie du buffer
 	buffer[0] = LoRAtoSend.header->recipient;
 	buffer[1] = LoRAtoSend.header->sender;

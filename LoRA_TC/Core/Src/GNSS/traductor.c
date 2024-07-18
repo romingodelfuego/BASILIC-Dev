@@ -7,8 +7,73 @@
 
 #include "GNSS/traductor.h"
 #include "RTOS_subfunctions/RTOS_extern.h"
+#define SEPARATON "-----------------------------\n"
+#define MAX_BUFFER_SIZE 1024
+void debug_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_TIMEUTC *structAssociate){
+	size_t offsetDebug = 0;
+	char bufferDebug[MAX_BUFFER_SIZE];
+
+	MAX_COLUMNS = 18;
+	char *columnNames[MAX_COLUMNS] = {"Signal","gnssId","svId","sigId","freqId","prRes","cno",
+			"qualityInd","corrSource","ionoModel","health","prSmoothed","prUsed","crUsed",
+			"doUsed","prCorrUsed","crCorrUsed","doCorrUsed"};
 
 
+	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug,
+			"\r\n___debug_UBX_NAV_SIG__\r\n"
+			"iTOW [ms]: %u\r\n"
+			"Version: %u\r\n"
+			"NumSigs: %u\r\n",
+			structAssociate->iTOW,
+			structAssociate->version,
+			structAssociate->numSigs
+	);
+
+	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug, SEPARATON);
+	for (int i = 0; i < MAX_COLUMNS; ++i) {
+	        offset += snprintf(bufferDebug + offsetDebug,
+	        		MAX_BUFFER_SIZE - offsetDebug,
+					"| %-10s |", columnNames[i]);
+	    }
+
+	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug, SEPARATON);
+
+	for (int i = 0; i < structAssociate->numSigs; i++) {
+		offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug,
+				"| %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s |"
+				"| %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s |"
+				"| %-10s || %-10s |\n",
+				i,
+				structAssociate->sig[i]->gnssId,
+				structAssociate->sig[i]->svId,
+				structAssociate->sig[i]->sigId,
+				structAssociate->sig[i]->freqId,
+				structAssociate->sig[i]->prRes,
+				structAssociate->sig[i]->cno,
+				structAssociate->sig[i]->qualityInd,
+				structAssociate->sig[i]->corrSource,
+				structAssociate->sig[i]->ionoModel,
+				structAssociate->sig[i]->sigFlags->health,
+				structAssociate->sig[i]->sigFlags->prSmoothed,
+				structAssociate->sig[i]->sigFlags->prUsed,
+				structAssociate->sig[i]->sigFlags->crUsed,
+				structAssociate->sig[i]->sigFlags->doUsed,
+				structAssociate->sig[i]->sigFlags->prCorrUsed,
+				structAssociate->sig[i]->sigFlags->crCorrUsed,
+				structAssociate->sig[i]->sigFlags->doCorrUsed
+		);
+	}
+	UARTdebugQ_t UARTdebug; color = ANSI_COLOR_RESET;
+
+	UARTdebug.message = pvPortMalloc(MAX_BUFFER_SIZE);
+	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
+
+	strcpy(UARTdebug.message, bufferDebug);
+	strcpy(UARTdebug.color, color);
+
+	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
+	vPortFree(structAssociate);
+}
 void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){
 	size_t offset = 6;
 	ITM_Port32(31)=21;
@@ -99,26 +164,26 @@ void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate)
 void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociate){
 	size_t offset = 6;
 
-		memcpy(&(structAssociate->msgClass), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgClass));
-		offset += sizeof((structAssociate->msgClass));
+	memcpy(&(structAssociate->msgClass), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgClass));
+	offset += sizeof((structAssociate->msgClass));
 
-		memcpy(&(structAssociate->msgID), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgID));
-		offset += sizeof((structAssociate->msgID));
+	memcpy(&(structAssociate->msgID), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgID));
+	offset += sizeof((structAssociate->msgID));
 
-		memcpy(&(structAssociate->rate), UBXMessage->brute->buffer + offset, sizeof(structAssociate->rate));
-		offset += sizeof((structAssociate->rate));
+	memcpy(&(structAssociate->rate), UBXMessage->brute->buffer + offset, sizeof(structAssociate->rate));
+	offset += sizeof((structAssociate->rate));
 
-		char bufferDebug[1024];
-		int len =snprintf(bufferDebug,  (size_t)1024,
-				"\r\n__debug_PollMsg___\r\n"
-				"msgClass: %u\r\n"
-				"msgID: %u\r\n"
-				"rate :%u\r\n",
-				bytes_to_endian(structAssociate->msgClass,sizeof(structAssociate->msgClass),'l'),
-				bytes_to_endian(structAssociate->msgID,sizeof(structAssociate->msgID),'l'),
-				bytes_to_endian(structAssociate->rate,sizeof(structAssociate->rate),'l')
-		);
-		fill_unuse_memory(UBXMessage,len);
+	char bufferDebug[1024];
+	int len =snprintf(bufferDebug,  (size_t)1024,
+			"\r\n__debug_PollMsg___\r\n"
+			"msgClass: %u\r\n"
+			"msgID: %u\r\n"
+			"rate :%u\r\n",
+			bytes_to_endian(structAssociate->msgClass,sizeof(structAssociate->msgClass),'l'),
+			bytes_to_endian(structAssociate->msgID,sizeof(structAssociate->msgID),'l'),
+			bytes_to_endian(structAssociate->rate,sizeof(structAssociate->rate),'l')
+	);
+	fill_unuse_memory(UBXMessage,len);
 
 }
 unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {

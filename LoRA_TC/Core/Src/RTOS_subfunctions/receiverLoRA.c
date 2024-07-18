@@ -81,32 +81,26 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 
 	if (LORA_Receive_Message->header->num_packet == LORA_Receive_Message->header->nbOf_packet)
 	{
-		/*LoRAinReceptionQ_t LoRAinReceptionQ1;
-		LoRAinReceptionQ_t LoRAinReceptionQ2;
-
-		xQueueReceive(LoRA_inReceptionHandle, &LoRAinReceptionQ1, osWaitForever);
-		xQueueReceive(LoRA_inReceptionHandle, &LoRAinReceptionQ2, osWaitForever);
-		xQueueSendToBack(LoRA_inReceptionHandle, &LoRAinReceptionQ1, osWaitForever);
-		xQueueSendToBack(LoRA_inReceptionHandle, &LoRAinReceptionQ2, osWaitForever);*/
-
-
-
-
 		//Liste de tous les LoRAinReceptionQ_t validant le meme identifier
 
 		LoRAinReceptionQ_t correspondingIdentifier[LORA_Receive_Message->header->nbOf_packet];
 		processQueueAndStoreIdentifiers(LoRA_inReceptionHandle,
-				LORA_Receive_Message->header->identifier,
-				correspondingIdentifier);
+										LORA_Receive_Message->header->identifier,
+										correspondingIdentifier);
 
 		size_t total_length = 0;
-		uint8_t* synthesisPayload = concat_payloads(correspondingIdentifier,(uint8_t)LORA_Receive_Message->header->nbOf_packet, &total_length);
+		uint8_t* synthesisPayload = concat_payloads(correspondingIdentifier,
+								(uint8_t)LORA_Receive_Message->header->nbOf_packet,
+								&total_length);
 		char* hexString_LORA = (char*)pvPortMalloc(total_length * 2 + 1);
 		if (hexString_LORA == NULL) Error_Handler();
 
 		uint8_array_to_hex_string(hexString_LORA, synthesisPayload, total_length);
 		UART_Transmit_With_Color("\r\nMESSAGE RECEIVED COMPLETLY, HERE IS THE RESULT PAYLOAD: \r\n",ANSI_COLOR_RESET);
 		UART_Transmit_With_Color(hexString_LORA, ANSI_COLOR_GREEN);
+
+		//Objetcif afficher le message en debug avec traductor.c
+		//Il faut donc creer un UBXMessage_Parsed
 
 		vPortFree(hexString_LORA);
 		vPortFree(synthesisPayload);
