@@ -22,13 +22,14 @@ void receivedLora(void){
 	RFM9x_Receive(LORA_Receive_Message); //PvPortMalloc LORA_Receive_Message->payload
 
 	if (!LORA_Receive_Message->RxNbrBytes){
+		vPortFree(LORA_Receive_Message->payload);
 		ITM_Port32(30)=66; //Si on recoit du bruit
 	}
 
 	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
 			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
 		messageLoRATreatment(LORA_Receive_Message);
-		vPortFree(LORA_Receive_Message->payload);
+		//vPortFree(LORA_Receive_Message->payload);
 
 		updateMemoryUsage();
 	}
@@ -38,8 +39,15 @@ void receivedLora(void){
 
 	}
 	updateMemoryUsage();
-	vPortFree(LORA_Receive_Message->header);
+	//vPortFree(LORA_Receive_Message->header);
 	vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
+
+
+
+	/*LoRAinReceptionQ_t test;
+	xQueueReceive(LoRA_inReceptionHandle, &test, osWaitForever);
+	xQueueSendToBack(LoRA_inReceptionHandle,&test,osWaitForever);*/
+
 
 	logMemoryUsage("END - LoRA Reception");
 }
@@ -54,26 +62,39 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 	//Si non on ajoute à la queue LoRAinReception
 	LoRAinReceptionQ_t LoRAinReceptionQ;
 
-		LoRAinReceptionQ =(LoRAinReceptionQ_t){
-			.header = LORA_Receive_Message->header,
-					.payload = LORA_Receive_Message->payload};
+	LoRAinReceptionQ =(LoRAinReceptionQ_t){
+		.header = LORA_Receive_Message->header,
+				.payload = LORA_Receive_Message->payload};
 
-		xQueueSendToBack(LoRA_inReceptionHandle,&LoRAinReceptionQ,osWaitForever);
 
-		char* nbpacketdebug = (char*)pvPortMalloc(sizeof(char));
-		UART_Transmit_With_Color("\r\nPACKET n°",ANSI_COLOR_RESET);
-		sprintf(nbpacketdebug,"%u",LoRAinReceptionQ.header->num_packet);
-		UART_Transmit_With_Color(nbpacketdebug,ANSI_COLOR_RESET);
-		vPortFree(nbpacketdebug);
 
-		char* hexString_LORA = (char*)pvPortMalloc(LoRAinReceptionQ.header->len_payload * 2 + 1);
-		uint8_array_to_hex_string(hexString_LORA, LoRAinReceptionQ.payload, LoRAinReceptionQ.header->len_payload);
-		UART_Transmit_With_Color("\r\n-->\t",ANSI_COLOR_RESET);
-		UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_RESET);
-		vPortFree(hexString_LORA);
+	char* nbpacketdebug = (char*)pvPortMalloc(sizeof(char));
+	UART_Transmit_With_Color("\r\nPACKET n°",ANSI_COLOR_RESET);
+	sprintf(nbpacketdebug,"%u",LoRAinReceptionQ.header->num_packet);
+	UART_Transmit_With_Color(nbpacketdebug,ANSI_COLOR_RESET);
+	vPortFree(nbpacketdebug);
+
+	char* hexString_LORA = (char*)pvPortMalloc(LoRAinReceptionQ.header->len_payload * 2 + 1);
+	uint8_array_to_hex_string(hexString_LORA, LoRAinReceptionQ.payload, LoRAinReceptionQ.header->len_payload);
+	UART_Transmit_With_Color("\r\n-->\t",ANSI_COLOR_RESET);
+	UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_RESET);
+	vPortFree(hexString_LORA);
+
+	xQueueSendToBack(LoRA_inReceptionHandle,&LoRAinReceptionQ,osWaitForever);
 
 	if (LORA_Receive_Message->header->num_packet == LORA_Receive_Message->header->nbOf_packet)
 	{
+		/*LoRAinReceptionQ_t LoRAinReceptionQ1;
+		LoRAinReceptionQ_t LoRAinReceptionQ2;
+
+		xQueueReceive(LoRA_inReceptionHandle, &LoRAinReceptionQ1, osWaitForever);
+		xQueueReceive(LoRA_inReceptionHandle, &LoRAinReceptionQ2, osWaitForever);
+		xQueueSendToBack(LoRA_inReceptionHandle, &LoRAinReceptionQ1, osWaitForever);
+		xQueueSendToBack(LoRA_inReceptionHandle, &LoRAinReceptionQ2, osWaitForever);*/
+
+
+
+
 		//Liste de tous les LoRAinReceptionQ_t validant le meme identifier
 
 		LoRAinReceptionQ_t correspondingIdentifier[LORA_Receive_Message->header->nbOf_packet];
@@ -126,6 +147,8 @@ uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfs
 	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
 		memcpy(result + offset, structsToConcatenate[i].payload, structsToConcatenate[i].header->len_payload);
 		offset += (size_t)structsToConcatenate[i].header->len_payload;
+		vPortFree(structsToConcatenate[i].payload);
+		vPortFree(structsToConcatenate[i].header);
 	}
 	return result;
 }

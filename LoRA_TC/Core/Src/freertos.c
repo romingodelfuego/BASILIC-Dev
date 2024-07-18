@@ -158,7 +158,7 @@ void MX_FREERTOS_Init(void) {
   SenderLoRAHandle = osThreadCreate(osThread(SenderLoRA), NULL);
 
   /* definition and creation of ReceiverLoRA */
-  osThreadDef(ReceiverLoRA, ReceiverLoRA_TASK, osPriorityNormal, 0, 512);
+  osThreadDef(ReceiverLoRA, ReceiverLoRA_TASK, osPriorityNormal, 0, 2048);
   ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
   /* definition and creation of Debug */
