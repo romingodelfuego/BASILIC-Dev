@@ -24,9 +24,9 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
 			"iTOW [ms]: %s\r\n"
 			"Version: %s\r\n"
 			"NumSigs: %s\r\n",
-			uint8ArrayToString(structAssociate->iTOW,sizeof(structAssociate->iTOW)),
-			uint8ArrayToString(structAssociate->version,sizeof(structAssociate->version)),
-			uint8ArrayToString(structAssociate->numSigs,sizeof(structAssociate->numSigs))
+			uint8ArrayToString(structAssociate->iTOW.bytes,sizeof(structAssociate->iTOW.bytes)),
+			uint8ArrayToString(structAssociate->version.bytes,sizeof(structAssociate->version.bytes)),
+			uint8ArrayToString(structAssociate->numSigs.bytes,sizeof(structAssociate->numSigs.bytes))
 	);
 
 	formattedString(bufferDebug, &offsetDebug,1, false, SEPARATON);
@@ -49,30 +49,30 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
 	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
 	updateMemoryUsage();
 
-	for (int i = 0; i < structAssociate->numSigs[0]; i++) {
+	for (int i = 0; i < structAssociate->numSigs.bytes[0]; i++) {
 		formattedString(bufferDebug, &offsetDebug, 1, false,
 				"| %-5i |",i+1);
 		formattedString(bufferDebug, &offsetDebug, MAX_COLUMNS - 1,true,
 				"| %-5s || %-5s || %-5s || %-5s || %-5s || %-5s || %-5s |"
 				"| %-5s || %-5s || %-5s || %-5s || %-5s || %-5s || %-5s || %-5s |"
 				"| %-5s || %-5s |\n",
-				uint8ArrayToString(structAssociate->sig[i].gnssId,sizeof(structAssociate->sig[i].gnssId)),
-				uint8ArrayToString(structAssociate->sig[i].svId,sizeof(structAssociate->sig[i].svId)),
-				uint8ArrayToString(structAssociate->sig[i].sigId,sizeof(structAssociate->sig[i].sigId)),
-				uint8ArrayToString(structAssociate->sig[i].freqId,sizeof(structAssociate->sig[i].freqId)),
-				uint8ArrayToString(structAssociate->sig[i].prRes,sizeof(structAssociate->sig[i].prRes)),
-				uint8ArrayToString(structAssociate->sig[i].cno,sizeof(structAssociate->sig[i].cno)),
-				uint8ArrayToString(structAssociate->sig[i].qualityInd,sizeof(structAssociate->sig[i].qualityInd)),
-				uint8ArrayToString(structAssociate->sig[i].corrSource,sizeof(structAssociate->sig[i].corrSource)),
-				uint8ArrayToString(structAssociate->sig[i].ionoModel,sizeof(structAssociate->sig[i].ionoModel)),
-				uint8ArrayToString(structAssociate->sig[i].health,sizeof(structAssociate->sig[i].health)),
-				uint8ArrayToString(structAssociate->sig[i].prSmoothed,sizeof(structAssociate->sig[i].prSmoothed)),
-				uint8ArrayToString(structAssociate->sig[i].prUsed,sizeof(structAssociate->sig[i].prUsed)),
-				uint8ArrayToString(structAssociate->sig[i].crUsed,sizeof(structAssociate->sig[i].crUsed)),
-				uint8ArrayToString(structAssociate->sig[i].doUsed,sizeof(structAssociate->sig[i].doUsed)),
-				uint8ArrayToString(structAssociate->sig[i].prCorrUsed,sizeof(structAssociate->sig[i].prCorrUsed)),
-				uint8ArrayToString(structAssociate->sig[i].crCorrUsed,sizeof(structAssociate->sig[i].crCorrUsed)),
-				uint8ArrayToString(structAssociate->sig[i].doCorrUsed,sizeof(structAssociate->sig[i].doCorrUsed))
+				uint8ArrayToString(structAssociate->sig[i].gnssId.bytes,sizeof(structAssociate->sig[i].gnssId.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].svId.bytes,sizeof(structAssociate->sig[i].svId.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].sigId.bytes,sizeof(structAssociate->sig[i].sigId.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].freqId.bytes,sizeof(structAssociate->sig[i].freqId.bytes)),
+				int8ArrayToString(structAssociate->sig[i].prRes.bytes,sizeof(structAssociate->sig[i].prRes.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].cno.bytes,sizeof(structAssociate->sig[i].cno.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].qualityInd.bytes,sizeof(structAssociate->sig[i].qualityInd.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].corrSource.bytes,sizeof(structAssociate->sig[i].corrSource.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].ionoModel.bytes,sizeof(structAssociate->sig[i].ionoModel.bytes)),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.health,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.prSmoothed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.prUsed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.crUsed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.doUsed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.prCorrUsed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.crCorrUsed,1),
+				uint8ArrayToString(structAssociate->sig[i].sigFlags.doCorrUsed,1)
 		);
 		formattedString(bufferDebug, &offsetDebug, 1, false, SEPARATON);
 
@@ -87,21 +87,56 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
 
 		xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
 		updateMemoryUsage();
-		}
+
+	}
+	vPortFree(structAssociate->sig);
 }
 char* uint8ArrayToString(uint8_t* array, size_t size) {
-	// Allocate enough space for the string
-	char* str = pvPortMalloc(size * 3 + 1); // 2 characters per byte + 1 for space or null terminator
-	char* ptr = str;
+	// Calculer la valeur totale en interprétant le tableau comme un entier
+	uint64_t totalValue = 0;
 	for (size_t i = 0; i < size; i++) {
-		ptr += sprintf(ptr, "%02X", array[i]);
-		if (i < size - 1) {
-			*ptr++ = ' ';
-		}
+		totalValue |= ((uint64_t)array[i]) << (i * 8);
 	}
+
+	// Calculer la taille nécessaire pour stocker la représentation en chaîne de la valeur totale
+	// La taille maximale en caractères pour un uint64_t en base 10 est 20, plus le null terminator
+	char* str = pvPortMalloc(21);
+
+	// Convertir la valeur totale en chaîne de caractères
+	//snprintf(str, 21, "%llu", totalValue);
+	itoa(totalValue, str, 10); // Base 10 pour les décimales
 	return str;
 }
+char* int8ArrayToString(int8_t* array, size_t size){
+	// Calculer la valeur totale en interprétant le tableau comme un entier
+	uint64_t totalValue = 0;
+	for (size_t i = 0; i < size; i++) {
+		totalValue |= ((uint64_t)array[i]) << (i * 8);
+	}
 
+	// Calculer la taille nécessaire pour stocker la représentation en chaîne de la valeur totale
+	// La taille maximale en caractères pour un uint64_t en base 10 est 20, plus le null terminator
+	char* str = pvPortMalloc(21);
+
+	// Convertir la valeur totale en chaîne de caractères
+	//snprintf(str, 21, "%llu", totalValue);
+	itoa(totalValue, str, 10); // Base 10 pour les décimales
+	return str;
+}
+const char* get_GNSSID(U1 gnssID) {
+
+	switch (gnssID.bytes[0]) {
+	case 0: return "GPS";
+	case 1: return "SBAS";
+	case 2: return "GAL";
+	case 3: return "BDS";
+	case 4: return "IMES";
+	case 5: return "QZSS";
+	case 6: return "GLO";
+	case 7: return "NavIC";
+	default: return "Unknown";
+	}
+}
 void formattedString(char* buffer, size_t* offset, int numArgs, bool freeMemory, const char* format,...){
 	va_list args;
 	va_start(args, format);
@@ -112,20 +147,42 @@ void formattedString(char* buffer, size_t* offset, int numArgs, bool freeMemory,
 		va_start(args, format);
 		for (int i = 0; i < numArgs; i++) {
 			void* arg = va_arg(args, void*);
-			vPortFree(arg);
+			vPortFree(arg); // SUPPRIME LE pvPortMalloc de uint8ArrayToString
 		}
 		va_end(args);
 	}
 }
-/*void UBX_format(UBX_data_type dataType, UBX_field_name fieldName, void* valueOfField, size_t size){
-	if (true){
-		switch (fieldName){
-		case gnssID:
-			valueOfField
 
-		}
+
+char* UBX_format(void* fieldToDebug,DataType type, char* (*funcSpe)(void*)){
+	switch (type) {
+	case TYPE_U1:
+	{
+		U1* fieldCasted = (U1*)fieldToDebug;//Si on n'a pas besoin de fonction speciale pour debug
+		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
+		else return funcSpe(fieldCasted);
 	}
-}*/
+	break;
+	case TYPE_I1:
+	{
+		I1* fieldCasted = (I1*)fieldToDebug;
+		if (funcSpe == NULL) return int8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
+		else return funcSpe(fieldCasted);
+	}
+	break;
+	case TYPE_X1:
+	{
+		X1* fieldCasted = (X1*)fieldToDebug;
+		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
+		else return funcSpe(fieldCasted);
+	}
+	break;
+	default:
+		printf("Unknown type\n");
+		break;
+	}
+	return "Error";
+}
 /*
 void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
 	size_t offsetDebug = 0;
@@ -391,27 +448,7 @@ void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociat
 	);
 	fill_unuse_memory(UBXMessage,len);
 
-}
-unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
-	uint64_t result = 0;
-	if (type_endian == 'l') { // little-endian
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << (i * 8);
-		}
-	} else if (type_endian == 'b') { // big-endian
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << ((sizeof(uint64_t) - i - 1) * 8);
-		}
-	}
-	else if (type_endian == '2'){ //little-endiand 2's complements
-		if (attr[length - 1] & 0x80) { // Check if the most significant bit (MSB) is 1 (indicating negative number)
-			result = -1; // Initialize result to all 1s for negative number
-		}
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << (i * 8);
-		}
-	}
-	return result;
 }*/
+
 
 

@@ -27,5 +27,7 @@ unsigned int bytes_to_endian(uint8_t attr[],size_t length,char type_endian);
 char* array_to_hex_string(const uint8_t* array, size_t length);
 void fill_unuse_memory(UBXMessage_parsed* UBXMessage,int len_use);
 char* uint8ArrayToString(uint8_t* array, size_t size);
+char* int8ArrayToString(int8_t* array, size_t size);
 void formattedString(char* buffer, size_t* offset, int numArgs, bool freeMemory, const char* format,...);
+const char* get_GNSSID(U1 gnssID);
 #endif /* INC_TRADUCTOR_H_ */

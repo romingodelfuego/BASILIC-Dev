@@ -62,10 +62,13 @@ void create_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_SIG *structAssoci
 	offset += sizeof(structAssociate->numSigs);
 
 	offset += sizeof(structAssociate->reserved0);
+	structAssociate->sig = (repeatedGroup_UBX_NAV_SIG*)pvPortMalloc(structAssociate->numSigs.bytes[0] * sizeof(repeatedGroup_UBX_NAV_SIG));
+	if (structAssociate->sig == NULL && structAssociate->numSigs.bytes[0]!=0 ) Error_Handler();
+	updateMemoryUsage();
+    for (int i = 0; i < structAssociate->numSigs.bytes[0]; i++) {
 
-	for (int i = 0; i < structAssociate->numSigs[0]; i++) {
-		memcpy(&(structAssociate->sig[i].gnssId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].gnssId));
-		offset += sizeof(structAssociate->sig[i].gnssId);
+		memcpy(&(structAssociate->sig[i].gnssId.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].gnssId.bytes));
+		offset += sizeof(structAssociate->sig[i].gnssId.bytes);
 
 		memcpy(&(structAssociate->sig[i].svId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].svId));
 		offset += sizeof(structAssociate->sig[i].svId);
@@ -73,52 +76,31 @@ void create_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_SIG *structAssoci
 		memcpy(&(structAssociate->sig[i].sigId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].sigId));
 		offset += sizeof(structAssociate->sig[i].sigId);
 
-		memcpy(&(structAssociate->sig[i].freqId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].freqId));
-		offset += sizeof(structAssociate->sig[i].freqId);
+		memcpy(&(structAssociate->sig[i].freqId.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].freqId.bytes));
+		offset += sizeof(structAssociate->sig[i].freqId.bytes);
 
-		memcpy(&(structAssociate->sig[i].prRes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prRes));
-		offset += sizeof(structAssociate->sig[i].prRes);
+		memcpy(&(structAssociate->sig[i].prRes.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prRes.bytes));
+		offset += sizeof(structAssociate->sig[i].prRes.bytes);
 
-		memcpy(&(structAssociate->sig[i].cno), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].cno));
-		offset += sizeof(structAssociate->sig[i].cno);
+		memcpy(&(structAssociate->sig[i].cno.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].cno.bytes));
+		offset += sizeof(structAssociate->sig[i].cno.bytes);
 
-		memcpy(&(structAssociate->sig[i].qualityInd), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].qualityInd));
-		offset += sizeof(structAssociate->sig[i].qualityInd);
+		memcpy(&(structAssociate->sig[i].qualityInd.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].qualityInd.bytes));
+		offset += sizeof(structAssociate->sig[i].qualityInd.bytes);
 
-		memcpy(&(structAssociate->sig[i].corrSource), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].corrSource));
-		offset += sizeof(structAssociate->sig[i].corrSource);
+		memcpy(&(structAssociate->sig[i].corrSource.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].corrSource.bytes));
+		offset += sizeof(structAssociate->sig[i].corrSource.bytes);
 
-		memcpy(&(structAssociate->sig[i].ionoModel), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].ionoModel));
-		offset += sizeof(structAssociate->sig[i].ionoModel);
+		memcpy(&(structAssociate->sig[i].ionoModel.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].ionoModel.bytes));
+		offset += sizeof(structAssociate->sig[i].ionoModel.bytes);
 
-		for (int y =0; y <8; y++){
-			memcpy(&(structAssociate->sig[i].health), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].health));
-			offset += sizeof(structAssociate->sig[i].health);
+		memcpy(&(structAssociate->sig[i].sigFlags.bytes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].sigFlags.bytes));
+		offset += sizeof(structAssociate->sig[i].sigFlags.bytes);
 
-			memcpy(&(structAssociate->sig[i].prSmoothed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prSmoothed));
-			offset += sizeof(structAssociate->sig[i].prSmoothed);
+		offset += sizeof(structAssociate->sig[i].reserved1);
 
-			memcpy(&(structAssociate->sig[i].prUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prUsed));
-			offset += sizeof(structAssociate->sig[i].prUsed);
-
-			memcpy(&(structAssociate->sig[i].crUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].crUsed));
-			offset += sizeof(structAssociate->sig[i].crUsed);
-
-			memcpy(&(structAssociate->sig[i].doUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].doUsed));
-			offset += sizeof(structAssociate->sig[i].doUsed);
-
-			memcpy(&(structAssociate->sig[i].prCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prCorrUsed));
-			offset += sizeof(structAssociate->sig[i].prCorrUsed);
-
-			memcpy(&(structAssociate->sig[i].crCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].crCorrUsed));
-			offset += sizeof(structAssociate->sig[i].crCorrUsed);
-
-			memcpy(&(structAssociate->sig[i].doCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].doCorrUsed));
-			offset += sizeof(structAssociate->sig[i].doCorrUsed);
-
-			offset += sizeof(structAssociate->reserved1);
-		}
 	}
+
 	updateMemoryUsage();
 
 }

@@ -7,13 +7,25 @@
 
 #ifndef INC_GNSS_UBX_ASSETS_H_
 #define INC_GNSS_UBX_ASSETS_H_
+typedef enum {
+	TYPE_U1,
+	TYPE_I1,
+	TYPE_X1,
+	TYPE_U2,
+	TYPE_I2,
+	TYPE_X2,
+	TYPE_U4,
+	TYPE_I4,
+	TYPE_X4,
+	// Ajoutez d'autres types si nécessaire
+} DataType;
 
 typedef struct{
-	uint8_t array[1];
+	uint8_t bytes[1];
 }U1;
 
 typedef struct{
-	int8_t array[1];
+	int8_t bytes[1];
 }I1;
 
 typedef union {
@@ -28,15 +40,15 @@ typedef union {
 		uint8_t bit6 : 1;
 		uint8_t bit7 : 1;
 		uint8_t bit8 : 1;
-	} bits;
+	};
 }X1;
 
 typedef struct{
-	uint8_t array[2];
+	uint8_t bytes[2];
 }U2;
 
 typedef struct{
-	int8_t array[2];
+	int8_t bytes[2];
 }I2;
 
 typedef union {
@@ -59,15 +71,15 @@ typedef union {
 		uint8_t bit14 : 1;
 		uint8_t bit15 : 1;
 		uint8_t bit16 : 1;
-	} bits;
+	};
 }X2;
 
 typedef struct{
-	uint8_t array[4];
+	uint8_t bytes[4];
 }U4;
 
 typedef struct{
-	int8_t array[4];
+	int8_t bytes[4];
 }I4;
 
 typedef union {
@@ -106,26 +118,23 @@ typedef union {
 		uint8_t bit30 : 1;
 		uint8_t bit31 : 1;
 		uint8_t bit32 : 1;
-	} bits;
+	};
 }X4;
 
-
-
-
-
-
-
-
-
-typedef enum {
-	U1,U2,U3,U4,
-	I1,I2,I3,I4
-}UBX_data_type;
-
-typedef enum {
-	U1,U2,U3,U4,
-	I1,I2,I3,I4
-}UBX_field_name;
+/* UBX_NAV_SIG - SIGLAGS  */
+typedef union {
+	struct {
+		uint8_t health : 2;
+		uint8_t prSmoothed : 1;
+		uint8_t prUsed : 1;
+		uint8_t crUsed : 1;
+		uint8_t doUsed : 1;
+		uint8_t prCorrUsed : 1;
+		uint8_t crCorrUsed : 1;
+		uint8_t doCorrUsed : 1;
+	};
+	uint8_t bytes[2]; // Représentation entière de 8 bits
+} X2_sigFlags;
 
 
 #endif /* INC_GNSS_UBX_ASSETS_H_ */

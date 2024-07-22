@@ -7,35 +7,28 @@
 
 #ifndef INC_GNSS_UBX_TYPES_H_
 #define INC_GNSS_UBX_TYPES_H_
-
+#include "UBX_assets.h"
 typedef struct {
-	uint8_t gnssId[1];
-	uint8_t svId[1];
-	uint8_t sigId[1];
-	uint8_t freqId[1];
-	uint8_t prRes[2];
-	uint8_t cno[1];
-	uint8_t qualityInd[1];
-	uint8_t corrSource[1];
-	uint8_t ionoModel[1];
-	//uint8_t sigFlags[2];
-	uint8_t health[1];
-	uint8_t prSmoothed[1];
-	uint8_t prUsed[1];
-	uint8_t crUsed[1];
-	uint8_t doUsed[1];
-	uint8_t prCorrUsed[1];
-	uint8_t crCorrUsed[1];
-	uint8_t doCorrUsed[1];
+	U1 gnssId;
+	U1 svId;
+	U1 sigId;
+	U1 freqId;
+	I2 prRes;
+	U1 cno;
+	U1 qualityInd;
+	U1 corrSource;
+	U1 ionoModel;
+	X2_sigFlags sigFlags;
+	uint8_t reserved1[4];
 }repeatedGroup_UBX_NAV_SIG;
 
 typedef struct {
-	uint8_t iTOW[4];
-	uint8_t version[1];
-	uint8_t numSigs[1];
+	U4 iTOW;
+	U1 version;
+	U1 numSigs;
 	uint8_t reserved0[2];
 	repeatedGroup_UBX_NAV_SIG* sig;
-	uint8_t reserved1[4];
+
 }UBX_NAV_SIG;
 
 typedef struct {
