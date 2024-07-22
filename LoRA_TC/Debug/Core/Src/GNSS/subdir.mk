@@ -6,17 +6,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/GNSS/GNSSCom.c \
-../Core/Src/GNSS/UBXParser.c \
+../Core/Src/GNSS/debugFormatter.c \
 ../Core/Src/GNSS/traductor.c 
 
 OBJS += \
 ./Core/Src/GNSS/GNSSCom.o \
-./Core/Src/GNSS/UBXParser.o \
+./Core/Src/GNSS/debugFormatter.o \
 ./Core/Src/GNSS/traductor.o 
 
 C_DEPS += \
 ./Core/Src/GNSS/GNSSCom.d \
-./Core/Src/GNSS/UBXParser.d \
+./Core/Src/GNSS/debugFormatter.d \
 ./Core/Src/GNSS/traductor.d 
 
 
@@ -27,7 +27,7 @@ Core/Src/GNSS/%.o Core/Src/GNSS/%.su Core/Src/GNSS/%.cyclo: ../Core/Src/GNSS/%.c
 clean: clean-Core-2f-Src-2f-GNSS
 
 clean-Core-2f-Src-2f-GNSS:
-	-$(RM) ./Core/Src/GNSS/GNSSCom.cyclo ./Core/Src/GNSS/GNSSCom.d ./Core/Src/GNSS/GNSSCom.o ./Core/Src/GNSS/GNSSCom.su ./Core/Src/GNSS/UBXParser.cyclo ./Core/Src/GNSS/UBXParser.d ./Core/Src/GNSS/UBXParser.o ./Core/Src/GNSS/UBXParser.su ./Core/Src/GNSS/traductor.cyclo ./Core/Src/GNSS/traductor.d ./Core/Src/GNSS/traductor.o ./Core/Src/GNSS/traductor.su
+	-$(RM) ./Core/Src/GNSS/GNSSCom.cyclo ./Core/Src/GNSS/GNSSCom.d ./Core/Src/GNSS/GNSSCom.o ./Core/Src/GNSS/GNSSCom.su ./Core/Src/GNSS/debugFormatter.cyclo ./Core/Src/GNSS/debugFormatter.d ./Core/Src/GNSS/debugFormatter.o ./Core/Src/GNSS/debugFormatter.su ./Core/Src/GNSS/traductor.cyclo ./Core/Src/GNSS/traductor.d ./Core/Src/GNSS/traductor.o ./Core/Src/GNSS/traductor.su
 
 .PHONY: clean-Core-2f-Src-2f-GNSS
 

@@ -40,7 +40,7 @@ void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug);
 DynamicBuffer* initializeBuffer(size_t initialSize);
 void GNSSCom_ReceiveDebug(void);
 
-GenericMessage* GNSSCom_Receive();
+void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* genericMessage);
 
 void resizeBuffer(DynamicBuffer *buffer, size_t newSize);
 void freeBuffer(DynamicBuffer *buffer);

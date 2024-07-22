@@ -152,7 +152,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len_RFM9x = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
 
-	if (len_RFM9x < sizeof(LORA_HeaderforReception)){
+	if (len_RFM9x <= sizeof(LORA_HeaderforReception)){
 		LORA_Receive_Message->RxNbrBytes=0;
 		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 		RFM9x_SetMode_Receive();
@@ -184,7 +184,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	LORA_Receive_Message->header->num_packet=data[5];
 	LORA_Receive_Message->header->len_payload=data[6];
 	//---------//
-	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(sizeof(uint8_t)*(len_RFM9x - sizeof(LORA_HeaderforSending)));
+	LORA_Receive_Message->payload = (uint8_t*)pvPortMalloc(len_RFM9x - sizeof(LORA_HeaderforSending));
 	if (LORA_Receive_Message->payload == NULL) Error_Handler();
 
 	memcpy(LORA_Receive_Message->payload, data + sizeof(LORA_HeaderforSending), len_RFM9x - sizeof(LORA_HeaderforSending));

@@ -28,43 +28,33 @@ void receivedLora(void){
 	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
 			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
 		messageLoRATreatment(LORA_Receive_Message);
-		//vPortFree(LORA_Receive_Message->payload);
-
 		updateMemoryUsage();
 	}
 	else{
 		vPortFree(LORA_Receive_Message->payload);
+		vPortFree(LORA_Receive_Message->header);
+		vPortFree(LORA_Receive_Message);
 		updateMemoryUsage();
 
 	}
 	updateMemoryUsage();
-	//vPortFree(LORA_Receive_Message->header);
-	//vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
-
-
-
-	/*LoRAinReceptionQ_t test;
-	xQueueReceive(LoRA_inReceptionHandle, &test, osWaitForever);
-	xQueueSendToBack(LoRA_inReceptionHandle,&test,osWaitForever);*/
-
-
 	logMemoryUsage("END - LoRA Reception");
 }
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
-	//On verifie si le numofPacket == nbOfPacket dans ce cas on est a la fin de la reception
+	/*On verifie si le numofPacket == nbOfPacket dans ce cas on est a la fin de la reception
 	//On recherche tout les messages avec le mm identifier
 	//On réalise une synthèse des messages recues
 	//ie concaténation dans l'ordre des payloads
 	//pourquoi pas ajout des header de reception pour chaque messages ie [SNR,RSSI][][][]
-	//Si non on ajoute à la queue LoRAinReception
+	//Si non on ajoute à la queue LoRAinReception*/
 	LoRAinReceptionQ_t LoRAinReceptionQ;
 
 	LoRAinReceptionQ =(LoRAinReceptionQ_t){.LMR = LORA_Receive_Message};
 
 	updateMemoryUsage();
-
+/*
 	char* nbpacketdebug = (char*)pvPortMalloc(sizeof(char));
 	UART_Transmit_With_Color("\r\nPACKET n°",ANSI_COLOR_RESET);
 	sprintf(nbpacketdebug,"%u",LoRAinReceptionQ.LMR->header->num_packet);
@@ -76,35 +66,48 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 	UART_Transmit_With_Color("\r\n-->\t",ANSI_COLOR_RESET);
 	UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_RESET);
 	vPortFree(hexString_LORA);
-
+*/
 	xQueueSendToBack(LoRA_inReceptionHandle,&LoRAinReceptionQ,osWaitForever);
 
 	if (LORA_Receive_Message->header->num_packet == LORA_Receive_Message->header->nbOf_packet)
 	{
 		//Liste de tous les LoRAinReceptionQ_t validant le meme identifier
-
 		LoRAinReceptionQ_t correspondingIdentifier[LORA_Receive_Message->header->nbOf_packet];
 		processQueueAndStoreIdentifiers(LoRA_inReceptionHandle,
 										LORA_Receive_Message->header->identifier,
 										correspondingIdentifier);
 
 		size_t total_length = 0;
+		// synthesisPayload is pvPortMalloc
 		uint8_t* synthesisPayload = concat_payloads(correspondingIdentifier,
 								(uint8_t)LORA_Receive_Message->header->nbOf_packet,
 								&total_length);
-		char* hexString_LORA = (char*)pvPortMalloc(total_length * 2 + 1);
+
+		/*char* hexString_LORA = (char*)pvPortMalloc(total_length * 2 + 1);
 		if (hexString_LORA == NULL) Error_Handler();
 
 		uint8_array_to_hex_string(hexString_LORA, synthesisPayload, total_length);
 		UART_Transmit_With_Color("\r\nMESSAGE RECEIVED COMPLETLY, HERE IS THE RESULT PAYLOAD: \r\n",ANSI_COLOR_RESET);
 		UART_Transmit_With_Color(hexString_LORA, ANSI_COLOR_GREEN);
+		vPortFree(hexString_LORA);*/
 
-		//Objetcif afficher le message en debug avec traductor.c
+		//Objectif afficher le message en debug avec traductor.c
 		//Il faut donc creer un UBXMessage_Parsed
+		GenericMessage* genericMessage=(GenericMessage*) pvPortMalloc(sizeof(GenericMessage));
 
-		vPortFree(hexString_LORA);
-		vPortFree(synthesisPayload);
+		// GNSSCom_MessageAdapter pvPortMalloc: genericMessage->Message.UBXMessage->brute & genericMessage->Message.UBXMessage
+		GNSSCom_MessageAdapter(synthesisPayload,&total_length,genericMessage);
 		updateMemoryUsage();
+		if (genericMessage->typeMessage==UBX){
+			//traductor pvPortMalloc
+			traductor(genericMessage->Message.UBXMessage);
+
+			freeBuffer(genericMessage->Message.UBXMessage->brute);
+			vPortFree(genericMessage->Message.UBXMessage);
+			updateMemoryUsage();
+		}
+		vPortFree(genericMessage);
+		vPortFree(synthesisPayload);
 	}
 }
 /*

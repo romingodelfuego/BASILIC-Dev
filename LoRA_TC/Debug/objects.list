@@ -1,5 +1,5 @@
 "./Core/Src/GNSS/GNSSCom.o"
-"./Core/Src/GNSS/UBXParser.o"
+"./Core/Src/GNSS/debugFormatter.o"
 "./Core/Src/GNSS/traductor.o"
 "./Core/Src/LORA/LORACom.o"
 "./Core/Src/LORA/RFM9x.o"

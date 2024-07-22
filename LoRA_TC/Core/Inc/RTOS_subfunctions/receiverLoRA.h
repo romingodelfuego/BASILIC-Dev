@@ -15,6 +15,8 @@
 #include "RTOS_extern.h"
 #include "LORA/LORACom.h"
 #include "LORA/RFM9x.h"
+#include "GNSS/traductor.h"
+
 
 void receivedLora(void);
 void messageLoRATreatment(LORA_MessageReception*);

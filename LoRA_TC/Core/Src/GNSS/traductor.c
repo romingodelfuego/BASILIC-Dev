@@ -1,219 +1,125 @@
 /*
- * structAssociateuctor.c
+ * UBXParser.c
  *
- *  Created on: May 28, 2024
+ *  Created on: May 29, 2024
  *      Author: romain.pace
  */
+#include <GNSS/debugFormatter.h>
+#include <GNSS/traductor.h>
+#include "GNSS/GNSSCom.h"
+#include "RTOS_subfunctions/debug.h"
 
-#include "GNSS/traductor.h"
-#include "RTOS_subfunctions/RTOS_extern.h"
-#define SEPARATON "-----------------------------\n"
-#define MAX_BUFFER_SIZE 1024
-void debug_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_TIMEUTC *structAssociate){
-	size_t offsetDebug = 0;
-	char bufferDebug[MAX_BUFFER_SIZE];
+// Define the instances for the message structures
+UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
+UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
+UBX_CFG_MSG UBX_CFG_MSG_instance;
+UBX_NAV_SIG UBX_NAV_SIG_instance;
 
-	MAX_COLUMNS = 18;
-	char *columnNames[MAX_COLUMNS] = {"Signal","gnssId","svId","sigId","freqId","prRes","cno",
-			"qualityInd","corrSource","ionoModel","health","prSmoothed","prUsed","crUsed",
-			"doUsed","prCorrUsed","crCorrUsed","doCorrUsed"};
+// Define the message mappings array
+MessageMapping message_mappings[] = {
+		//{0x01, 0x21, (void (*)(UBXMessage_parsed *, void *)) debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance}, //A la place de la fonction debug on peut penser a ecrire sur la SD
+		//{0x06, 0x8a,(void (*)(UBXMessage_parsed *, void *)) debug_SetVal, &UBX_CFG_SETVAL_instance},
+		//{0x06, 0x01,(void (*)(UBXMessage_parsed *, void *)) debug_PollMessage, &UBX_CFG_MSG_instance},
+		{		0x01,0x43,
+				&UBX_NAV_SIG_instance,
+				(void (*)(UBXMessage_parsed *, void *))create_UBX_NAV_SIG,
+				(void(*)(void*)) debug_UBX_NAV_SIG
+		},
+		// Add other mappings for other message types if necessary
+};
 
 
-	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug,
-			"\r\n___debug_UBX_NAV_SIG__\r\n"
-			"iTOW [ms]: %u\r\n"
-			"Version: %u\r\n"
-			"NumSigs: %u\r\n",
-			structAssociate->iTOW,
-			structAssociate->version,
-			structAssociate->numSigs
-	);
+void traductor(UBXMessage_parsed* UBXMessage) {
+	// Function pointer and variables to hold the matched mapping's values
+	void (*create_func)(UBXMessage_parsed*, void *) = NULL;
+	void (*debug_func)(void *) = NULL;
+	void* structAssociate = NULL;
 
-	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug, SEPARATON);
-	for (int i = 0; i < MAX_COLUMNS; ++i) {
-	        offset += snprintf(bufferDebug + offsetDebug,
-	        		MAX_BUFFER_SIZE - offsetDebug,
-					"| %-10s |", columnNames[i]);
-	    }
-
-	offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug, SEPARATON);
-
-	for (int i = 0; i < structAssociate->numSigs; i++) {
-		offsetDebug += snprintf(bufferDebug + offsetDebug, MAX_BUFFER_SIZE - offsetDebug,
-				"| %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s |"
-				"| %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s || %-10s |"
-				"| %-10s || %-10s |\n",
-				i,
-				structAssociate->sig[i]->gnssId,
-				structAssociate->sig[i]->svId,
-				structAssociate->sig[i]->sigId,
-				structAssociate->sig[i]->freqId,
-				structAssociate->sig[i]->prRes,
-				structAssociate->sig[i]->cno,
-				structAssociate->sig[i]->qualityInd,
-				structAssociate->sig[i]->corrSource,
-				structAssociate->sig[i]->ionoModel,
-				structAssociate->sig[i]->sigFlags->health,
-				structAssociate->sig[i]->sigFlags->prSmoothed,
-				structAssociate->sig[i]->sigFlags->prUsed,
-				structAssociate->sig[i]->sigFlags->crUsed,
-				structAssociate->sig[i]->sigFlags->doUsed,
-				structAssociate->sig[i]->sigFlags->prCorrUsed,
-				structAssociate->sig[i]->sigFlags->crCorrUsed,
-				structAssociate->sig[i]->sigFlags->doCorrUsed
-		);
+	// Loop through the message mappings to find a match
+	for (int i = 0; i < sizeof(message_mappings) / sizeof(message_mappings[0]); i++) {
+		if (message_mappings[i].CLASS == UBXMessage->CLASS &&
+				message_mappings[i].ID == UBXMessage->ID) {
+			// Retrieve the corresponding get function and associated structure and variables
+			create_func = message_mappings[i].create_func;
+			debug_func = message_mappings[i].debug_func;
+			structAssociate = message_mappings[i].structAssociate; //Pour l'utilisation dans d'autres fonctions, perhaps
+			create_func(UBXMessage,structAssociate);
+			debug_func(structAssociate);
+			break;
+		}
 	}
-	UARTdebugQ_t UARTdebug; color = ANSI_COLOR_RESET;
-
-	UARTdebug.message = pvPortMalloc(MAX_BUFFER_SIZE);
-	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
-
-	strcpy(UARTdebug.message, bufferDebug);
-	strcpy(UARTdebug.color, color);
-
-	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
-	vPortFree(structAssociate);
 }
-void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC *structAssociate){
-	size_t offset = 6;
-	ITM_Port32(31)=21;
+void create_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_SIG *structAssociate){
+	size_t offset = 6; //B562...
+	updateMemoryUsage();
 	memcpy(&(structAssociate->iTOW), UBXMessage->brute->buffer + offset, sizeof(structAssociate->iTOW));
 	offset += sizeof(structAssociate->iTOW);
 
-	memcpy(&(structAssociate->tAcc), UBXMessage->brute->buffer + offset, sizeof(structAssociate->tAcc));
-	offset += sizeof(structAssociate->tAcc);
-
-	memcpy(&(structAssociate->nano), UBXMessage->brute->buffer + offset, sizeof(structAssociate->nano));
-	offset += sizeof(structAssociate->nano);
-
-	memcpy(&(structAssociate->year), UBXMessage->brute->buffer + offset, sizeof(structAssociate->year));
-	offset += sizeof(structAssociate->year);
-
-	memcpy(&(structAssociate->month), UBXMessage->brute->buffer + offset, sizeof(structAssociate->month));
-	offset += sizeof(structAssociate->month);
-
-	memcpy(&(structAssociate->day), UBXMessage->brute->buffer + offset, sizeof(structAssociate->day));
-	offset += sizeof(structAssociate->day);
-
-	memcpy(&(structAssociate->hour), UBXMessage->brute->buffer + offset, sizeof(structAssociate->hour));
-	offset += sizeof(structAssociate->hour);
-
-	memcpy(&(structAssociate->min), UBXMessage->brute->buffer + offset, sizeof(structAssociate->min));
-	offset += sizeof(structAssociate->min);
-
-	memcpy(&(structAssociate->sec), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sec));
-	offset += sizeof(structAssociate->sec);
-
-	memcpy(&(structAssociate->valid), UBXMessage->brute->buffer + offset, sizeof(structAssociate->valid));
-	offset += sizeof(structAssociate->valid);
-
-
-	char bufferDebug[1024];
-	//int len =
-	snprintf(bufferDebug,  (size_t)1024,
-			"\r\n___debug_UBX_NAV_TIMEUTC__\r\n"
-			"iTOW [ms]: %u\r\n"
-			"tAcc [ns]: %u\r\n"
-			"Date [YYYY-MM-DD]: %u-%u-%u\r\n"
-			"Time [HH:MM:SS]: %u:%u:%u - %u [ns]\r\n"
-			"valid: %u\r\n",
-			bytes_to_endian(structAssociate->iTOW,sizeof(structAssociate->iTOW),'l'),
-			bytes_to_endian(structAssociate->tAcc,sizeof(structAssociate->tAcc),'l'),
-			bytes_to_endian(structAssociate->year,sizeof(structAssociate->year),'l'),
-			bytes_to_endian(structAssociate->month,sizeof(structAssociate->month),'l'),
-			bytes_to_endian(structAssociate->day,sizeof(structAssociate->day),'l'),
-			bytes_to_endian(structAssociate->hour,sizeof(structAssociate->hour),'l'),
-			bytes_to_endian(structAssociate->min,sizeof(structAssociate->min),'l'),
-			bytes_to_endian(structAssociate->sec,sizeof(structAssociate->sec),'l'),
-			bytes_to_endian(structAssociate->nano,sizeof(structAssociate->nano),'l'),
-			bytes_to_endian(structAssociate->valid,sizeof(structAssociate->valid),'l')
-	);
-	UART_Transmit_With_Color(bufferDebug, ANSI_COLOR_MAGENTA);
-	//fill_unuse_memory(UBXMessage,len);
-	ITM_Port32(31)=20;
-}
-
-void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL* structAssociate){
-
-	size_t offset = 6;
-
 	memcpy(&(structAssociate->version), UBXMessage->brute->buffer + offset, sizeof(structAssociate->version));
-	offset += sizeof((structAssociate->version));
+	offset += sizeof(structAssociate->version);
 
-	memcpy(&(structAssociate->layers), UBXMessage->brute->buffer + offset, sizeof(structAssociate->layers));
-	offset += sizeof((structAssociate->layers));
+	memcpy(&(structAssociate->numSigs), UBXMessage->brute->buffer + offset, sizeof(structAssociate->numSigs));
+	offset += sizeof(structAssociate->numSigs);
 
-	offset += sizeof((structAssociate->reserved));
+	offset += sizeof(structAssociate->reserved0);
 
-	memcpy(&(structAssociate->cfgData), UBXMessage->brute->buffer + offset, sizeof(structAssociate->cfgData));
-	offset += sizeof((structAssociate->cfgData));
-	//Diviser ici en flag
-	//
-	char bufferDebug[1024];
-	int len =snprintf(bufferDebug,  (size_t)1024,
-			"\r\n__debug_SetVal___\r\n"
-			"version: %u\r\n"
-			"layers: %u\r\n"
-			"KeyId|Value: %s\r\n",
-			bytes_to_endian(structAssociate->version,sizeof(structAssociate->version),'b'),
-			bytes_to_endian(structAssociate->layers,sizeof(structAssociate->layers),'l'),
-			array_to_hex_string(structAssociate->cfgData,sizeof(structAssociate->cfgData))
-	);
-	fill_unuse_memory(UBXMessage,len);
-}
-void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociate){
-	size_t offset = 6;
+	for (int i = 0; i < structAssociate->numSigs[0]; i++) {
+		memcpy(&(structAssociate->sig[i].gnssId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].gnssId));
+		offset += sizeof(structAssociate->sig[i].gnssId);
 
-	memcpy(&(structAssociate->msgClass), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgClass));
-	offset += sizeof((structAssociate->msgClass));
+		memcpy(&(structAssociate->sig[i].svId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].svId));
+		offset += sizeof(structAssociate->sig[i].svId);
 
-	memcpy(&(structAssociate->msgID), UBXMessage->brute->buffer + offset, sizeof(structAssociate->msgID));
-	offset += sizeof((structAssociate->msgID));
+		memcpy(&(structAssociate->sig[i].sigId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].sigId));
+		offset += sizeof(structAssociate->sig[i].sigId);
 
-	memcpy(&(structAssociate->rate), UBXMessage->brute->buffer + offset, sizeof(structAssociate->rate));
-	offset += sizeof((structAssociate->rate));
+		memcpy(&(structAssociate->sig[i].freqId), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].freqId));
+		offset += sizeof(structAssociate->sig[i].freqId);
 
-	char bufferDebug[1024];
-	int len =snprintf(bufferDebug,  (size_t)1024,
-			"\r\n__debug_PollMsg___\r\n"
-			"msgClass: %u\r\n"
-			"msgID: %u\r\n"
-			"rate :%u\r\n",
-			bytes_to_endian(structAssociate->msgClass,sizeof(structAssociate->msgClass),'l'),
-			bytes_to_endian(structAssociate->msgID,sizeof(structAssociate->msgID),'l'),
-			bytes_to_endian(structAssociate->rate,sizeof(structAssociate->rate),'l')
-	);
-	fill_unuse_memory(UBXMessage,len);
+		memcpy(&(structAssociate->sig[i].prRes), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prRes));
+		offset += sizeof(structAssociate->sig[i].prRes);
 
-}
-unsigned int bytes_to_endian(uint8_t attr[], size_t length, char type_endian) {
-	uint64_t result = 0;
-	if (type_endian == 'l') { // little-endian
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << (i * 8);
-		}
-	} else if (type_endian == 'b') { // big-endian
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << ((sizeof(uint64_t) - i - 1) * 8);
-		}
-	}
-	else if (type_endian == '2'){ //little-endiand 2's complements
-		if (attr[length - 1] & 0x80) { // Check if the most significant bit (MSB) is 1 (indicating negative number)
-			result = -1; // Initialize result to all 1s for negative number
-		}
-		for (size_t i = 0; i < length; ++i) {
-			result |= ((uint64_t)attr[i]) << (i * 8);
+		memcpy(&(structAssociate->sig[i].cno), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].cno));
+		offset += sizeof(structAssociate->sig[i].cno);
+
+		memcpy(&(structAssociate->sig[i].qualityInd), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].qualityInd));
+		offset += sizeof(structAssociate->sig[i].qualityInd);
+
+		memcpy(&(structAssociate->sig[i].corrSource), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].corrSource));
+		offset += sizeof(structAssociate->sig[i].corrSource);
+
+		memcpy(&(structAssociate->sig[i].ionoModel), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].ionoModel));
+		offset += sizeof(structAssociate->sig[i].ionoModel);
+
+		for (int y =0; y <8; y++){
+			memcpy(&(structAssociate->sig[i].health), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].health));
+			offset += sizeof(structAssociate->sig[i].health);
+
+			memcpy(&(structAssociate->sig[i].prSmoothed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prSmoothed));
+			offset += sizeof(structAssociate->sig[i].prSmoothed);
+
+			memcpy(&(structAssociate->sig[i].prUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prUsed));
+			offset += sizeof(structAssociate->sig[i].prUsed);
+
+			memcpy(&(structAssociate->sig[i].crUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].crUsed));
+			offset += sizeof(structAssociate->sig[i].crUsed);
+
+			memcpy(&(structAssociate->sig[i].doUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].doUsed));
+			offset += sizeof(structAssociate->sig[i].doUsed);
+
+			memcpy(&(structAssociate->sig[i].prCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].prCorrUsed));
+			offset += sizeof(structAssociate->sig[i].prCorrUsed);
+
+			memcpy(&(structAssociate->sig[i].crCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].crCorrUsed));
+			offset += sizeof(structAssociate->sig[i].crCorrUsed);
+
+			memcpy(&(structAssociate->sig[i].doCorrUsed), UBXMessage->brute->buffer + offset, sizeof(structAssociate->sig[i].doCorrUsed));
+			offset += sizeof(structAssociate->sig[i].doCorrUsed);
+
+			offset += sizeof(structAssociate->reserved1);
 		}
 	}
-	return result;
+	updateMemoryUsage();
+
 }
 
-char* array_to_hex_string(const uint8_t* array, size_t length) {
-	// Taille maximale pour le buffer
-	static char hex_string[UART_RX_BUFFER_SIZE * 2 + 1];
-	for (size_t i = 0; i < length; ++i) {
-		sprintf(hex_string + (i * 2), "%02x", array[i]);
-	}
-	hex_string[length * 2] = '\0';
-	return hex_string;
-}

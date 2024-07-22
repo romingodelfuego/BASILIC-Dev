@@ -49,33 +49,26 @@ void freeBuffer(DynamicBuffer *bufferDynamic) {
 	vPortFree(bufferDynamic);
 }
 
-/*GenericMessage* GNSSCom_Receive(uint8_t* buffer,size_t size){
-	GenericMessage* genericMessage=(GenericMessage*) malloc(sizeof(GenericMessage));
-
-	for (int i = 0; i < size; i++) {
-		if (buffer[i] == HEADER_UBX_1 &&
-				buffer[i +1] == HEADER_UBX_2 ){
+void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* genericMessage){
+		if (buffer[0] == HEADER_UBX_1 &&
+				buffer[1] == HEADER_UBX_2 ){
 			genericMessage->typeMessage=UBX;
-			UBXMessage_parsed* UbxMessage =(UBXMessage_parsed*) malloc(sizeof(UBXMessage_parsed));
-			UbxMessage->CLASS = buffer[i + 2];
-			UbxMessage->ID = buffer[i + 3];
-			UbxMessage->len_payload= (buffer[i+5] << 8) |buffer[i+4];
+			genericMessage->Message.UBXMessage =(UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed));
+			updateMemoryUsage();
 
+			genericMessage->Message.UBXMessage->CLASS = buffer[2];
+			genericMessage->Message.UBXMessage->ID = buffer[3];
+			genericMessage->Message.UBXMessage->len_payload= (buffer[5] << 8) |buffer[4];
 
-			UbxMessage->brute=initializeBuffer((size_t)UbxMessage->len_payload + 8);
-			memcpy(UbxMessage->brute->buffer, buffer + i, UbxMessage->brute->size);
-
-			genericMessage->Message.UBXMessage = UbxMessage;
-			return genericMessage;
+			genericMessage->Message.UBXMessage->brute=initializeBuffer(genericMessage->Message.UBXMessage->len_payload +8 );
+			updateMemoryUsage();
+			memcpy(genericMessage->Message.UBXMessage->brute->buffer, buffer , genericMessage->Message.UBXMessage->len_payload +8);
+			updateMemoryUsage();
 		}
 
-		else if(buffer[i] == HEADER_NMEA) {
-			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) malloc(sizeof(NMEAMessage_parsed));
+		else if(buffer[0] == HEADER_NMEA) {
+			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) pvPortMalloc(sizeof(NMEAMessage_parsed));
 			genericMessage->typeMessage= NMEA;
 			genericMessage->Message.NMEAMessage = NMEAMessage;
-			return genericMessage; //Temporaire
 		}
-	}
-
-	return genericMessage;
-}*/
+}

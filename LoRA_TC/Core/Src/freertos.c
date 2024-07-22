@@ -162,7 +162,7 @@ void MX_FREERTOS_Init(void) {
   ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
   /* definition and creation of Debug */
-  osThreadDef(Debug, Debug_TASK, osPriorityBelowNormal, 0, 256);
+  osThreadDef(Debug, Debug_TASK, osPriorityAboveNormal, 0, 256);
   DebugHandle = osThreadCreate(osThread(Debug), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -245,7 +245,7 @@ void SenderLoRA_TASK(void const * argument)
 			vPortFree(headerForPolling);
 			logMemoryUsage("END - Lora Sender TASK");
 
-			vTaskDelay(10000);
+			vTaskDelay(5000);
 		}
 	}
   /* USER CODE END SenderLoRA_TASK */
