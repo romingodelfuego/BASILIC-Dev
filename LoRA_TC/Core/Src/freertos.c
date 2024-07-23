@@ -245,7 +245,7 @@ void SenderLoRA_TASK(void const * argument)
 			vPortFree(headerForPolling);
 			logMemoryUsage("END - Lora Sender TASK");
 
-			vTaskDelay(2000);
+			vTaskDelay(7000);
 		}
 	}
   /* USER CODE END SenderLoRA_TASK */

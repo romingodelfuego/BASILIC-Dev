@@ -56,7 +56,6 @@ int __io_putchar(int ch) {
 	ITM_SendChar(ch);
 	return ch;
 }
-
 void updateMemoryUsage(void) {
 	vPortGetHeapStats(&heapStats);
 }
@@ -74,4 +73,6 @@ void logMemoryUsage(char*phase) {
 	printf("Number of Successful Allocations: %u\n", (unsigned int)heapStats.xNumberOfSuccessfulAllocations);
 	printf("Number of Successful Frees: %u\n\n", (unsigned int)heapStats.xNumberOfSuccessfulFrees);
 }
+
+
 /************************ -------- ************************/

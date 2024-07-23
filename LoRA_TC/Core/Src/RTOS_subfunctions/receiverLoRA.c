@@ -23,6 +23,8 @@ void receivedLora(void){
 
 	if (!LORA_Receive_Message->RxNbrBytes){
 		ITM_Port32(30)=66; //Si on recoit du bruit
+		vPortFree(LORA_Receive_Message->header);
+		vPortFree(LORA_Receive_Message);
 	}
 
 	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
@@ -35,7 +37,6 @@ void receivedLora(void){
 		vPortFree(LORA_Receive_Message->header);
 		vPortFree(LORA_Receive_Message);
 		updateMemoryUsage();
-
 	}
 	updateMemoryUsage();
 	logMemoryUsage("END - LoRA Reception");
@@ -71,6 +72,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 
 	if (LORA_Receive_Message->header->num_packet == LORA_Receive_Message->header->nbOf_packet)
 	{
+		logMemoryUsage("START - Completed Reception");
 		//Liste de tous les LoRAinReceptionQ_t validant le meme identifier
 		LoRAinReceptionQ_t correspondingIdentifier[LORA_Receive_Message->header->nbOf_packet];
 		processQueueAndStoreIdentifiers(LoRA_inReceptionHandle,
@@ -108,6 +110,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 		}
 		vPortFree(genericMessage);
 		vPortFree(synthesisPayload);
+		logMemoryUsage("END - Completed Reception");
 	}
 }
 /*
@@ -146,7 +149,6 @@ uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfs
 		vPortFree(structsToConcatenate[i].LMR->header);
 		vPortFree(structsToConcatenate[i].LMR);
 		updateMemoryUsage();
-
 	}
 	return result;
 }

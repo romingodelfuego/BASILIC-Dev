@@ -17,6 +17,7 @@ RM := rm -rf
 -include Core/Startup/subdir.mk
 -include Core/Src/RTOS_subfunctions/subdir.mk
 -include Core/Src/LORA/subdir.mk
+-include Core/Src/GNSS/UBX_NAV/subdir.mk
 -include Core/Src/GNSS/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
