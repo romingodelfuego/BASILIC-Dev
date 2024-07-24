@@ -6,39 +6,40 @@
  */
 
 #include <RTOS_subfunctions/receiverLoRA.h>
-
+extern ModuleConfig_t ModuleConfig;
 /************************ TASK ************************/
 void receivedLora(void){
 	logMemoryUsage("START - LoRA Reception");
-	UART_Transmit_With_Color("\n\r--- RECEIVED MESSAGE ---",ANSI_COLOR_GREEN);
+
 	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
 	if (LORA_Receive_Message == NULL) Error_Handler();
 	LORA_Receive_Message->header = (LORA_HeaderforSending*)pvPortMalloc(sizeof(LORA_HeaderforSending));
 	if (LORA_Receive_Message->header == NULL) Error_Handler();
-
 	updateMemoryUsage();
 
-	ITM_Port32(30)=357951;
 	RFM9x_Receive(LORA_Receive_Message); //PvPortMalloc LORA_Receive_Message->payload
 
 	if (!LORA_Receive_Message->RxNbrBytes){
-		ITM_Port32(30)=66; //Si on recoit du bruit
+		// IF THE NOISE IS TRIGERRED
 		vPortFree(LORA_Receive_Message->header);
 		vPortFree(LORA_Receive_Message);
+		updateMemoryUsage();
+		return;
 	}
 
 	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
 			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
+		// IF THE IS ADDRESS TO THIS MODULE
+		// ADRESS CAN BE MANAGED FROM THE inc/LoRA/LoraCom.h file
+		UART_Transmit_With_Color("\n\r--- ADRESSED MESSAGE ---",ANSI_COLOR_GREEN);
 		messageLoRATreatment(LORA_Receive_Message);
-		updateMemoryUsage();
 	}
 	else{
+		UART_Transmit_With_Color("\n\r--- INTERCEPTED MESSAGE ---",ANSI_COLOR_GREEN);
 		vPortFree(LORA_Receive_Message->payload);
 		vPortFree(LORA_Receive_Message->header);
 		vPortFree(LORA_Receive_Message);
-		updateMemoryUsage();
 	}
-	updateMemoryUsage();
 	logMemoryUsage("END - LoRA Reception");
 }
 /************************ ---- ************************/
@@ -51,9 +52,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 	//pourquoi pas ajout des header de reception pour chaque messages ie [SNR,RSSI][][][]
 	//Si non on ajoute à la queue LoRAinReception*/
 	LoRAinReceptionQ_t LoRAinReceptionQ;
-
 	LoRAinReceptionQ =(LoRAinReceptionQ_t){.LMR = LORA_Receive_Message};
-
 	updateMemoryUsage();
 /*
 	char* nbpacketdebug = (char*)pvPortMalloc(sizeof(char));
@@ -102,7 +101,7 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 		updateMemoryUsage();
 		if (genericMessage->typeMessage==UBX){
 			//traductor pvPortMalloc
-			traductor(genericMessage->Message.UBXMessage);
+			traductor(genericMessage->Message.UBXMessage, ModuleConfig);
 
 			freeBuffer(genericMessage->Message.UBXMessage->brute);
 			vPortFree(genericMessage->Message.UBXMessage);
@@ -128,8 +127,32 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
         {&header3, payload3}
     };
 
-    Output : should be  {0x01, 0x02, 0x03,0x04, 0x05,0x06, 0x07, 0x08, 0x09}
+    Output : should be  {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09}
  */
+/*
+uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate,size_t* total_length){
+	*total_length=0;
+	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
+		*total_length += structsToConcatenate[i].LMR->header->len_payload;
+	}
+
+	// Allouer de la mémoire pour le tableau concaténé
+	uint8_t* result = (uint8_t*)pvPortMalloc(*total_length);
+	if (result == NULL)Error_Handler();
+
+	// Copier chaque payload dans le tableau concaténé
+	size_t offset = 0;
+	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
+		memcpy(result + offset, structsToConcatenate[i].LMR->payload, structsToConcatenate[i].LMR->header->len_payload);
+		offset += (size_t)structsToConcatenate[i].LMR->header->len_payload;
+		vPortFree(structsToConcatenate[i].LMR->payload);
+		vPortFree(structsToConcatenate[i].LMR->header);
+		vPortFree(structsToConcatenate[i].LMR);
+		updateMemoryUsage();
+	}
+	return result;
+}*/
+
 uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate,size_t* total_length){
 	*total_length=0;
 	for (int i = 0; i < nbOfstructsToConcatenate; i++) {

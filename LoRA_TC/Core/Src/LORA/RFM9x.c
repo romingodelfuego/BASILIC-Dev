@@ -119,6 +119,8 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
 	vTaskDelay(1);
+	RFM9x_SetMode_Receive();
+
 }
 void waitPacketSent() {
 	// Implement this function to wait until the packet has been sent

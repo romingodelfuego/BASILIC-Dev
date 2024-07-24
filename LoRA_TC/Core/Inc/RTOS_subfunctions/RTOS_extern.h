@@ -8,14 +8,7 @@
 #ifndef INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_
 #define INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_
 
-//WHO AM I
-#define MODULE_SOURCE_ADDRESS 0xFE
-#define MODULE_BROADCAST_ADDRESS 0xFF
-// PAQUET TYPE
-#define PACKET_TYPE_DATA 0x01
-#define PACKET_TYPE_ACK  0x02
-#define PACKET_TYPE_POLL 0x03
-
+#include <stdbool.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -24,6 +17,14 @@
 #include "debug.h"
 #include "shared.h"
 #include "GNSS/GNSSCom.h"
+
+//WHO AM I
+#define MODULE_SOURCE_ADDRESS 0xFE
+#define MODULE_BROADCAST_ADDRESS 0xFF
+// PAQUET TYPE
+#define PACKET_TYPE_DATA 0x01
+#define PACKET_TYPE_ACK  0x02
+#define PACKET_TYPE_POLL 0x03
 
 extern osThreadId StartInitHandle;
 extern osThreadId SenderLoRAHandle;
@@ -36,11 +37,17 @@ extern osMessageQId LoRA_inReceptionHandle;
 
 extern osSemaphoreId xSem_LORAReceive_startHandleHandle;
 
+typedef struct {
+    bool doDebugging;
+    bool doLowEnergy;
+    // Ajoutez d'autres paramètres de configuration si nécessaire
+} ModuleConfig_t;
 
 typedef enum{
 	OK,
 	Error
 }GNSSReturnStatut;
+
 typedef enum {
 	WAIT_FOR_SYNC_1,
 	WAIT_FOR_SYNC_2,
@@ -86,10 +93,6 @@ typedef struct {
 	DynamicBuffer* payload;
 }LoRAtoSendQ_t;
 
-/*typedef struct {
-	LORA_HeaderforSending* header;
-	uint8_t* payload;
-}LoRAinReceptionQ_t;*/
 typedef struct {
 	LORA_MessageReception* LMR;
 }LoRAinReceptionQ_t;

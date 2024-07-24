@@ -27,6 +27,6 @@ typedef struct {
 } MessageMapping;
 extern MessageMapping message_mappings[];
 
-void traductor(UBXMessage_parsed* UBXMessage);
+void traductor(UBXMessage_parsed* UBXMessage , ModuleConfig_t ModuleConfig);
 
 #endif /* INC_UBXPARSER_H_ */

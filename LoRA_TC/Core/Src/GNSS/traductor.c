@@ -31,7 +31,7 @@ MessageMapping message_mappings[] = {
 };
 
 
-void traductor(UBXMessage_parsed* UBXMessage) {
+void traductor(UBXMessage_parsed* UBXMessage,ModuleConfig_t ModuleConfig) {
 	// Function pointer and variables to hold the matched mapping's values
 	void (*create_func)(UBXMessage_parsed*, void *) = NULL;
 	void (*debug_func)(void *) = NULL;
@@ -48,7 +48,7 @@ void traductor(UBXMessage_parsed* UBXMessage) {
 			cleaner_func = message_mappings[i].cleaner_func;
 			structAssociate = message_mappings[i].structAssociate; //Pour l'utilisation dans d'autres fonctions, perhaps
 			create_func(UBXMessage,structAssociate); //pvPortMaloc de structAssociate->sig apr exe
-			debug_func(structAssociate);
+			if (ModuleConfig.doDebugging) debug_func(structAssociate);
 			cleaner_func(structAssociate);
 			break;
 		}

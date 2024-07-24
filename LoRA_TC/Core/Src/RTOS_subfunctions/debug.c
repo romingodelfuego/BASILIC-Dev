@@ -8,10 +8,10 @@
 #include "RTOS_subfunctions/debug.h"
 #include "shared.h"
 HeapStats_t heapStats;
+extern ModuleConfig_t ModuleConfig;
 #define MAX_SIZE_BUFFER_DEBUG 5012
 /************************ TASK ************************/
 void debug(void){
-
 	UARTdebugQ_t UARTdebug;
 	char buffer[MAX_SIZE_BUFFER_DEBUG];
 
@@ -29,9 +29,8 @@ void debug(void){
 /************************ FUNCTIONS ************************/
 void UART_Transmit_With_Color(char *data, char *color) {
 	UARTdebugQ_t UARTdebug;
-
     size_t dataSize = strlen(data);
-
+    if (ModuleConfig.doDebugging){
 	// Allouer de la mémoire pour le message et la couleur
 	UARTdebug.message = pvPortMalloc(dataSize + 1);
 	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
@@ -43,7 +42,7 @@ void UART_Transmit_With_Color(char *data, char *color) {
 	strcpy(UARTdebug.color, color);
 	updateMemoryUsage();
 	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
-
+    }
 }
 void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
 	for (size_t i = 0; i < len; i++) {	// Parcourir le tableau et convertir chaque octet en hexadécimal

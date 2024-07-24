@@ -48,7 +48,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+ModuleConfig_t ModuleConfig;
 /* USER CODE END Variables */
 osThreadId StartInitHandle;
 osThreadId SenderLoRAHandle;
@@ -195,6 +195,10 @@ void StartInitHandle_TASK(void const * argument)
 	HAL_UART_Transmit(&huart2, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 
 	logMemoryUsage("INITILISATION");
+	ModuleConfig = (ModuleConfig_t){
+		.doDebugging = false,
+		.doLowEnergy = false
+	};
 	osSignalSet(ReceiverLoRAHandle, 0x01);
 	osSignalSet(SenderLoRAHandle, 0x01);
 	osStatus event = osThreadTerminate(StartInitHandle);
@@ -214,20 +218,27 @@ void SenderLoRA_TASK(void const * argument)
   /* USER CODE BEGIN SenderLoRA_TASK */
 	/* Infinite loop */
 	uint8_t pollingStatutCommand [] = {0xb5, 0x62, 0x01, 0x43, 0x00, 0x00, 0x44, 0xcd};
+    uint32_t notificationValue;
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
 		{
+			/*WAIT FOR A NOTIFY FROM ISR EXTI 8-9 */
+			 xTaskNotifyWait(0x00, // Ne pas effacer de bits à l'entrée
+			                        0xFFFFFFFF, // Effacer tous les bits à la sortie
+			                        &notificationValue, // Stocker la valeur des bits notifiés
+			                        portMAX_DELAY); // Attendre indéfiniment
+
+			 /* BUILD OF THE MESSAGE TO SEND VIA LoRA - THIS PART MEANS TO DISSAPEAR FOR A SOFTWARE MESSAGE BUILD */
 			logMemoryUsage("START - Lora Sender TASK");
 			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(pollingStatutCommand));
 			LORA_HeaderforReception* headerForPolling = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
 			if (headerForPolling == NULL) Error_Handler();
-			logMemoryUsage("MEMCPY - Lora Sender TASK");
-
 			memcpy(payloadForPolling->buffer, pollingStatutCommand, payloadForPolling->size);
+			updateMemoryUsage();
 
 			*headerForPolling = (LORA_HeaderforReception){
-				.recipient = MODULE_BROADCAST_ADDRESS,
+				.recipient = notificationValue,
 						.sender = MODULE_SOURCE_ADDRESS,
 						.type = PACKET_TYPE_POLL,
 						.len_payload = (uint8_t)payloadForPolling->size
@@ -239,13 +250,12 @@ void SenderLoRA_TASK(void const * argument)
 			};
 			xQueueSendToBack(LoRA_toSendHandle,&pollingStatutGNSS,osWaitForever);
 
+			/* THIS PART IS ESSENTIAL */
 			senderLoRA();
-
+			/* --------------------- */
 			freeBuffer(payloadForPolling);
 			vPortFree(headerForPolling);
 			logMemoryUsage("END - Lora Sender TASK");
-
-			vTaskDelay(7000);
 		}
 	}
   /* USER CODE END SenderLoRA_TASK */
@@ -266,6 +276,7 @@ void ReceiverLoRA_TASK(void const * argument)
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
 		{
+			/* WAITING FOR THE SEMAPHORE FROM ISR */
 			osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
 			receivedLora();
 		}

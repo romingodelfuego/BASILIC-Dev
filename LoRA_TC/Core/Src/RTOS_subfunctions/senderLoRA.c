@@ -5,13 +5,14 @@
  *      Author: romain.pace
  */
 #include "RTOS_subfunctions/senderLoRA.h"
+#include "GNSS/debug_utils.h"
 
 /************************ TASK ************************/
 void senderLoRA(){
 	LoRAtoSendQ_t LoRAtoSend;
 	logMemoryUsage("START - Lora Sender");
-	//RECEVOIR D UNE QUEUE : format :{Header, DynamicBuffer}
-	//Allouer memoire ou pas
+
+	/* RECEIVE FROM QUEUE : format :{Header, DynamicBuffer} */
 	xQueueReceive(LoRA_toSendHandle, &LoRAtoSend, osWaitForever);
 
 	UART_Transmit_With_Color("\n\r--- SEND MESSAGE ---",ANSI_COLOR_MAGENTA);
@@ -31,10 +32,14 @@ void senderLoRA(){
 			LoRAtoSend.header->len_payload);
 
 	RFM9x_Send(buffer, LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforReception)); //Pour l'instant on s'oblige a faire comme cela,
-	UART_Transmit_With_Color("\n\r--- SEND MESSAGE - DONE ---\n",ANSI_COLOR_MAGENTA);
-	vPortFree(buffer);
+	char* hexString = (char*)pvPortMalloc(sizeof(LoRAtoSend.header->recipient));
+	if (hexString == NULL) Error_Handler();
+	uint8_array_to_hex_string(hexString,&LoRAtoSend.header->recipient,sizeof(LoRAtoSend.header->recipient));
 
+	UART_Transmit_With_Color(hexString,ANSI_COLOR_MAGENTA);
+
+	vPortFree(hexString);
+	vPortFree(buffer);
 	logMemoryUsage("END - Lora Sender");
-	RFM9x_SetMode_Receive();
 }
 /************************ ---- ************************/
