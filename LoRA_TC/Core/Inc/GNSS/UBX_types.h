@@ -139,6 +139,15 @@ typedef union {
 	};
 	uint8_t bytes[2]; // Représentation entière de 8 bits
 } X2_sigFlags;
+typedef union {
+	struct {
+		uint8_t validTOW : 1;
+		uint8_t validWKN : 1;
+		uint8_t validUTC : 1;
+		uint8_t utcStandard : 4;
+	};
+	uint8_t bytes[1]; // Représentation entière de 8 bits
+} X1_valid;
 
 
 #endif /* INC_GNSS_UBX_TYPES_H_ */

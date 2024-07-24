@@ -196,7 +196,7 @@ void StartInitHandle_TASK(void const * argument)
 
 	logMemoryUsage("INITILISATION");
 	ModuleConfig = (ModuleConfig_t){
-		.doDebugging = false,
+		.doDebugging = true,
 		.doLowEnergy = false
 	};
 	osSignalSet(ReceiverLoRAHandle, 0x01);

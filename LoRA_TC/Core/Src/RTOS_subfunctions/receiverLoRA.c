@@ -95,15 +95,14 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 		//Objectif afficher le message en debug avec traductor.c
 		//Il faut donc creer un UBXMessage_Parsed
 		GenericMessage* genericMessage=(GenericMessage*) pvPortMalloc(sizeof(GenericMessage));
-
-		// GNSSCom_MessageAdapter pvPortMalloc: genericMessage->Message.UBXMessage->brute & genericMessage->Message.UBXMessage
-		GNSSCom_MessageAdapter(synthesisPayload,&total_length,genericMessage);
+		GNSSCom_MessageAdapter(synthesisPayload,&total_length,genericMessage);// GNSSCom_MessageAdapter pvPortMalloc: genericMessage->Message.UBXMessage->brute & genericMessage->Message.UBXMessage
 		updateMemoryUsage();
 		if (genericMessage->typeMessage==UBX){
 			//traductor pvPortMalloc
 			traductor(genericMessage->Message.UBXMessage, ModuleConfig);
 
-			freeBuffer(genericMessage->Message.UBXMessage->brute);
+			//freeBuffer(genericMessage->Message.UBXMessage->brute);
+			vPortFree(genericMessage->Message.UBXMessage->brute);
 			vPortFree(genericMessage->Message.UBXMessage);
 			updateMemoryUsage();
 		}
@@ -153,28 +152,43 @@ uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfs
 	return result;
 }*/
 
-uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate,size_t* total_length){
-	*total_length=0;
-	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		*total_length += structsToConcatenate[i].LMR->header->len_payload;
-	}
+uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate, size_t* total_length) {
+    *total_length = 0;
+    size_t offset = 0;
+    uint8_t* result = NULL;
+    uint8_t* temp = NULL;
 
-	// Allouer de la mémoire pour le tableau concaténé
-	uint8_t* result = (uint8_t*)pvPortMalloc(*total_length);
-	if (result == NULL)Error_Handler();
+    for (int i = 0; i < nbOfstructsToConcatenate; i++) {
+        size_t new_total_length = *total_length + structsToConcatenate[i].LMR->header->len_payload;
 
-	// Copier chaque payload dans le tableau concaténé
-	size_t offset = 0;
-	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		memcpy(result + offset, structsToConcatenate[i].LMR->payload, structsToConcatenate[i].LMR->header->len_payload);
-		offset += (size_t)structsToConcatenate[i].LMR->header->len_payload;
-		vPortFree(structsToConcatenate[i].LMR->payload);
-		vPortFree(structsToConcatenate[i].LMR->header);
-		vPortFree(structsToConcatenate[i].LMR);
-		updateMemoryUsage();
-	}
-	return result;
+        // Allocate new memory block
+        temp = (uint8_t*)pvPortMalloc(new_total_length);
+        if (temp == NULL) Error_Handler();
+
+        // Copy the existing data to the new block
+        if (result != NULL) {
+            memcpy(temp, result, *total_length);
+            vPortFree(result); // Free the old memory block
+        }
+
+        // Update the total length
+        *total_length = new_total_length;
+        result = temp; // Assign the new block to result
+
+        // Copy the new data into the new block
+        memcpy(result + offset, structsToConcatenate[i].LMR->payload, structsToConcatenate[i].LMR->header->len_payload);
+        offset += (size_t)structsToConcatenate[i].LMR->header->len_payload;
+
+        // Free the individual payload memory
+        vPortFree(structsToConcatenate[i].LMR->payload);
+        vPortFree(structsToConcatenate[i].LMR->header);
+        vPortFree(structsToConcatenate[i].LMR);
+        updateMemoryUsage();
+    }
+
+    return result;
 }
+
 
 void processQueueAndStoreIdentifiers(osMessageQId xQueue, uint8_t identifierToFind ,LoRAinReceptionQ_t* correspondingIdentifiers){
 	LoRAinReceptionQ_t currentItem;

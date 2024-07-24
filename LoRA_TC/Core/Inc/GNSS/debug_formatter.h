@@ -24,9 +24,5 @@
 
 #define SEPARATON "\r\n--------------------------------------------------------------\r\n"
 
-void debug_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage,UBX_NAV_TIMEUTC*);
-void debug_SetVal(UBXMessage_parsed* UBXMessage,UBX_CFG_SETVAL*);
-void debug_PollMessage(UBXMessage_parsed* UBXMessage,UBX_CFG_MSG* structAssociate);
-
 char* UBX_format(void* fieldToDebug, DataType type, char* (*funcSpe)(void*));
 #endif /* INC_TRADUCTOR_H_ */

@@ -25,5 +25,7 @@ char* get_CORRSOURCE(U1* corrSource);
 char* get_IONOMODEL(U1* ionoModel);
 char* get_HEALTH(uint8_t* health);
 
+char* get_UTCSTANDARD(uint8_t* utcStandard);
+
 
 #endif /* INC_GNSS_DEBUG_GETTER_H_ */

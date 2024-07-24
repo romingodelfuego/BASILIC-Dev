@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.c 
+../Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.c \
+../Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.c 
 
 OBJS += \
-./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o 
+./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o \
+./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o 
 
 C_DEPS += \
-./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.d 
+./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.d \
+./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +24,7 @@ Core/Src/GNSS/UBX_NAV/%.o Core/Src/GNSS/UBX_NAV/%.su Core/Src/GNSS/UBX_NAV/%.cyc
 clean: clean-Core-2f-Src-2f-GNSS-2f-UBX_NAV
 
 clean-Core-2f-Src-2f-GNSS-2f-UBX_NAV:
-	-$(RM) ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.cyclo ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.su
+	-$(RM) ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.cyclo ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.su ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.cyclo ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.su
 
 .PHONY: clean-Core-2f-Src-2f-GNSS-2f-UBX_NAV
 

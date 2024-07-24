@@ -4,6 +4,7 @@
 "./Core/Src/GNSS/debug_utils.o"
 "./Core/Src/GNSS/traductor.o"
 "./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o"
+"./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o"
 "./Core/Src/LORA/LORACom.o"
 "./Core/Src/LORA/RFM9x.o"
 "./Core/Src/RTOS_subfunctions/debug.o"

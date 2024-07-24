@@ -17,5 +17,10 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate);
 void create_UBX_NAV_SIG(UBXMessage_parsed* UBXMessage, UBX_NAV_SIG *structAssociate);
 void cleaner_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate);
 /*------------------------ ____________ ------------------------*/
+/*------------------------ UBX_NAV_TIMEUTC ------------------------*/
+void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate);
+void create_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage, UBX_NAV_TIMEUTC *structAssociate);
+void cleaner_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate);
+/*------------------------ ____________ ------------------------*/
 
 #endif /* INC_GNSS_UBX_NAV_H_ */

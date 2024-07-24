@@ -115,6 +115,23 @@ char* get_HEALTH(uint8_t* health){
 	}
 	return str;
 }
+char* get_UTCSTANDARD(uint8_t* utcStandard){
+	char* str = (char*)pvPortMalloc(30 * sizeof(char));
+	if (str == NULL) Error_Handler();
+	switch (*utcStandard){
+	case 0: {strcpy(str,"Information not available");}break;
+	case 1: {strcpy(str,"(CRL),Tokyo, Japan");}break;
+	case 2: {strcpy(str,"(NIST)");}break;
+	case 3:{strcpy(str,"(USNO)");}break;
+	case 4:{strcpy(str,"(BIPM)");}break;
+	case 5:{strcpy(str,"European laboratories");}break;
+	case 6:{strcpy(str,"(SU)");}break;
+	case 7:{strcpy(str,"(NTSC),China");}break;
+	case 8:{strcpy(str,"(NPLI)");}break;
+	default :{strcpy(str,"Unknown");}break;
+	}
+	return str;
+}
 
 
 

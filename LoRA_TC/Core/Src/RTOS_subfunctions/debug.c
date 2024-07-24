@@ -60,7 +60,7 @@ void updateMemoryUsage(void) {
 }
 void logMemoryUsage(char*phase) {
 	// Obtenir les statistiques de la mémoire
-	vPortGetHeapStats(&heapStats);
+	updateMemoryUsage();
 	 TickType_t systemTime = xTaskGetTickCount() * portTICK_PERIOD_MS;
 	// Imprimer les statistiques de mémoire
 	printf("\n-----%s-----\tTIME: %lu\n", phase,systemTime);

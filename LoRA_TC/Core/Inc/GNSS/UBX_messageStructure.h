@@ -28,22 +28,20 @@ typedef struct {
 	U1 numSigs;
 	uint8_t reserved0[2];
 	repeatedGroup_UBX_NAV_SIG* sig;
-
 }UBX_NAV_SIG;
 
 typedef struct {
-	uint8_t iTOW[4];
-	uint8_t tAcc[4];
-	uint8_t nano[4];
-	uint8_t year[2];
-	uint8_t month[1];
-	uint8_t day[1];
-	uint8_t hour[1];
-	uint8_t min[1];
-	uint8_t sec[1];
-	uint8_t valid[1];
+	U4 iTOW;
+	U4 tAcc;
+	I4 nano;
+	U2 year;
+	U1 month;
+	U1 day;
+	U1 hour;
+	U1 min;
+	U1 sec;
+	X1_valid valid;
 }UBX_NAV_TIMEUTC;
-//extern UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 
 typedef struct {
 	uint8_t version[1];

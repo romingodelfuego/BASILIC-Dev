@@ -11,16 +11,13 @@
 #include "RTOS_subfunctions/debug.h"
 
 // Define the instances for the message structures
-UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
-UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
-UBX_CFG_MSG UBX_CFG_MSG_instance;
+
 UBX_NAV_SIG UBX_NAV_SIG_instance;
+// Add other instances
 
 // Define the message mappings array
 MessageMapping message_mappings[] = {
-		//{0x01, 0x21, (void (*)(UBXMessage_parsed *, void *)) debug_UBX_NAV_TIMEUTC, &UBX_NAV_TIMEUTC_instance}, //A la place de la fonction debug on peut penser a ecrire sur la SD
-		//{0x06, 0x8a,(void (*)(UBXMessage_parsed *, void *)) debug_SetVal, &UBX_CFG_SETVAL_instance},
-		//{0x06, 0x01,(void (*)(UBXMessage_parsed *, void *)) debug_PollMessage, &UBX_CFG_MSG_instance},
+
 		{		0x01,0x43,
 				&UBX_NAV_SIG_instance,
 				(void (*)(UBXMessage_parsed *, void *))create_UBX_NAV_SIG,
@@ -29,7 +26,6 @@ MessageMapping message_mappings[] = {
 		},
 		// Add other mappings for other message types if necessary
 };
-
 
 void traductor(UBXMessage_parsed* UBXMessage,ModuleConfig_t ModuleConfig) {
 	// Function pointer and variables to hold the matched mapping's values
