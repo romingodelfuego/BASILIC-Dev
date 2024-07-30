@@ -12,7 +12,15 @@
 #define RFM9x_h
 
 /* Public function prototypes ------------------------------------------------*/
+#include "FreeRTOS.h"
+#include "task.h"
+#include "main.h"
+#include "cmsis_os.h"
+
 #include "shared.h"
+#include <string.h>
+#include "LORA/LORACom.h"
+#include "RTOS_subfunctions/RTOS_extern.h"
 
 void RFM9x_Init( void );
 void RFM9x_Send(uint8_t* data, uint8_t len);

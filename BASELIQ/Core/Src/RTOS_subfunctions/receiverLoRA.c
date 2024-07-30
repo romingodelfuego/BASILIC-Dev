@@ -15,7 +15,6 @@ void receivedLora(void){
 	LORA_Receive_Message->header = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
 	if (LORA_Receive_Message->header == NULL)Error_Handler();
 	updateMemoryUsage();
-	ITM_Port32(30)=357951;
 
 	RFM9x_Receive(LORA_Receive_Message);
 
@@ -70,9 +69,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
 
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
-	ITM_Port32(30)=111;
 	request_commandToGNSS(poll); //On envoie un message vers GNSS
-	ITM_Port32(30)=444;
 	osStatus eventLORA = osSemaphoreWait(LORA_Access_GNSS_ReturnHandle, osWaitForever);
 
 	if (eventLORA !=osOK){

@@ -13,6 +13,7 @@
 // Define the instances for the message structures
 
 UBX_NAV_SIG UBX_NAV_SIG_instance;
+UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 // Add other instances
 
 // Define the message mappings array
@@ -24,6 +25,13 @@ MessageMapping message_mappings[] = {
 				(void(*)(void*)) debug_UBX_NAV_SIG,
 				(void(*)(void*)) cleaner_UBX_NAV_SIG
 		},
+		{
+				0x01, 0x21,
+				&UBX_NAV_TIMEUTC_instance,
+				(void (*)(UBXMessage_parsed *, void *))create_UBX_NAV_TIMEUTC,
+				(void(*)(void*)) debug_UBX_NAV_TIMEUTC,
+				(void(*)(void*)) cleaner_UBX_NAV_TIMEUTC
+		}
 		// Add other mappings for other message types if necessary
 };
 
@@ -42,8 +50,8 @@ void traductor(UBXMessage_parsed* UBXMessage,ModuleConfig_t ModuleConfig) {
 			create_func = message_mappings[i].create_func;
 			debug_func = message_mappings[i].debug_func;
 			cleaner_func = message_mappings[i].cleaner_func;
-			structAssociate = message_mappings[i].structAssociate; //Pour l'utilisation dans d'autres fonctions, perhaps
-			create_func(UBXMessage,structAssociate); //pvPortMaloc de structAssociate->sig apr exe
+			structAssociate = message_mappings[i].structAssociate; //Pour l'utilisation dans d'autres fonctions
+			create_func(UBXMessage,structAssociate); //pvPortMaloc de structAssociate->sig par ex
 			if (ModuleConfig.doDebugging) debug_func(structAssociate);
 			cleaner_func(structAssociate);
 			break;

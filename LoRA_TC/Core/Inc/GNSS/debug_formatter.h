@@ -24,5 +24,5 @@
 
 #define SEPARATON "\r\n--------------------------------------------------------------\r\n"
 
-char* UBX_format(void* fieldToDebug, DataType type, char* (*funcSpe)(void*));
+char* UBX_format(void* fieldToDebug, DataType type, char* (*funcSpe)(void*),...);
 #endif /* INC_TRADUCTOR_H_ */

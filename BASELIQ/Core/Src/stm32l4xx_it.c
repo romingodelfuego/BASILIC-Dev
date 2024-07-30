@@ -25,6 +25,7 @@
 #include "cmsis_os.h"           // Pour les types de données FreeRTOS et CMSIS-RTOS
 #include "FreeRTOS.h"           // Pour les fonctions de FreeRTOS
 #include "semphr.h"             // Pour les sémaphores de FreeRTOS
+#include "RTOS_subfunctions/RTOS_extern.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -173,7 +174,11 @@ void EXTI9_5_IRQHandler(void)
 {
 	/* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
-		osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		if(NotifyForRFM_IRQ.task != NULL){
+			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+			xTaskNotifyFromISR(NotifyForRFM_IRQ.task,0,eNoAction, &xHigherPriorityTaskWoken);
+			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		}
 	}
 
 	/* USER CODE END EXTI9_5_IRQn 0 */
@@ -182,7 +187,7 @@ void EXTI9_5_IRQHandler(void)
 	HAL_GPIO_EXTI_IRQHandler(SD_DETECT_INT_Pin);
 	HAL_GPIO_EXTI_IRQHandler(RFM_IRQ_Pin);
 	/* USER CODE BEGIN EXTI9_5_IRQn 1 */
-	ITM_Port32(20)=999;
+
 	/* USER CODE END EXTI9_5_IRQn 1 */
 }
 

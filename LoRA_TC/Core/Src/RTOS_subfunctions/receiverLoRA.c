@@ -41,6 +41,8 @@ void receivedLora(void){
 		vPortFree(LORA_Receive_Message);
 	}
 	logMemoryUsage("END - LoRA Reception");
+	RFM9x_SetMode_Receive();
+
 }
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
@@ -128,30 +130,6 @@ void messageLoRATreatment(LORA_MessageReception* LORA_Receive_Message){
 
     Output : should be  {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09}
  */
-/*
-uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate,size_t* total_length){
-	*total_length=0;
-	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		*total_length += structsToConcatenate[i].LMR->header->len_payload;
-	}
-
-	// Allouer de la mémoire pour le tableau concaténé
-	uint8_t* result = (uint8_t*)pvPortMalloc(*total_length);
-	if (result == NULL)Error_Handler();
-
-	// Copier chaque payload dans le tableau concaténé
-	size_t offset = 0;
-	for (int i = 0; i < nbOfstructsToConcatenate; i++) {
-		memcpy(result + offset, structsToConcatenate[i].LMR->payload, structsToConcatenate[i].LMR->header->len_payload);
-		offset += (size_t)structsToConcatenate[i].LMR->header->len_payload;
-		vPortFree(structsToConcatenate[i].LMR->payload);
-		vPortFree(structsToConcatenate[i].LMR->header);
-		vPortFree(structsToConcatenate[i].LMR);
-		updateMemoryUsage();
-	}
-	return result;
-}*/
-
 uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate, size_t* total_length) {
     *total_length = 0;
     size_t offset = 0;
@@ -185,7 +163,6 @@ uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfs
         vPortFree(structsToConcatenate[i].LMR);
         updateMemoryUsage();
     }
-
     return result;
 }
 

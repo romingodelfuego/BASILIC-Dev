@@ -13,9 +13,10 @@ void senderLoRA(){
 	//RECEVOIR D UNE QUEUE : format :{Header, DynamicBuffer}
 	//Allouer memoire ou pas
 	xQueueReceive(LoRA_toSendHandle, &LoRAtoSend, osWaitForever);
+	NotifyForRFM_IRQ = (NotifyForRFM_IRQ_t){.task=SenderLoRaHandle,.name="SenderLoRaHandle"};
 
 	LoRAtoSend.header->nbOf_packet = LoRAtoSend.payload->size / (size_t)(RFM9x_FIFO_SIZE - sizeof(LORA_HeaderforSending)) +1;
-	LoRAtoSend.header->identifier= 42; // A generer aleatoirement mais de facon unique pour chaque payload
+	LoRAtoSend.header->identifier= (uint8_t)(rand() % 256); // A generer aleatoirement mais de facon unique pour chaque payload
 	ITM_Port32(30)=LoRAtoSend.header->nbOf_packet;
 	ITM_Port32(30)=LoRAtoSend.payload->size;
 	//On decoupe de message en plusieurs ssmessage
@@ -50,7 +51,12 @@ void senderLoRA(){
 		updateMemoryUsage();
 
 		//SEMAPHORE D ATTENTE DE RFM SEND
+		vTaskDelay(500); //Ce delai depend de la distance avec la cible
 		RFM9x_Send(buffer, len_payload + sizeof(LORA_HeaderforSending));
+		xTaskNotifyWait(0x00,        // Ne pas effacer de bits à l'entrée
+				                        0xFFFFFFFF,  // Effacer tous les bits à la sortie
+				                        NULL,        // Stocker la valeur des bits notifiés
+				                        portMAX_DELAY); // Attendre indéfiniment*/
 
 		char* hexString_LORA = (char*)pvPortMalloc((len_payload + sizeof(LORA_HeaderforSending))*2 + 1);
 		if (hexString_LORA == NULL) Error_Handler();
@@ -58,11 +64,11 @@ void senderLoRA(){
 		UART_Transmit_With_Color("\r\nMESSAGE RFM9x Send: \r\n",ANSI_COLOR_RESET);
 		UART_Transmit_With_Color(hexString_LORA, ANSI_COLOR_GREEN);
 		vPortFree(hexString_LORA);
-
 		vPortFree(buffer);
 		updateMemoryUsage();
-		vTaskDelay(1000); // A remplacer par un message de reception ?
+
 	}
+	UART_Transmit_With_Color("\r\nMESSAGE RFM9x Send: TERMINATED\r\n",ANSI_COLOR_MAGENTA);
 
 	//Liberer memoire
 	freeBuffer(LoRAtoSend.payload);

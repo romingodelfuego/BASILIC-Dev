@@ -4,16 +4,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "LORA/LORACom.h"
 #include "LORA/RFM9x.h"
-#include <string.h>
-#include "RTOS_subfunctions/RTOS_extern.h"
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "main.h"
-#include "cmsis_os.h"
 /* Private define ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -103,8 +95,12 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 		}
 	}*/
 	// Position at the beginning of the FIFO
+
+
 	RFM9x_WriteReg(RFM9x_REG_0D_FIFO_ADDR_PTR, 0);
 
+	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00);//Neccesaire pour que chaque message send soit distinguable
+	vTaskDelay(1);
 	// The payload data
 	for(int i=0; i < len; i++)
 	{
@@ -118,7 +114,8 @@ void RFM9x_Send(uint8_t* data, uint8_t len)
 	vTaskDelay(5);
 	// Interrupt on DIO0 for TxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x40);
-	vTaskDelay(1);
+	vTaskDelay(10);
+
 }
 void waitPacketSent() {
 	// Implement this function to wait until the packet has been sent
@@ -152,7 +149,7 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	uint8_t start = RFM9x_ReadReg(RFM9x_REG_10_FIFO_RX_CURRENT_ADDR);
 	uint8_t len_RFM9x = RFM9x_ReadReg(RFM9x_REG_13_RX_NB_BYTES);
 
-	if (len_RFM9x < sizeof(LORA_HeaderforReception)){
+	if (len_RFM9x <= sizeof(LORA_HeaderforReception)){
 		LORA_Receive_Message->RxNbrBytes=0;
 		RFM9x_WriteReg( RFM9x_REG_12_IRQ_FLAGS, 0xFF );
 		RFM9x_SetMode_Receive();
@@ -200,6 +197,7 @@ void RFM9x_SetMode_Receive(void){
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_RXCONTINUOUS);
 	// Configurer l'interruption sur DIO0 pour RxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
+	NotifyForRFM_IRQ = (NotifyForRFM_IRQ_t){.task=ReceiverLoRAHandle,.name="ReceiverLoRAHandle"};
 }
 uint8_t RFM9x_GetMode( void )
 {

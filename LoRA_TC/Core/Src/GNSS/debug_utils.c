@@ -40,7 +40,7 @@ char* int8ArrayToString(int8_t* array, size_t size){
 }
 
 
-void formattedString(char* buffer, size_t* offset, int numArgs, bool freeMemory,bool isThereSpecFormat,  const char* format,...){
+void formattedString(char* buffer, size_t* offset, int numArgs, bool freeMemory, bool isThereSpecFormat,  const char* format,...){
 	va_list args;
 	va_start(args, format);
 	*offset += vsnprintf(buffer + *offset, MAX_BUFFER_SIZE - *offset, format, args);

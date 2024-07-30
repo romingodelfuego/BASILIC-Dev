@@ -10,7 +10,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
 	size_t offsetDebug = 0;
 	char bufferDebug[MAX_BUFFER_SIZE];
 
-	formattedString(bufferDebug, &offsetDebug, 3, true,false,
+	formattedString(bufferDebug, &offsetDebug, 13, true,false,
 			"\r\n___debug_UBX_NAV_SIG__\r\n"
 			"iTOW [ms]: %s\r\n"
 			"tAcc: %s\r\n"
@@ -40,6 +40,15 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
 			UBX_format(structAssociate->valid.validUTC,TYPE_BITFIELD,NULL),
 			UBX_format(structAssociate->valid.utcStandard,TYPE_BITFIELD,(char*(*)(void*))get_UTCSTANDARD)
 	);
+	UARTdebugQ_t UARTdebug; char *color = ANSI_COLOR_RESET;
+	UARTdebug.message = pvPortMalloc(offsetDebug+1);
+	UARTdebug.color = pvPortMalloc(strlen(color) + 1);
+	updateMemoryUsage();
+	strncpy(UARTdebug.message, bufferDebug, offsetDebug+1);
+	strcpy(UARTdebug.color, color);
+	offsetDebug = 0 ;
+
+	xQueueSendToBack(UARTdebugHandle, &UARTdebug, osWaitForever);
 }
 
 void create_UBX_NAV_TIMEUTC(UBXMessage_parsed* UBXMessage, UBX_NAV_TIMEUTC *structAssociate){

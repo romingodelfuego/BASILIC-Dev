@@ -29,6 +29,7 @@
 #include "RTOS_subfunctions/debug.h"
 #include "RTOS_subfunctions/receiverLoRA.h"
 #include "RTOS_subfunctions/senderLoRA.h"
+#include "GNSS/UBX_NAV.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -158,11 +159,11 @@ void MX_FREERTOS_Init(void) {
   SenderLoRAHandle = osThreadCreate(osThread(SenderLoRA), NULL);
 
   /* definition and creation of ReceiverLoRA */
-  osThreadDef(ReceiverLoRA, ReceiverLoRA_TASK, osPriorityNormal, 0, 2048);
+  osThreadDef(ReceiverLoRA, ReceiverLoRA_TASK, osPriorityAboveNormal, 0, 2048);
   ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
   /* definition and creation of Debug */
-  osThreadDef(Debug, Debug_TASK, osPriorityAboveNormal, 0, 256);
+  osThreadDef(Debug, Debug_TASK, osPriorityHigh, 0, 256);
   DebugHandle = osThreadCreate(osThread(Debug), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -217,7 +218,6 @@ void SenderLoRA_TASK(void const * argument)
 {
   /* USER CODE BEGIN SenderLoRA_TASK */
 	/* Infinite loop */
-	uint8_t pollingStatutCommand [] = {0xb5, 0x62, 0x01, 0x43, 0x00, 0x00, 0x44, 0xcd};
     uint32_t notificationValue;
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
@@ -231,10 +231,12 @@ void SenderLoRA_TASK(void const * argument)
 
 			 /* BUILD OF THE MESSAGE TO SEND VIA LoRA - THIS PART MEANS TO DISSAPEAR FOR A SOFTWARE MESSAGE BUILD */
 			logMemoryUsage("START - Lora Sender TASK");
-			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(pollingStatutCommand));
+
+
+			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(poll_UBX_NAV_TIMEUTC));
 			LORA_HeaderforReception* headerForPolling = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
 			if (headerForPolling == NULL) Error_Handler();
-			memcpy(payloadForPolling->buffer, pollingStatutCommand, payloadForPolling->size);
+			memcpy(payloadForPolling->buffer, poll_UBX_NAV_TIMEUTC, payloadForPolling->size);
 			updateMemoryUsage();
 
 			*headerForPolling = (LORA_HeaderforReception){
@@ -277,8 +279,10 @@ void ReceiverLoRA_TASK(void const * argument)
 		for(;;)
 		{
 			/* WAITING FOR THE SEMAPHORE FROM ISR */
+			ITM_Port32(31)=1111;
 			osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
 			receivedLora();
+			ITM_Port32(31)=9999;
 		}
 	}
   /* USER CODE END ReceiverLoRA_TASK */

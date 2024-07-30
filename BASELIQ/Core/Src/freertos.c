@@ -26,13 +26,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usb_otg.h"
+#include "RTOS_subfunctions/RTOS_extern.h"
 #include "RTOS_subfunctions/matcher.h"
 #include "RTOS_subfunctions/fakeuseSD.h"
 #include "RTOS_subfunctions/uartbyteToGnssMessage.h"
 #include "RTOS_subfunctions/receiverLoRA.h"
 #include "RTOS_subfunctions/debug.h"
 #include "RTOS_subfunctions/senderLoRA.h"
-
+#include <time.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,9 +49,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+NotifyForRFM_IRQ_t NotifyForRFM_IRQ = {.task = NULL,.name="Init"};
+ModuleConfig_t ModuleConfig;
 
 /* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 /* USER CODE END Variables */
@@ -275,17 +277,21 @@ void StartInitTask(void const * argument)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
 	GNSSCom_Init(&huart3,&huart1);
 	LORACom_Init(&hspi2, &huart1);
-
+	srand(time(NULL));
 	RFM9x_Init();
 	GNSSCom_SetUp_Init();
 
 	HAL_UART_Transmit(&huart1, (uint8_t *)initDoneMessage, sizeof(initDoneMessage), 10);
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
+	logMemoryUsage("INITIALISATION");
+	ModuleConfig = (ModuleConfig_t){
+		.doDebugging = true,
+		.doLowEnergy = false //Led allumée seulement 5s par exemple
+	};
 	osSignalSet(ReceiverLoRAHandle, 0x01);
 	osSignalSet(Fake_SDuseHandle, 0x01);
 	osSignalSet(UARTbyte_to_GNHandle, 0x01);
 	osSignalSet(MatcherHandle, 0x01);
-	logMemoryUsage("INITIALISATION");
 	osThreadTerminate(InitTaskHandle);
 	//__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
 	/* USER CODE END StartInitTask */
@@ -307,7 +313,12 @@ void ReceiverLoRA_Task(void const * argument)
 	if (eventFromStart.status == osEventSignal){
 		for(;;)
 		{
-			osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
+			//osSemaphoreWait(xSem_LORAReceive_startHandle, osWaitForever);
+            xTaskNotifyWait(0x00,        // Ne pas effacer de bits à l'entrée
+                            0xFFFFFFFF,  // Effacer tous les bits à la sortie
+                            NULL,        // Stocker la valeur des bits notifiés
+                            portMAX_DELAY); // Attendre indéfiniment
+            NotifyForRFM_IRQ = (NotifyForRFM_IRQ_t){.task = NULL,.name="PostReception"};
 			receivedLora();
 		}
 	}
@@ -417,7 +428,6 @@ void commandToGNSSTask(void const * argument)
 	for(;;)
 	{
 		commandToGNSS();
-
 	}
 
 	/* USER CODE END commandToGNSSTask */

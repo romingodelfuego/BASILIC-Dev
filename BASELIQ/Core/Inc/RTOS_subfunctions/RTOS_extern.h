@@ -14,8 +14,10 @@
 #include "cmsis_os.h"
 #include "debug.h"
 #include "shared.h"
+#include <stdbool.h>
 
-
+extern osThreadId ReceiverLoRAHandle;
+extern osThreadId SenderLoRaHandle;
 
 extern osMessageQId UARTbyteHandle;
 extern osMessageQId UBXQueueHandle;
@@ -31,6 +33,17 @@ extern osSemaphoreId LORA_Access_GNSS_ReturnHandle;
 extern osSemaphoreId GNSS_UART_AccessHandle;
 extern osSemaphoreId xSem_GNSS_InitHandle;
 
+typedef struct {
+	osThreadId task;
+	char* name; //Debug purpose
+}NotifyForRFM_IRQ_t;
+extern NotifyForRFM_IRQ_t NotifyForRFM_IRQ;
+
+typedef struct {
+    bool doDebugging;
+    bool doLowEnergy;
+    // Ajoutez d'autres paramètres de configuration si nécessaire
+} ModuleConfig_t;
 
 typedef enum{
 	OK,

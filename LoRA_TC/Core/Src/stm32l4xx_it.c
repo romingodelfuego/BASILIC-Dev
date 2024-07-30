@@ -171,6 +171,7 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(SPI2_IRQ_Pin) != RESET){
 		osSemaphoreRelease(xSem_LORAReceive_startHandle);
+		__HAL_GPIO_EXTI_CLEAR_FLAG(SPI2_IRQ_Pin);
 	}
 
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -179,17 +180,12 @@ void EXTI9_5_IRQHandler(void)
 		HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
 		xTaskNotifyFromISR(SenderLoRAHandle, (uint32_t)0x01, eSetValueWithOverwrite,&xHigherPriorityTaskWoken);
 		__HAL_GPIO_EXTI_CLEAR_FLAG(LoRA1_IRQ_Pin);
-		//__HAL_GPIO_EXTI_CLEAR_FLAG(LoRA2_IRQ_Pin);
 
 	}
 	if (__HAL_GPIO_EXTI_GET_IT(LoRA2_IRQ_Pin) != RESET){
 		HAL_GPIO_TogglePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin);
-		//BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 		xTaskNotifyFromISR(SenderLoRAHandle, (uint32_t)0x02, eSetValueWithOverwrite, &xHigherPriorityTaskWoken);
-		//portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 		__HAL_GPIO_EXTI_CLEAR_FLAG(LoRA2_IRQ_Pin);
-		//__HAL_GPIO_EXTI_CLEAR_FLAG(LoRA1_IRQ_Pin);
-
 	}
 
   /* USER CODE END EXTI9_5_IRQn 0 */
@@ -197,7 +193,7 @@ void EXTI9_5_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(LoRA2_IRQ_Pin);
   HAL_GPIO_EXTI_IRQHandler(LoRA1_IRQ_Pin);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
-	//portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
   /* USER CODE END EXTI9_5_IRQn 1 */
 }

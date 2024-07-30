@@ -31,7 +31,7 @@ void senderLoRA(){
 			LoRAtoSend.payload->buffer ,
 			LoRAtoSend.header->len_payload);
 
-	RFM9x_Send(buffer, LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforReception)); //Pour l'instant on s'oblige a faire comme cela,
+	RFM9x_Send(buffer, LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforReception));
 	char* hexString = (char*)pvPortMalloc(sizeof(LoRAtoSend.header->recipient));
 	if (hexString == NULL) Error_Handler();
 	uint8_array_to_hex_string(hexString,&LoRAtoSend.header->recipient,sizeof(LoRAtoSend.header->recipient));

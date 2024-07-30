@@ -12,6 +12,7 @@ extern ModuleConfig_t ModuleConfig;
 #define MAX_SIZE_BUFFER_DEBUG 5012
 /************************ TASK ************************/
 void debug(void){
+	ITM_Port32(31)=2222;
 	UARTdebugQ_t UARTdebug;
 	char buffer[MAX_SIZE_BUFFER_DEBUG];
 
@@ -23,6 +24,7 @@ void debug(void){
 	vPortFree(UARTdebug.message);
 	vPortFree(UARTdebug.color);
 	updateMemoryUsage();
+	ITM_Port32(31)=8888;
 
 }
 /************************ ---- ************************/
