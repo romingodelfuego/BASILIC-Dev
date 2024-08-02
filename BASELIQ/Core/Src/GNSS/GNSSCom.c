@@ -46,8 +46,9 @@ void GNSSCom_SetUp_Init(void){
 	GNSStoPollQ_t commands[] = {
 
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
-			{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
-			{commandSetTP2, sizeof(commandSetTP2)},
+			{commandSetTP1x2, sizeof(commandSetTP1x2)},
+			//{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
+			//{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
 			{commandUart1Ouput, sizeof(commandUart1Ouput)},
 			//{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
@@ -56,15 +57,13 @@ void GNSSCom_SetUp_Init(void){
 
 	char message[50];
 	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i){
-		sprintf(message, "\r\t\t\n %s%s%d...%s \r\n",ANSI_COLOR_RESET,"...UBXMessage", i + 1,ANSI_COLOR_RESET);
-		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
 		HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
 
-		sprintf(message, "\r\t\t\n %s%s%s \r\n",ANSI_COLOR_RESET,"...UBXMessage --FROM-- INIT...",ANSI_COLOR_RESET);
+		sprintf(message, "\r\n %s%s%i%s%s",ANSI_COLOR_RESET,"...UBXMessage",i," --FROM-- INIT...",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
-		sprintf(message, "\r\t\t\n %s%s%s \r\n",ANSI_COLOR_GREEN,"\t---SUCCESS---\r\n",ANSI_COLOR_RESET);
+		sprintf(message, "\t %s%s%s \r\n\n",ANSI_COLOR_GREEN,"---SUCCESS---",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
 		vTaskDelay(500);

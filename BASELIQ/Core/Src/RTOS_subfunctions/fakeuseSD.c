@@ -38,7 +38,6 @@ void fakeuseSD(void){
 		return;
 	}
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-	//Probleme ici
 	ITM_Port32(29)=666;
 
 	if (gnssReturn.statut != OK)

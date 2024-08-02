@@ -18,11 +18,8 @@ void receivedLora(void){
 
 	RFM9x_Receive(LORA_Receive_Message);
 
-	if (!LORA_Receive_Message->RxNbrBytes){
-		ITM_Port32(30)=66; //Si on recoit du bruit
-	}
-
-	else if (LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
+	if (LORA_Receive_Message->RxNbrBytes > 0 &&
+			LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
 			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
 
 		switch (LORA_Receive_Message->header->type){
