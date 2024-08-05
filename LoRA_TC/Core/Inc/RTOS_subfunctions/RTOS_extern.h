@@ -89,7 +89,7 @@ typedef struct{ //Copie assumer de CommandnSize
 }GNSStoPollQ_t;
 
 typedef struct {
-	LORA_HeaderforReception* header;
+	LORA_HeaderforSend* header;
 	DynamicBuffer* payload;
 }LoRAtoSendQ_t;
 

@@ -1,0 +1,5 @@
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:11:6:receivedLora	6
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:49:6:messageLoRATreatment	3
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:133:10:concat_payloads	4
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:170:6:processQueueAndStoreIdentifiers	4
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:188:5:isIdentifierMatching	1

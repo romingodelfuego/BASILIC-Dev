@@ -13,7 +13,7 @@ void receivedLora(void){
 
 	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
 	if (LORA_Receive_Message == NULL) Error_Handler();
-	LORA_Receive_Message->header = (LORA_HeaderforSending*)pvPortMalloc(sizeof(LORA_HeaderforSending));
+	LORA_Receive_Message->header = (LORA_HeaderforBaseliq*)pvPortMalloc(sizeof(LORA_HeaderforBaseliq));
 	if (LORA_Receive_Message->header == NULL) Error_Handler();
 	updateMemoryUsage();
 

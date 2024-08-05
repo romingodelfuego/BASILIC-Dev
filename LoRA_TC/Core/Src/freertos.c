@@ -233,13 +233,13 @@ void SenderLoRA_TASK(void const * argument)
 			logMemoryUsage("START - Lora Sender TASK");
 
 
-			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(poll_UBX_NAV_TIMEUTC));
-			LORA_HeaderforReception* headerForPolling = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
+			DynamicBuffer* payloadForPolling =(DynamicBuffer*)initializeBuffer(sizeof(poll_UBX_NAV_SIG));
+			LORA_HeaderforSend* headerForPolling = (LORA_HeaderforSend*)pvPortMalloc(sizeof(LORA_HeaderforSend));
 			if (headerForPolling == NULL) Error_Handler();
-			memcpy(payloadForPolling->buffer, poll_UBX_NAV_TIMEUTC, payloadForPolling->size);
+			memcpy(payloadForPolling->buffer, poll_UBX_NAV_SIG, payloadForPolling->size);
 			updateMemoryUsage();
 
-			*headerForPolling = (LORA_HeaderforReception){
+			*headerForPolling = (LORA_HeaderforSend){
 				.recipient = notificationValue,
 						.sender = MODULE_SOURCE_ADDRESS,
 						.type = PACKET_TYPE_POLL,

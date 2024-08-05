@@ -1,0 +1,8 @@
+../Core/Src/GNSS/debug_getter.c:9:7:get_GNSSID	24	static
+../Core/Src/GNSS/debug_getter.c:25:7:get_SVID	24	static
+../Core/Src/GNSS/debug_getter.c:55:7:get_PRES	24	static
+../Core/Src/GNSS/debug_getter.c:61:7:get_QUALTIYIND	24	static
+../Core/Src/GNSS/debug_getter.c:77:7:get_CORRSOURCE	32	static
+../Core/Src/GNSS/debug_getter.c:94:7:get_IONOMODEL	40	static
+../Core/Src/GNSS/debug_getter.c:107:7:get_HEALTH	24	static
+../Core/Src/GNSS/debug_getter.c:118:7:get_UTCSTANDARD	32	static

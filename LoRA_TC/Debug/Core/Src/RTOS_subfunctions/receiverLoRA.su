@@ -1,0 +1,5 @@
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:11:6:receivedLora	16	static
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:49:6:messageLoRATreatment	64	dynamic
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:133:10:concat_payloads	48	static
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:170:6:processQueueAndStoreIdentifiers	40	static
+../Core/Src/RTOS_subfunctions/receiverLoRA.c:188:5:isIdentifierMatching	16	static

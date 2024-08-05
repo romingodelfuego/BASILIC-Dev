@@ -58,7 +58,8 @@ void GNSSCom_SetUp_Init(void){
 	char message[50];
 	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i){
 
-		HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
+
+		HAL_OK != HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
 
 		sprintf(message, "\r\n %s%s%i%s%s",ANSI_COLOR_RESET,"...UBXMessage",i," --FROM-- INIT...",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
@@ -66,7 +67,7 @@ void GNSSCom_SetUp_Init(void){
 		sprintf(message, "\t %s%s%s \r\n\n",ANSI_COLOR_GREEN,"---SUCCESS---",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		ITM_Port32(31)=1;
 	}
 }

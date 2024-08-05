@@ -77,7 +77,7 @@ typedef struct{
 	uint8_t num_packet;// Le numero du paquet send
 	uint8_t	len_payload;
 
-}LORA_HeaderforSending;
+}LORA_HeaderforBaseliq;
 
 typedef struct{
 	uint8_t recipient;
@@ -85,14 +85,14 @@ typedef struct{
 	uint8_t type;
 	uint8_t	len_payload;
 
-}LORA_HeaderforReception;
+}LORA_HeaderforSend;
 typedef struct {
 	uint8_t IRQFlags;
 	uint8_t RxCurrAddr;
 	uint8_t RxNbrBytes;
 	uint8_t SNR;
 	uint8_t RSSI;
-	LORA_HeaderforSending* header;
+	LORA_HeaderforBaseliq* header;
 	uint8_t* payload;
 }LORA_MessageReception;
 /******** ---- ********/

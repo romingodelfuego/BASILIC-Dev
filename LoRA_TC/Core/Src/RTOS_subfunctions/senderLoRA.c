@@ -17,7 +17,7 @@ void senderLoRA(){
 
 	UART_Transmit_With_Color("\n\r--- SEND MESSAGE ---",ANSI_COLOR_MAGENTA);
 
-	uint8_t* buffer = (uint8_t*)pvPortMalloc(LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforReception));
+	uint8_t* buffer = (uint8_t*)pvPortMalloc(LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforSend));
 	if(buffer == NULL) Error_Handler();
 	updateMemoryUsage();
 
@@ -27,11 +27,11 @@ void senderLoRA(){
 	buffer[2] = LoRAtoSend.header->type;
 	buffer[3] = LoRAtoSend.header->len_payload;
 
-	memcpy(buffer + sizeof(LORA_HeaderforReception),
+	memcpy(buffer + sizeof(LORA_HeaderforSend),
 			LoRAtoSend.payload->buffer ,
 			LoRAtoSend.header->len_payload);
 
-	RFM9x_Send(buffer, LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforReception));
+	RFM9x_Send(buffer, LoRAtoSend.header->len_payload + sizeof(LORA_HeaderforSend));
 	char* hexString = (char*)pvPortMalloc(sizeof(LoRAtoSend.header->recipient));
 	if (hexString == NULL) Error_Handler();
 	uint8_array_to_hex_string(hexString,&LoRAtoSend.header->recipient,sizeof(LoRAtoSend.header->recipient));
