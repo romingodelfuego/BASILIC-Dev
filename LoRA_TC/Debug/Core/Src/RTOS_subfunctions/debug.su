@@ -1,0 +1,7 @@
+../Drivers/CMSIS/Include/core_cm4.h:2059:26:ITM_SendChar	16	static,ignoring_inline_asm
+../Core/Src/RTOS_subfunctions/debug.c:14:6:debug	5040	static
+../Core/Src/RTOS_subfunctions/debug.c:32:6:UART_Transmit_With_Color	32	static
+../Core/Src/RTOS_subfunctions/debug.c:49:6:uint8_array_to_hex_string	32	static
+../Core/Src/RTOS_subfunctions/debug.c:56:5:__io_putchar	16	static
+../Core/Src/RTOS_subfunctions/debug.c:60:6:updateMemoryUsage	8	static
+../Core/Src/RTOS_subfunctions/debug.c:63:6:logMemoryUsage	24	static

@@ -9,8 +9,16 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include Middlewares/Third_Party/TraceRecorder/streamports/ARM_ITM/subdir.mk
+-include Middlewares/Third_Party/TraceRecorder/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
 -include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
+-include Core/Src/RTOS_subfunctions/subdir.mk
+-include Core/Src/LORA/subdir.mk
 -include Core/Src/GNSS/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
@@ -86,7 +94,7 @@ main-build: BASELIQ.elf secondary-outputs
 
 # Tool invocations
 BASELIQ.elf BASELIQ.map: $(OBJS) $(USER_OBJS) C:\Users\romain.pace\Documents\GitHub\BASELIQ-Dev\BASELIQ\STM32L496VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "BASELIQ.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\romain.pace\Documents\GitHub\BASELIQ-Dev\BASELIQ\STM32L496VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BASELIQ.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	arm-none-eabi-g++ -o "BASELIQ.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\romain.pace\Documents\GitHub\BASELIQ-Dev\BASELIQ\STM32L496VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BASELIQ.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

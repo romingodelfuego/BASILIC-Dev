@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    stm32l4xx_it.c
-  * @brief   Interrupt Service Routines.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    stm32l4xx_it.c
+ * @brief   Interrupt Service Routines.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -22,26 +22,31 @@
 #include "stm32l4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cmsis_os.h"           // Pour les types de données FreeRTOS et CMSIS-RTOS
+#include "FreeRTOS.h"           // Pour les fonctions de FreeRTOS
+#include "semphr.h"             // Pour les sémaphores de FreeRTOS
+#include "RTOS_subfunctions/RTOS_extern.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+extern osSemaphoreId xSem_LORAReceive_startHandle;
+extern osMessageQId UARTbyteHandle;
+extern osThreadId ReceiverLoRAHandle;
 
+volatile unsigned long ulHighFrequencyTimerTicks = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +63,8 @@
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+extern TIM_HandleTypeDef htim1;
+
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -71,12 +78,14 @@ extern UART_HandleTypeDef huart3;
 void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-   while (1)
-  {
-  }
+	while (1)
+	{
+		vTaskDelay(800);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
+	}
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
@@ -86,11 +95,13 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+		vTaskDelay(800);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }
@@ -101,11 +112,13 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+		vTaskDelay(800);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
     /* USER CODE END W1_MemoryManagement_IRQn 0 */
   }
 }
@@ -116,11 +129,13 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
   /* USER CODE BEGIN BusFault_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END BusFault_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_BusFault_IRQn 0 */
+		vTaskDelay(800);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
     /* USER CODE END W1_BusFault_IRQn 0 */
   }
 }
@@ -131,26 +146,15 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* USER CODE BEGIN UsageFault_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END UsageFault_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+		vTaskDelay(800);
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
     /* USER CODE END W1_UsageFault_IRQn 0 */
   }
-}
-
-/**
-  * @brief This function handles System service call via SWI instruction.
-  */
-void SVC_Handler(void)
-{
-  /* USER CODE BEGIN SVCall_IRQn 0 */
-
-  /* USER CODE END SVCall_IRQn 0 */
-  /* USER CODE BEGIN SVCall_IRQn 1 */
-
-  /* USER CODE END SVCall_IRQn 1 */
 }
 
 /**
@@ -159,38 +163,11 @@ void SVC_Handler(void)
 void DebugMon_Handler(void)
 {
   /* USER CODE BEGIN DebugMonitor_IRQn 0 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
   /* USER CODE END DebugMonitor_IRQn 0 */
   /* USER CODE BEGIN DebugMonitor_IRQn 1 */
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
   /* USER CODE END DebugMonitor_IRQn 1 */
-}
-
-/**
-  * @brief This function handles Pendable request for system service.
-  */
-void PendSV_Handler(void)
-{
-  /* USER CODE BEGIN PendSV_IRQn 0 */
-
-  /* USER CODE END PendSV_IRQn 0 */
-  /* USER CODE BEGIN PendSV_IRQn 1 */
-
-  /* USER CODE END PendSV_IRQn 1 */
-}
-
-/**
-  * @brief This function handles System tick timer.
-  */
-void SysTick_Handler(void)
-{
-  /* USER CODE BEGIN SysTick_IRQn 0 */
-
-  /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
-  /* USER CODE BEGIN SysTick_IRQn 1 */
-
-  /* USER CODE END SysTick_IRQn 1 */
 }
 
 /******************************************************************************/
@@ -199,6 +176,45 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32l4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
+		if(NotifyForRFM_IRQ.task != NULL){
+
+			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+			xTaskNotifyFromISR(NotifyForRFM_IRQ.task,0,eNoAction, &xHigherPriorityTaskWoken);
+			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		}
+	}
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(PROC_FPGA_BUSY_Pin);
+  HAL_GPIO_EXTI_IRQHandler(UI_WakeUp_Pin);
+  HAL_GPIO_EXTI_IRQHandler(SD_DETECT_INT_Pin);
+  HAL_GPIO_EXTI_IRQHandler(RFM_IRQ_Pin);
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM1 update interrupt and TIM16 global interrupt.
+  */
+void TIM1_UP_TIM16_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
+
+  /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
+
+  /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
+}
 
 /**
   * @brief This function handles USART1 global interrupt.
@@ -234,6 +250,13 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
+	uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
+	// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
+	UARTMessageQ_t uartMsg = { .data = receivedByte };
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	xQueueSendFromISR(UARTbyteHandle,&uartMsg,&xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
 
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);

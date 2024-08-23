@@ -1,0 +1,3 @@
+../Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.c:10:6:debug_UBX_NAV_SIG	848	static
+../Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.c:113:6:cleaner_UBX_NAV_SIG	16	static
+../Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.c:117:6:create_UBX_NAV_SIG	24	static

@@ -1,27 +1,35 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    usart.c
-  * @brief   This file provides code for the configuration
-  *          of the USART instances.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    usart.c
+ * @brief   This file provides code for the configuration
+ *          of the USART instances.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
 #include "GNSS/GNSSCom.h"
+#include "LORA/LORACom.h"
+#include "main.h"
+#include "cmsis_os.h"           // Pour les types de données FreeRTOS et CMSIS-RTOS
+#include "FreeRTOS.h"           // Pour les fonctions de FreeRTOS
+#include "semphr.h"             // Pour les sémaphores de FreeRTOS
+#include "RTOS_subfunctions/debug.h"
+extern osSemaphoreId xSem_GNSSReceive_startHandle;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -41,7 +49,7 @@ void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 2000000 ;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -167,7 +175,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(STM_VCP_TX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
@@ -204,7 +212,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -233,7 +241,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     PD8     ------> USART3_TX
     PD9     ------> USART3_RX
     */
-    GPIO_InitStruct.Pin = GPS_TX_STM_Pin|GPSR_RX_STM_Pin;
+    GPIO_InitStruct.Pin = GPS_TX_STM_Pin|GPS_RX_STM_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -241,7 +249,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* USART3 interrupt Init */
-    HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE BEGIN USART3_MspInit 1 */
 
@@ -306,7 +314,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     PD8     ------> USART3_TX
     PD9     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOD, GPS_TX_STM_Pin|GPSR_RX_STM_Pin);
+    HAL_GPIO_DeInit(GPIOD, GPS_TX_STM_Pin|GPS_RX_STM_Pin);
 
     /* USART3 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USART3_IRQn);
@@ -317,20 +325,5 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	 if (hGNSSCom.huart->Instance == huart3.Instance)
-	{
-		 ITM_Port32(30)=01;
-		 GNSSCom_ReceiveDebug();
-		 GNSSCom_UartActivate(&hGNSSCom);
-		 ITM_Port32(30)=00;
-	}
-}
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
-    if (hGNSSCom.huart->Instance == huart3.Instance) {
-    	HAL_UART_Receive_IT(hGNSSCom.huart, hGNSSCom.Rx->buffer, hGNSSCom.Rx->size); // Relancer la réception
-    }
 
-}
 /* USER CODE END 1 */
