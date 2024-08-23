@@ -49,8 +49,7 @@ Core/Src/RTOS_subfunctions/debug.o: ../Core/Src/RTOS_subfunctions/debug.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
  ../Core/Inc/RTOS_subfunctions/debug.h ../Core/Inc/shared.h \
- ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h \
- ../Core/Inc/GNSS/command.h
+ ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h
 ../Core/Inc/RTOS_subfunctions/debug.h:
 ../Core/Inc/RTOS_subfunctions/RTOS_extern.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -106,4 +105,3 @@ Core/Src/RTOS_subfunctions/debug.o: ../Core/Src/RTOS_subfunctions/debug.c \
 ../Core/Inc/GNSS/GNSSCom.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
-../Core/Inc/GNSS/command.h:

@@ -19,10 +19,6 @@
 #define ANSI_COLOR_ORANGE "\033[38;5;208m"
 #define ANSI_COLOR_RESET   "\033[0m"
 
-typedef enum {
-	TYPE_CHAR,
-	TYPE_UINT8,
-}Debug_TYPE;
 void debug(void);
 
 void UART_Transmit_With_Color(char *data, char *color);

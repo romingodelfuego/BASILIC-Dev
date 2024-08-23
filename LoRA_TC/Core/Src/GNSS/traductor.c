@@ -10,8 +10,22 @@
 #include "GNSS/GNSSCom.h"
 #include "RTOS_subfunctions/debug.h"
 
-// Define the instances for the message structures
+/*
+ *  INSTRUCTIONS FOR ADDING NEW MESSAGE
+ *
+ * if the message is not a UBX_NAV (which already exist), create a new folder name by the correct message type
+ * create a new file .c named like that message_type_name.c
+ * fill the file with 3 functions create_xxx, debug_xxx, cleaner_xxx,
+ *
+ * Create a new typedef struct, which contains correct fields
+ * add a line here for creating an instance
+ *
+ * Add in the message mapping below fields mandatory
+ *
+ */
 
+
+// Define the instances for the message structures
 UBX_NAV_SIG UBX_NAV_SIG_instance;
 UBX_NAV_TIMEUTC UBX_NAV_TIMEUTC_instance;
 // Add other instances

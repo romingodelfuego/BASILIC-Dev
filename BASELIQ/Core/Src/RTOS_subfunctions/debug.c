@@ -13,10 +13,10 @@ void debug(void){
 	char buffer[1024];
 	UARTdebugQ_t UARTdebug;
 
-	xQueueReceive(UARTdebugHandle, &UARTdebug, osWaitForever);
+	xQueueReceive(UARTdebugHandle, &UARTdebug, osWaitForever);		// Waiting for a request debug
 
 	snprintf(buffer, sizeof(buffer), "%s%s%s", UARTdebug.color, UARTdebug.message, ANSI_COLOR_RESET);
-	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)buffer, strlen(buffer),HAL_MAX_DELAY); //Le IT ne met pas les messages dans le bon ordre
+	HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)buffer, strlen(buffer),HAL_MAX_DELAY);
 	vPortFree(UARTdebug.message);
 	vPortFree(UARTdebug.color);
 }
@@ -44,17 +44,18 @@ void uint8_array_to_hex_string(char* hexString, uint8_t* array, size_t len) {
 	}
 	hexString[len * 2+1] = '\0';	// Ajouter le caractère de fin de chaîne
 }
+
+/*--------------- PRUPROSE : CHECKING THE MEMORY USAGE ---------------*/
 int __io_putchar(int ch) {
 	ITM_SendChar(ch);
 	return ch;
 }
-
 void updateMemoryUsage(void) {
 	vPortGetHeapStats(&heapStats);
 }
 void logMemoryUsage(char*phase) {
 	// Obtenir les statistiques de la mémoire
-	vPortGetHeapStats(&heapStats);
+	updateMemoryUsage();
 	 TickType_t systemTime = xTaskGetTickCount() * portTICK_PERIOD_MS;
 	// Imprimer les statistiques de mémoire
 	printf("\n-----%s-----\tTIME: %lu\n", phase,systemTime);

@@ -50,7 +50,7 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Core/Inc/RTOS_subfunctions/debug.h \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h ../Core/Inc/shared.h \
  ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h \
- ../Core/Inc/GNSS/command.h ../Core/Inc/RTOS_subfunctions/debug.h \
+ ../Core/Inc/RTOS_subfunctions/debug.h \
  ../Core/Inc/RTOS_subfunctions/receiverLoRA.h ../Core/Inc/LORA/LORACom.h \
  ../Core/Inc/spi.h ../Core/Inc/LORA/RFM9x.h ../Core/Inc/GNSS/traductor.h \
  ../Core/Inc/GNSS/debug_formatter.h ../Core/Inc/GNSS/debug_getter.h \
@@ -112,7 +112,6 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 ../Core/Inc/GNSS/GNSSCom.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
-../Core/Inc/GNSS/command.h:
 ../Core/Inc/RTOS_subfunctions/debug.h:
 ../Core/Inc/RTOS_subfunctions/receiverLoRA.h:
 ../Core/Inc/LORA/LORACom.h:

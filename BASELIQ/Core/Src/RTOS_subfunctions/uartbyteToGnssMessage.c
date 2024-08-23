@@ -15,10 +15,9 @@ UBXMessage_parsed* UBXMessage = NULL;
 
 /************************ TASK ************************/
 void uartbyteToGnssMessage(void){
-	if (xQueueReceive(UARTbyteHandle, &uartMsg, portMAX_DELAY) == pdTRUE) { //On recoit un byte d'un ISR de lhuart du GNSS
+	if (xQueueReceive(UARTbyteHandle, &uartMsg, portMAX_DELAY) == pdTRUE) { //On recoit un byte d'un ISR de l'uart du GNSS
 		uint8_t receivedByte = uartMsg.data;
-		/*//Eviter les problemes de state qui sont malheureusement present
-	    if (state < WAIT_FOR_SYNC_1 || state > RECEIVE_MESSAGE) state = WAIT_FOR_SYNC_1;*/
+
 		// Machine à états pour traiter les messages
 		switch (state) {
 		case WAIT_FOR_SYNC_1:
@@ -39,7 +38,7 @@ void uartbyteToGnssMessage(void){
 		case WAIT_FOR_CLASS:
 			if(UBXMessage != NULL) Error_Handler();
 			updateMemoryUsage();
-			UBXMessage = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed)); //UBXMessage utilise une partie de la memoire HEAP
+			UBXMessage = (UBXMessage_parsed*) pvPortMalloc(sizeof(UBXMessage_parsed));
 			if (UBXMessage == NULL) Error_Handler();
 			updateMemoryUsage();
 			UBXMessage->CLASS = receivedByte;
@@ -59,12 +58,12 @@ void uartbyteToGnssMessage(void){
 		case WAIT_FOR_LENGTH_2:
 			ITM_Port32(31)=6666;
 			UBXMessage->len_payload |= receivedByte << 8;
-			if (UBXMessage->len_payload == 0 || UBXMessage->len_payload > UART_MAX_BUFFER_SIZE) Error_Handler(); //On checke que le message ne dépasse pas une certaine longueur
+			if (UBXMessage->len_payload == 0 || UBXMessage->len_payload > UART_MAX_BUFFER_SIZE) Error_Handler(); //On checke que le message ne dépasse pas une certaine longueur pour debug
 			ITM_Port32(31)=UBXMessage->len_payload;
 			updateMemoryUsage();
-			UBXMessage->brute = initializeBuffer(UBXMessage->len_payload + 8); //On fait pointer un buffer sur une partie protege de la mémoire HEAP
+			UBXMessage->brute = initializeBuffer(UBXMessage->len_payload + 8); // 8 is for the sync1,sync2,class,id,length1,legnth2,CRC1,CRC2
 			if (UBXMessage->brute == NULL) Error_Handler();
-			updateMemoryUsage();			//On rempli un de nos buffer
+			updateMemoryUsage();
 			UBXMessage->brute->buffer[0]=0xb5;
 			UBXMessage->brute->buffer[1]=0x62;
 			UBXMessage->brute->buffer[2]=UBXMessage->CLASS;
@@ -77,7 +76,6 @@ void uartbyteToGnssMessage(void){
 			break;
 
 		case RECEIVE_MESSAGE:
-			//ITM_Port32(31)=payloadIndex;
 
 			if (payloadIndex <= UBXMessage->len_payload + 2) UBXMessage->brute->buffer[6 + payloadIndex] = receivedByte;
 			payloadIndex++ ;

@@ -10,7 +10,7 @@
 /************************ TASK ************************/
 void receivedLora(void){
 	logMemoryUsage("START - LoRA Reception");
-	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception)); // On pointe vers une partie de la memoire HEAP protégée
+	LORA_MessageReception* LORA_Receive_Message = (LORA_MessageReception*)pvPortMalloc(sizeof(LORA_MessageReception));
 	if (LORA_Receive_Message == NULL) Error_Handler();
 	LORA_Receive_Message->header = (LORA_HeaderforReception*)pvPortMalloc(sizeof(LORA_HeaderforReception));
 	if (LORA_Receive_Message->header == NULL)Error_Handler();
@@ -18,9 +18,9 @@ void receivedLora(void){
 
 	RFM9x_Receive(LORA_Receive_Message);
 
-	if (LORA_Receive_Message->RxNbrBytes > 0 &&
+	if ((LORA_Receive_Message->RxNbrBytes > 0) &&(
 			LORA_Receive_Message->header->recipient == MODULE_BROADCAST_ADDRESS
-			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS){
+			||LORA_Receive_Message->header->recipient == MODULE_SOURCE_ADDRESS)){
 
 		switch (LORA_Receive_Message->header->type){
 
@@ -33,12 +33,12 @@ void receivedLora(void){
 			break;
 
 		default:
+			vPortFree(LORA_Receive_Message->payload);
 			break;
 		}
 	}
-	ITM_Port32(30)=159753;
-	updateMemoryUsage();
 
+	updateMemoryUsage();
 	vPortFree(LORA_Receive_Message->header);
 	vPortFree(LORA_Receive_Message); //contient des attribut qui sont pvPortMalloc et qui sont free de facon asynchrone
 	logMemoryUsage("END -LoRA Reception");
@@ -46,7 +46,7 @@ void receivedLora(void){
 /************************ ---- ************************/
 /************************ FUNCTIONS ************************/
 void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
-	logMemoryUsage("START - LoRA Reception - PackePoll");
+	logMemoryUsage("START - LoRA Reception - PacketPoll");
 	GNSSReturnQ_t gnssReturn;
 	GNSStoPollQ_t poll = {
 			(const uint8_t*) LORA_Receive_Message->payload,
@@ -63,7 +63,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	/*--------------- COMMAND PART ---------------*/
 	xQueueSendToBack(GNSS_RequestHandle,&requestFromLora,osWaitForever);
 
-	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever);
+	osSemaphoreWait(LORA_Access_GNSS_ReturnHandle,osWaitForever); //Useless ?
 
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- LORA Polling...\r\n",ANSI_COLOR_MAGENTA);
 	request_commandToGNSS(poll); //On envoie un message vers GNSS
@@ -75,6 +75,7 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 		Error_Handler();
 	}
 	vPortFree(LORA_Receive_Message->payload);
+	updateMemoryUsage();
 	/*--------------- RECEIVE RESPONSE PART ---------------*/
 	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
 	ITM_Port32(30)=555;
@@ -87,7 +88,6 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 	}
 
 	/*--------------- SEND PART ---------------*/
-	updateMemoryUsage();
 	LORA_HeaderforSending* headerSend =(LORA_HeaderforSending*) pvPortMalloc(sizeof(LORA_HeaderforSending));
 	updateMemoryUsage();
 
@@ -114,22 +114,24 @@ void PACKET_TYPE_POLL_fct(LORA_MessageReception* LORA_Receive_Message){
 		uint8_array_to_hex_string(hexString_LORA, gnssReturn.bufferReturn->buffer, gnssReturn.bufferReturn->size);
 		UART_Transmit_With_Color(hexString_LORA,ANSI_COLOR_MAGENTA);
 		vPortFree(hexString_LORA);
+		updateMemoryUsage();
 
 	}else{
-		char* len = (char*)pvPortMalloc(sizeof(TickType_t) * sizeof(char));
+		char* len = (char*)pvPortMalloc(sizeof(size_t) * sizeof(char));
 		if (len == NULL) Error_Handler();
 
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --SEND-- LORA Polling --TOO LONG FOR DEBUG...\t",ANSI_COLOR_MAGENTA);
 		sprintf(len, "%u",gnssReturn.bufferReturn->size);
 		UART_Transmit_With_Color(len, ANSI_COLOR_RED);
 		vPortFree(len);
+		updateMemoryUsage();
 	}
 
 	// Reinitialisation de la trame
 	ITM_Port32(30)=666;
 	osSemaphoreRelease(LORA_Access_GNSS_ReturnHandle);
 
-	logMemoryUsage("END - LoRA Reception - PackePoll");
+	logMemoryUsage("END - LoRA Reception - PacketPoll");
 	// --- //
 }
 

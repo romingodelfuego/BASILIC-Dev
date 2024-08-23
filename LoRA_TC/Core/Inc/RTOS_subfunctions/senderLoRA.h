@@ -13,6 +13,4 @@
 
 void senderLoRA(void);
 
-
-
 #endif /* INC_RTOS_SUBFUNCTIONS_SENDERLORA_H_ */

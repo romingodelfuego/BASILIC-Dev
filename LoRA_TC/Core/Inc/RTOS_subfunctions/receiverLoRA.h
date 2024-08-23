@@ -17,7 +17,6 @@
 #include "LORA/RFM9x.h"
 #include "GNSS/traductor.h"
 
-
 void receivedLora(void);
 void messageLoRATreatment(LORA_MessageReception*);
 uint8_t* concat_payloads(LoRAinReceptionQ_t* structsToConcatenate, uint8_t nbOfstructsToConcatenate, size_t* total_length);

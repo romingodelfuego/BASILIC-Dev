@@ -1,34 +1,29 @@
 /*
  * RFM9x.c
  *
+							DISCLAIMER
+ *	This file is based on the work of jvegger, which you can find as it was before I worked on it
+ *	at the following GitHub repositorie :
+ *	https://github.com/jvedder/nucleo_F030R8_rfm96/tree/master
+ *
  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "LORA/RFM9x.h"
 
-/* Private define ------------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
-
-
-/* Private function prototypes -----------------------------------------------*/
-/* User code -----------------------------------------------------------------*/
-
 
 void RFM9x_Init( void )
 {
 	// Assert Reset low on the RFM9x
-	RF_TestSpi();
+
+	RF_TestSpi();							// This test has to be uncorrect because access to register is denied
 	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_RESET);
-	//Delay_ms(10);
 	HAL_GPIO_WritePin(RFM_RST_GPIO_Port, RFM_RST_Pin, GPIO_PIN_SET);
-	//Delay_ms(10);
-	RF_TestSpi();
+
+	RF_TestSpi(); 							// This test has to be correct
 	// Set sleep mode, so we can also set RFM9x mode:
 	RFM9x_WriteReg(RFM9x_REG_01_OP_MODE, RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE);
 
-	// Wait for sleep mode to take over from say, CAD
-	//HDelay_ms(10);
 
 	// Check we are in sleep mode, with RFM9x set
 	if (RFM9x_ReadReg(RFM9x_REG_01_OP_MODE) != (RFM9x_MODE_SLEEP | RFM9x_LONG_RANGE_MODE))
@@ -79,6 +74,7 @@ void RFM9x_Init( void )
 	RFM9x_WriteReg(RFM9x_REG_09_PA_CONFIG, 0xcf);
 
 	//On decide  a est par defaut en mode ECOUTE
+
 	RFM9x_SetMode_Receive();
 }
 
@@ -187,7 +183,6 @@ void RFM9x_Receive(LORA_MessageReception* LORA_Receive_Message){
 	vPortFree(data);
 	// clear all the IRQ flags
 	RFM9x_WriteReg(RFM9x_REG_12_IRQ_FLAGS, 0xFF);
-	RFM9x_SetMode_Receive();
 	logMemoryUsage("END - RFM9x Reception");
 
 }
@@ -199,6 +194,7 @@ void RFM9x_SetMode_Receive(void){
 	// Configurer l'interruption sur DIO0 pour RxDone
 	RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, 0x00); // Interrupt on RxDone
 	NotifyForRFM_IRQ = (NotifyForRFM_IRQ_t){.task=ReceiverLoRAHandle,.name="ReceiverLoRAHandle"};
+
 }
 uint8_t RFM9x_GetMode( void )
 {
@@ -238,11 +234,7 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 		//second byte is the register value
 		data = rxData[1];
 	}
-	else
-	{
-		print1("*HAL_ERROR*", 99);
-
-	}
+	else{print1("*HAL_ERROR*", 99);}
 
 	// Set nCS high (inactive)
 	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_SET);
@@ -253,8 +245,6 @@ uint8_t RFM9x_ReadReg( uint8_t reg )
 void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 {
 	HAL_StatusTypeDef status;
-
-	//print2("RFM9x WR", reg, data );
 
 	//set the reg msb for write
 	reg |= 0x80;
@@ -276,8 +266,6 @@ void RFM9x_WriteReg( uint8_t reg, uint8_t data )
 		// handle errors here
 	}
 
-	//HACK: Wait for SPI transfer to complete
-	//HAL_Delay(1);
 	// Set nCS high (inactive)
 	HAL_GPIO_WritePin(RFM_SPI_nCS_GPIO_Port, RFM_SPI_nCS_Pin, GPIO_PIN_SET);
 }
@@ -308,10 +296,8 @@ void RF_TestSpi( void )
 		v = (1 << i);
 		print1("Write", v);
 		RFM9x_WriteReg(RFM9x_REG_40_DIO_MAPPING1, v);
-		//Delay_ms(1);
 		v =RFM9x_ReadReg(RFM9x_REG_40_DIO_MAPPING1);
 		print1("Read ", v);
-		//Delay_ms(1);
 	}
 	print("------------");
 	return;

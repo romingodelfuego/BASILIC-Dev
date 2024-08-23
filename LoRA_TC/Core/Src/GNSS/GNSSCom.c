@@ -12,16 +12,12 @@
 
 
 GNSSCom_HandleTypeDef hGNSSCom;
-OutputType type = ASCII;
-OutputProtocol protocol = UBX;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
-
-	//hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
-
 }
+
 DynamicBuffer* initializeBuffer(size_t initialSize) {
 	DynamicBuffer *bufferDynamic = pvPortMalloc(sizeof(DynamicBuffer));
 	if (bufferDynamic == NULL) {
@@ -37,13 +33,7 @@ DynamicBuffer* initializeBuffer(size_t initialSize) {
 	bufferDynamic->size = initialSize;
 	return bufferDynamic;
 }
-void resizeBuffer(DynamicBuffer *bufferDynamic, size_t newSize) {
-	/*uint8_t *newData = realloc(bufferDynamic->buffer, newSize);
-	if (newData != NULL) {
-		bufferDynamic->buffer = newData;
-		bufferDynamic->size = newSize;
-	}*/
-}
+
 void freeBuffer(DynamicBuffer *bufferDynamic) {
 	vPortFree(bufferDynamic->buffer);
 	vPortFree(bufferDynamic);
@@ -59,11 +49,8 @@ void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* generi
 			genericMessage->Message.UBXMessage->CLASS = buffer[2];
 			genericMessage->Message.UBXMessage->ID = buffer[3];
 			genericMessage->Message.UBXMessage->len_payload= (buffer[5] << 8) |buffer[4];
-			//genericMessage->Message.UBXMessage->brute = (DynamicBuffer*)initializeBuffer(genericMessage->Message.UBXMessage->len_payload +8);
 			genericMessage->Message.UBXMessage->brute = (DynamicBuffer*)pvPortMalloc(sizeof(DynamicBuffer));
 			*(DynamicBuffer*) genericMessage->Message.UBXMessage->brute=(DynamicBuffer){.buffer = buffer,.size=*size};
-			updateMemoryUsage();
-			//memcpy(genericMessage->Message.UBXMessage->brute->buffer, buffer , genericMessage->Message.UBXMessage->len_payload +8);
 			updateMemoryUsage();
 		}
 

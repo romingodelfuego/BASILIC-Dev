@@ -49,14 +49,12 @@ typedef struct {
 	uint8_t reserved[2];
 	uint8_t cfgData[200];
 }UBX_CFG_SETVAL;
-//extern UBX_CFG_SETVAL UBX_CFG_SETVAL_instance;
 
 typedef struct {
 	uint8_t msgClass[1];
 	uint8_t msgID[1];
 	uint8_t rate[1];
 }UBX_CFG_MSG;
-//extern UBX_CFG_MSG UBX_CFG_MSG_instance;
 
 
 #endif /* INC_GNSS_UBX_MESSAGESTRUCTURE_H_ */

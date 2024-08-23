@@ -73,101 +73,101 @@ extern TIM_HandleTypeDef htim1;
 /*           Cortex-M4 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
- * @brief This function handles Non maskable interrupt.
- */
+  * @brief This function handles Non maskable interrupt.
+  */
 void NMI_Handler(void)
 {
-	/* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END NonMaskableInt_IRQn 0 */
-	/* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+  /* USER CODE END NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 	while (1)
 	{
 		vTaskDelay(800);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
 	}
-	/* USER CODE END NonMaskableInt_IRQn 1 */
+  /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
 /**
- * @brief This function handles Hard fault interrupt.
- */
+  * @brief This function handles Hard fault interrupt.
+  */
 void HardFault_Handler(void)
 {
-	/* USER CODE BEGIN HardFault_IRQn 0 */
+  /* USER CODE BEGIN HardFault_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END HardFault_IRQn 0 */
-	while (1)
-	{
-		/* USER CODE BEGIN W1_HardFault_IRQn 0 */
+  /* USER CODE END HardFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
 		vTaskDelay(800);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
-		/* USER CODE END W1_HardFault_IRQn 0 */
-	}
+    /* USER CODE END W1_HardFault_IRQn 0 */
+  }
 }
 
 /**
- * @brief This function handles Memory management fault.
- */
+  * @brief This function handles Memory management fault.
+  */
 void MemManage_Handler(void)
 {
-	/* USER CODE BEGIN MemoryManagement_IRQn 0 */
+  /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END MemoryManagement_IRQn 0 */
-	while (1)
-	{
-		/* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+  /* USER CODE END MemoryManagement_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
 		vTaskDelay(800);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
-		/* USER CODE END W1_MemoryManagement_IRQn 0 */
-	}
+    /* USER CODE END W1_MemoryManagement_IRQn 0 */
+  }
 }
 
 /**
- * @brief This function handles Prefetch fault, memory access fault.
- */
+  * @brief This function handles Prefetch fault, memory access fault.
+  */
 void BusFault_Handler(void)
 {
-	/* USER CODE BEGIN BusFault_IRQn 0 */
+  /* USER CODE BEGIN BusFault_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END BusFault_IRQn 0 */
-	while (1)
-	{
-		/* USER CODE BEGIN W1_BusFault_IRQn 0 */
+  /* USER CODE END BusFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_BusFault_IRQn 0 */
 		vTaskDelay(800);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
-		/* USER CODE END W1_BusFault_IRQn 0 */
-	}
+    /* USER CODE END W1_BusFault_IRQn 0 */
+  }
 }
 
 /**
- * @brief This function handles Undefined instruction or illegal state.
- */
+  * @brief This function handles Undefined instruction or illegal state.
+  */
 void UsageFault_Handler(void)
 {
-	/* USER CODE BEGIN UsageFault_IRQn 0 */
+  /* USER CODE BEGIN UsageFault_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END UsageFault_IRQn 0 */
-	while (1)
-	{
-		/* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+  /* USER CODE END UsageFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
 		vTaskDelay(800);
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
-		/* USER CODE END W1_UsageFault_IRQn 0 */
-	}
+    /* USER CODE END W1_UsageFault_IRQn 0 */
+  }
 }
 
 /**
- * @brief This function handles Debug monitor.
- */
+  * @brief This function handles Debug monitor.
+  */
 void DebugMon_Handler(void)
 {
-	/* USER CODE BEGIN DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 0 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
-	/* USER CODE END DebugMonitor_IRQn 0 */
-	/* USER CODE BEGIN DebugMonitor_IRQn 1 */
+  /* USER CODE END DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 1 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4,GPIO_PIN_SET);
-	/* USER CODE END DebugMonitor_IRQn 1 */
+  /* USER CODE END DebugMonitor_IRQn 1 */
 }
 
 /******************************************************************************/
@@ -178,77 +178,78 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
- * @brief This function handles EXTI line[9:5] interrupts.
- */
+  * @brief This function handles EXTI line[9:5] interrupts.
+  */
 void EXTI9_5_IRQHandler(void)
 {
-	/* USER CODE BEGIN EXTI9_5_IRQn 0 */
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if (__HAL_GPIO_EXTI_GET_IT(RFM_IRQ_Pin) != RESET){
 		if(NotifyForRFM_IRQ.task != NULL){
+
 			BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 			xTaskNotifyFromISR(NotifyForRFM_IRQ.task,0,eNoAction, &xHigherPriorityTaskWoken);
 			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 		}
 	}
 
-	/* USER CODE END EXTI9_5_IRQn 0 */
-	HAL_GPIO_EXTI_IRQHandler(PROC_FPGA_BUSY_Pin);
-	HAL_GPIO_EXTI_IRQHandler(UI_WakeUp_Pin);
-	HAL_GPIO_EXTI_IRQHandler(SD_DETECT_INT_Pin);
-	HAL_GPIO_EXTI_IRQHandler(RFM_IRQ_Pin);
-	/* USER CODE BEGIN EXTI9_5_IRQn 1 */
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(PROC_FPGA_BUSY_Pin);
+  HAL_GPIO_EXTI_IRQHandler(UI_WakeUp_Pin);
+  HAL_GPIO_EXTI_IRQHandler(SD_DETECT_INT_Pin);
+  HAL_GPIO_EXTI_IRQHandler(RFM_IRQ_Pin);
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
-	/* USER CODE END EXTI9_5_IRQn 1 */
+  /* USER CODE END EXTI9_5_IRQn 1 */
 }
 
 /**
- * @brief This function handles TIM1 update interrupt and TIM16 global interrupt.
- */
+  * @brief This function handles TIM1 update interrupt and TIM16 global interrupt.
+  */
 void TIM1_UP_TIM16_IRQHandler(void)
 {
-	/* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
 
-	/* USER CODE END TIM1_UP_TIM16_IRQn 0 */
-	HAL_TIM_IRQHandler(&htim1);
-	/* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
+  /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
 
-	/* USER CODE END TIM1_UP_TIM16_IRQn 1 */
+  /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }
 
 /**
- * @brief This function handles USART1 global interrupt.
- */
+  * @brief This function handles USART1 global interrupt.
+  */
 void USART1_IRQHandler(void)
 {
-	/* USER CODE BEGIN USART1_IRQn 0 */
+  /* USER CODE BEGIN USART1_IRQn 0 */
 
-	/* USER CODE END USART1_IRQn 0 */
-	HAL_UART_IRQHandler(&huart1);
-	/* USER CODE BEGIN USART1_IRQn 1 */
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
 
-	/* USER CODE END USART1_IRQn 1 */
+  /* USER CODE END USART1_IRQn 1 */
 }
 
 /**
- * @brief This function handles USART2 global interrupt.
- */
+  * @brief This function handles USART2 global interrupt.
+  */
 void USART2_IRQHandler(void)
 {
-	/* USER CODE BEGIN USART2_IRQn 0 */
+  /* USER CODE BEGIN USART2_IRQn 0 */
 
-	/* USER CODE END USART2_IRQn 0 */
-	HAL_UART_IRQHandler(&huart2);
-	/* USER CODE BEGIN USART2_IRQn 1 */
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
 
-	/* USER CODE END USART2_IRQn 1 */
+  /* USER CODE END USART2_IRQn 1 */
 }
 
 /**
- * @brief This function handles USART3 global interrupt.
- */
+  * @brief This function handles USART3 global interrupt.
+  */
 void USART3_IRQHandler(void)
 {
-	/* USER CODE BEGIN USART3_IRQn 0 */
+  /* USER CODE BEGIN USART3_IRQn 0 */
 	uint8_t receivedByte = (uint8_t)(huart3.Instance->RDR & 0x00FF);
 	// Envoyer l'octet reçu à la file d'attente pour traitement ultérieur
 	UARTMessageQ_t uartMsg = { .data = receivedByte };
@@ -257,11 +258,11 @@ void USART3_IRQHandler(void)
 	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
 
-	/* USER CODE END USART3_IRQn 0 */
-	HAL_UART_IRQHandler(&huart3);
-	/* USER CODE BEGIN USART3_IRQn 1 */
+  /* USER CODE END USART3_IRQn 0 */
+  HAL_UART_IRQHandler(&huart3);
+  /* USER CODE BEGIN USART3_IRQn 1 */
 
-	/* USER CODE END USART3_IRQn 1 */
+  /* USER CODE END USART3_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

@@ -51,9 +51,9 @@ Core/Src/GNSS/debug_formatter.o: ../Core/Src/GNSS/debug_formatter.c \
  ../Core/Inc/RTOS_subfunctions/debug.h \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h ../Core/Inc/shared.h \
  ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h \
- ../Core/Inc/GNSS/command.h ../Core/Inc/GNSS/debug_getter.h \
- ../Core/Inc/GNSS/UBX_messageStructure.h ../Core/Inc/GNSS/UBX_types.h \
- ../Core/Inc/GNSS/debug_utils.h ../Core/Inc/GNSS/traductor.h
+ ../Core/Inc/GNSS/debug_getter.h ../Core/Inc/GNSS/UBX_messageStructure.h \
+ ../Core/Inc/GNSS/UBX_types.h ../Core/Inc/GNSS/debug_utils.h \
+ ../Core/Inc/GNSS/traductor.h
 ../Core/Inc/GNSS/debug_formatter.h:
 ../Core/Inc/RTOS_subfunctions/RTOS_extern.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -110,7 +110,6 @@ Core/Src/GNSS/debug_formatter.o: ../Core/Src/GNSS/debug_formatter.c \
 ../Core/Inc/GNSS/GNSSCom.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
-../Core/Inc/GNSS/command.h:
 ../Core/Inc/GNSS/debug_getter.h:
 ../Core/Inc/GNSS/UBX_messageStructure.h:
 ../Core/Inc/GNSS/UBX_types.h:

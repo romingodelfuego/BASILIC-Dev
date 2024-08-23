@@ -12,14 +12,16 @@
 #include "RTOS_subfunctions/commandToGNSS.h"
 
 GNSSCom_HandleTypeDef hGNSSCom;
-OutputType type = ASCII;
-OutputProtocol protocol = UBX;
 
 void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
 	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
 	hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
 	GNSSCom_UartActivate(&hGNSSCom);
+}
+
+void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
+	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
 }
 
 DynamicBuffer* initializeBuffer(size_t initialSize) {
@@ -47,19 +49,15 @@ void GNSSCom_SetUp_Init(void){
 
 			{commandSetGNSS_Config, sizeof(commandSetGNSS_Config)},
 			{commandSetTP1x2, sizeof(commandSetTP1x2)},
-			//{commandSetTP1_atNVTRate,sizeof(commandSetTP1_atNVTRate)},
-			//{commandSetTP2, sizeof(commandSetTP2)},
 			{commandMeasureRate, sizeof(commandMeasureRate)},
 			{commandUart1Ouput, sizeof(commandUart1Ouput)},
-			//{commandUBXTimeUTC, sizeof(commandUBXTimeUTC)}
 	};
 
 
 	char message[50];
 	for (int i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i){
 
-
-		HAL_OK != HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
+		HAL_UART_Transmit(hGNSSCom.huart,commands[i].command,commands[i].size,HAL_MAX_DELAY);
 
 		sprintf(message, "\r\n %s%s%i%s%s",ANSI_COLOR_RESET,"...UBXMessage",i," --FROM-- INIT...",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
@@ -67,14 +65,11 @@ void GNSSCom_SetUp_Init(void){
 		sprintf(message, "\t %s%s%s \r\n\n",ANSI_COLOR_GREEN,"---SUCCESS---",ANSI_COLOR_RESET);
 		HAL_UART_Transmit(hGNSSCom.huartDebug, (uint8_t*)message,strlen(message),HAL_MAX_DELAY);
 
-		vTaskDelay(1000);
-		ITM_Port32(31)=1;
+		vTaskDelay(1000); // Important delay
 	}
 }
 
-void GNSSCom_UartActivate(GNSSCom_HandleTypeDef* hGNSS){
-	HAL_UART_Receive_IT(hGNSS->huart, hGNSS->Rx->buffer, hGNSS->Rx->size);
-}
+
 /*
 
 */

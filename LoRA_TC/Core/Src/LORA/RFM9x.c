@@ -2,7 +2,12 @@
  * RFM9x.c
  *
  */
-
+/*							DISCLAIMER
+ *	This file is based on the work of jvegger, which you can find as it was before I worked on it
+ *	at the following GitHub repositorie :
+ *	https://github.com/jvedder/nucleo_F030R8_rfm96/tree/master
+ *
+ */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "LORA/LORACom.h"
@@ -14,14 +19,6 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
-/* Private define ------------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
-
-
-/* Private function prototypes -----------------------------------------------*/
-/* User code -----------------------------------------------------------------*/
-
 
 void RFM9x_Init( void )
 {

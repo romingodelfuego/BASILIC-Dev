@@ -37,7 +37,7 @@ typedef struct {
 	uint8_t CLASS;
 	uint8_t ID;
 	uint16_t len_payload;
-	DynamicBuffer* brute; // Pointeur de tableau de longeur variable
+	DynamicBuffer* brute; 				// Pointeur de tableau de longeur variable
 }UBXMessage_parsed ;
 
 typedef struct {
@@ -57,7 +57,7 @@ typedef struct{
 
 /******** QUEUE ********/
 typedef struct {
-	uint8_t data;  // Un octet de données reçu via UART
+	uint8_t data;  			// Un octet de données reçu via UART
 } UARTMessageQ_t;
 
 typedef struct {

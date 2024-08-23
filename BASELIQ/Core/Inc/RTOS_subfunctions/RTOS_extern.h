@@ -35,7 +35,7 @@ extern osSemaphoreId xSem_GNSS_InitHandle;
 
 typedef struct {
 	osThreadId task;
-	char* name; //Debug purpose
+	char* name; 						// DEBUG PURPOSE
 }NotifyForRFM_IRQ_t;
 extern NotifyForRFM_IRQ_t NotifyForRFM_IRQ;
 
@@ -45,10 +45,8 @@ typedef struct {
     // Ajoutez d'autres paramètres de configuration si nécessaire
 } ModuleConfig_t;
 
-typedef enum{
-	OK,
-	Error
-}GNSSReturnStatut;
+
+ /* ------------ GNSS ------------ */
 typedef enum {
     WAIT_FOR_SYNC_1,
     WAIT_FOR_SYNC_2,
@@ -59,12 +57,17 @@ typedef enum {
     RECEIVE_MESSAGE
 } UARTState;
 
+typedef enum{
+	OK,
+	Error
+}GNSSReturnStatut;
+
 typedef struct {
 	TickType_t Request_TIME;
 	uint8_t CLASS;
 	uint8_t ID;
 	osSemaphoreId applicantSemaphore;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName;					 // DEBUG PURPOSE
 } GNSSRequestQ_t;
 
 typedef struct {
@@ -75,23 +78,29 @@ typedef struct {
 	uint8_t ID;
 	UBXMessage_parsed* UBXMessage;
 	DynamicBuffer * bufferReturn;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName; 					// DEBUG PURPOSE
 } GNSSReturnQ_t;
 
-typedef struct {
-	char* message;
-	char* color;
-}UARTdebugQ_t;
 
-typedef struct{ //Copie assumer de CommandnSize
+typedef struct{
     const uint8_t *command;
     size_t size;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName; 					// DEBUG PURPOSE
 }GNSStoPollQ_t;
 
+
+/* ------------ LoRA ------------*/
 typedef struct {
 	LORA_HeaderforSending* header;
 	DynamicBuffer* payload;
 	UBXMessage_parsed* UBXMessage;
 }LoRAtoSendQ_t;
+
+
+/* ------------ DEBUG ------------*/
+typedef struct {
+	char* message;
+	char* color;
+}UARTdebugQ_t;
+
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

@@ -8,7 +8,7 @@
 
 GNSSReturnQ_t gnssReturn;
 GNSStoPollQ_t pollTimeUTC = {pollUBXTimeUTC, sizeof(pollUBXTimeUTC),"SD_POLLING"};
-
+/************************ TASK ************************/
 void fakeuseSD(void){
 	logMemoryUsage("START - fakeUseSD");
 
@@ -20,25 +20,20 @@ void fakeuseSD(void){
 			.applicantName = "SD_REQUEST"
 	};
 
-	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);
-	osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); //On verrouille la semaphore
+	xQueueSendToBack(GNSS_RequestHandle,&requestFromSD,osWaitForever);			// Sending the request for accessing to GNSS uart
+	osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); 				//Locking the semaphore
 	UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...\r\n",ANSI_COLOR_YELLOW);
-	ITM_Port32(29)=111;
 
+	// Sending the request for GNSS
 	request_commandToGNSS(pollTimeUTC);
 
-	ITM_Port32(29)=444;
-
-	osStatus eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever);
-	ITM_Port32(29)=555;
-
+	osStatus eventSD = osSemaphoreWait(SD_Access_GNSS_ReturnHandle, osWaitForever); 	//Waiting, the sempahore is free by matcher.c
 	if (eventSD != osOK){
 		UART_Transmit_With_Color("\r\t\t\n...UBXMessage --FROM-- SD Polling...",ANSI_COLOR_YELLOW);
 		UART_Transmit_With_Color("\t---SEMAPHORE ISSUE---\r\n\n",ANSI_COLOR_RED);
 		return;
 	}
-	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);
-	ITM_Port32(29)=666;
+	xQueueReceive(GNSS_ReturnHandle, &gnssReturn, osWaitForever);						// Reception of the response from the GNSS
 
 	if (gnssReturn.statut != OK)
 	{
@@ -47,7 +42,7 @@ void fakeuseSD(void){
 	}
 
 
-	if (gnssReturn.bufferReturn->size<= 512){
+	if (gnssReturn.bufferReturn->size<= 512){										// Checking for debugging the message or not
 		char* hexString_SD = (char*)pvPortMalloc(gnssReturn.bufferReturn->size * 2 + 1);
 		if (hexString_SD == NULL) Error_Handler();
 
@@ -74,7 +69,7 @@ void fakeuseSD(void){
 	vPortFree(gnssReturn.UBXMessage);
 	logMemoryUsage("END - fakeUseSD");
 
-	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);
+	osSemaphoreRelease(SD_Access_GNSS_ReturnHandle);	//Unlocking the semaphore
 
 }
-
+/************************ ---- ************************/

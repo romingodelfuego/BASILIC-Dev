@@ -53,6 +53,7 @@ NotifyForRFM_IRQ_t NotifyForRFM_IRQ = {.task = NULL,.name="Init"};
 ModuleConfig_t ModuleConfig;
 
 /* USER CODE END PM */
+
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 /* USER CODE END Variables */
@@ -143,120 +144,121 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
 /* USER CODE END GET_TIMER_TASK_MEMORY */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
 void MX_FREERTOS_Init(void) {
-	/* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-	/* USER CODE END Init */
+  /* USER CODE END Init */
 
-	/* USER CODE BEGIN RTOS_MUTEX */
+  /* USER CODE BEGIN RTOS_MUTEX */
 	/* add mutexes, ... */
-	/* USER CODE END RTOS_MUTEX */
+  /* USER CODE END RTOS_MUTEX */
 
-	/* Create the semaphores(s) */
-	/* definition and creation of xSem_LORAReceive_start */
-	osSemaphoreDef(xSem_LORAReceive_start);
-	xSem_LORAReceive_startHandle = osSemaphoreCreate(osSemaphore(xSem_LORAReceive_start), 1);
+  /* Create the semaphores(s) */
+  /* definition and creation of xSem_LORAReceive_start */
+  osSemaphoreDef(xSem_LORAReceive_start);
+  xSem_LORAReceive_startHandle = osSemaphoreCreate(osSemaphore(xSem_LORAReceive_start), 1);
 
-	/* definition and creation of SD_Access_GNSS_Return */
-	osSemaphoreDef(SD_Access_GNSS_Return);
-	SD_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(SD_Access_GNSS_Return), 1);
+  /* definition and creation of SD_Access_GNSS_Return */
+  osSemaphoreDef(SD_Access_GNSS_Return);
+  SD_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(SD_Access_GNSS_Return), 1);
 
-	/* definition and creation of LORA_Access_GNSS_Return */
-	osSemaphoreDef(LORA_Access_GNSS_Return);
-	LORA_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(LORA_Access_GNSS_Return), 1);
+  /* definition and creation of LORA_Access_GNSS_Return */
+  osSemaphoreDef(LORA_Access_GNSS_Return);
+  LORA_Access_GNSS_ReturnHandle = osSemaphoreCreate(osSemaphore(LORA_Access_GNSS_Return), 1);
 
-	/* definition and creation of GNSS_UART_Access */
-	osSemaphoreDef(GNSS_UART_Access);
-	GNSS_UART_AccessHandle = osSemaphoreCreate(osSemaphore(GNSS_UART_Access), 1);
+  /* definition and creation of GNSS_UART_Access */
+  osSemaphoreDef(GNSS_UART_Access);
+  GNSS_UART_AccessHandle = osSemaphoreCreate(osSemaphore(GNSS_UART_Access), 1);
 
-	/* definition and creation of xSem_GNSS_Init */
-	osSemaphoreDef(xSem_GNSS_Init);
-	xSem_GNSS_InitHandle = osSemaphoreCreate(osSemaphore(xSem_GNSS_Init), 1);
+  /* definition and creation of xSem_GNSS_Init */
+  osSemaphoreDef(xSem_GNSS_Init);
+  xSem_GNSS_InitHandle = osSemaphoreCreate(osSemaphore(xSem_GNSS_Init), 1);
 
-	/* definition and creation of STARTUP_INIT_done */
-	osSemaphoreDef(STARTUP_INIT_done);
-	STARTUP_INIT_doneHandle = osSemaphoreCreate(osSemaphore(STARTUP_INIT_done), 1);
+  /* definition and creation of STARTUP_INIT_done */
+  osSemaphoreDef(STARTUP_INIT_done);
+  STARTUP_INIT_doneHandle = osSemaphoreCreate(osSemaphore(STARTUP_INIT_done), 1);
 
-	/* USER CODE BEGIN RTOS_SEMAPHORES */
-	/* USER CODE END RTOS_SEMAPHORES */
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* USER CODE END RTOS_SEMAPHORES */
 
-	/* USER CODE BEGIN RTOS_TIMERS */
+  /* USER CODE BEGIN RTOS_TIMERS */
 	/* start timers, add new ones, ... */
-	/* USER CODE END RTOS_TIMERS */
+  /* USER CODE END RTOS_TIMERS */
 
-	/* Create the queue(s) */
-	/* definition and creation of UARTbyte */
-	osMessageQDef(UARTbyte, 50, uint8_t);
-	UARTbyteHandle = osMessageCreate(osMessageQ(UARTbyte), NULL);
+  /* Create the queue(s) */
+  /* definition and creation of UARTbyte */
+  osMessageQDef(UARTbyte, 50, uint8_t);
+  UARTbyteHandle = osMessageCreate(osMessageQ(UARTbyte), NULL);
 
-	/* definition and creation of UBXQueue */
-	osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
-	UBXQueueHandle = osMessageCreate(osMessageQ(UBXQueue), NULL);
+  /* definition and creation of UBXQueue */
+  osMessageQDef(UBXQueue, 16, UBXMessageQ_t);
+  UBXQueueHandle = osMessageCreate(osMessageQ(UBXQueue), NULL);
 
-	/* definition and creation of GNSS_Request */
-	osMessageQDef(GNSS_Request, 16, GNSSRequestQ_t);
-	GNSS_RequestHandle = osMessageCreate(osMessageQ(GNSS_Request), NULL);
+  /* definition and creation of GNSS_Request */
+  osMessageQDef(GNSS_Request, 16, GNSSRequestQ_t);
+  GNSS_RequestHandle = osMessageCreate(osMessageQ(GNSS_Request), NULL);
 
-	/* definition and creation of GNSS_Return */
-	osMessageQDef(GNSS_Return, 16, GNSSReturnQ_t);
-	GNSS_ReturnHandle = osMessageCreate(osMessageQ(GNSS_Return), NULL);
+  /* definition and creation of GNSS_Return */
+  osMessageQDef(GNSS_Return, 16, GNSSReturnQ_t);
+  GNSS_ReturnHandle = osMessageCreate(osMessageQ(GNSS_Return), NULL);
 
-	/* definition and creation of UARTdebug */
-	osMessageQDef(UARTdebug, 128, UARTdebugQ_t);
-	UARTdebugHandle = osMessageCreate(osMessageQ(UARTdebug), NULL);
+  /* definition and creation of UARTdebug */
+  osMessageQDef(UARTdebug, 128, UARTdebugQ_t);
+  UARTdebugHandle = osMessageCreate(osMessageQ(UARTdebug), NULL);
 
-	/* definition and creation of GNSS_toPoll */
-	osMessageQDef(GNSS_toPoll, 16, GNSStoPollQ_t);
-	GNSS_toPollHandle = osMessageCreate(osMessageQ(GNSS_toPoll), NULL);
+  /* definition and creation of GNSS_toPoll */
+  osMessageQDef(GNSS_toPoll, 16, GNSStoPollQ_t);
+  GNSS_toPollHandle = osMessageCreate(osMessageQ(GNSS_toPoll), NULL);
 
-	/* definition and creation of LoRA_toSend */
-	osMessageQDef(LoRA_toSend, 16, LoRAtoSendQ_t);
-	LoRA_toSendHandle = osMessageCreate(osMessageQ(LoRA_toSend), NULL);
+  /* definition and creation of LoRA_toSend */
+  osMessageQDef(LoRA_toSend, 16, LoRAtoSendQ_t);
+  LoRA_toSendHandle = osMessageCreate(osMessageQ(LoRA_toSend), NULL);
 
-	/* USER CODE BEGIN RTOS_QUEUES */
+  /* USER CODE BEGIN RTOS_QUEUES */
 	/* add queues, ... */
-	/* USER CODE END RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
 
-	/* Create the thread(s) */
-	/* definition and creation of InitTask */
-	osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
-	InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
+  /* Create the thread(s) */
+  /* definition and creation of InitTask */
+  osThreadDef(InitTask, StartInitTask, osPriorityRealtime, 0, 1024);
+  InitTaskHandle = osThreadCreate(osThread(InitTask), NULL);
 
-	/* definition and creation of ReceiverLoRA */
-	osThreadDef(ReceiverLoRA, ReceiverLoRA_Task, osPriorityNormal, 0, 2048);
-	ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
+  /* definition and creation of ReceiverLoRA */
+  osThreadDef(ReceiverLoRA, ReceiverLoRA_Task, osPriorityNormal, 0, 2048);
+  ReceiverLoRAHandle = osThreadCreate(osThread(ReceiverLoRA), NULL);
 
-	/* definition and creation of UARTbyte_to_GN */
-	osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 2048);
-	UARTbyte_to_GNHandle = osThreadCreate(osThread(UARTbyte_to_GN), NULL);
+  /* definition and creation of UARTbyte_to_GN */
+  osThreadDef(UARTbyte_to_GN, UARTbyte_to_GNSSMessage_Task, osPriorityHigh, 0, 2048);
+  UARTbyte_to_GNHandle = osThreadCreate(osThread(UARTbyte_to_GN), NULL);
 
-	/* definition and creation of Matcher */
-	osThreadDef(Matcher, MatcherTask, osPriorityHigh, 0, 1024);
-	MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
+  /* definition and creation of Matcher */
+  osThreadDef(Matcher, MatcherTask, osPriorityHigh, 0, 1024);
+  MatcherHandle = osThreadCreate(osThread(Matcher), NULL);
 
-	/* definition and creation of Fake_SDuse */
-	osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 2048);
-	Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
+  /* definition and creation of Fake_SDuse */
+  osThreadDef(Fake_SDuse, Fake_SDuse_Task, osPriorityNormal, 0, 2048);
+  Fake_SDuseHandle = osThreadCreate(osThread(Fake_SDuse), NULL);
 
-	/* definition and creation of UartDebug */
-	osThreadDef(UartDebug, UartDebugTask, osPriorityBelowNormal, 0, 2048);
-	UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
+  /* definition and creation of UartDebug */
+  osThreadDef(UartDebug, UartDebugTask, osPriorityBelowNormal, 0, 2048);
+  UartDebugHandle = osThreadCreate(osThread(UartDebug), NULL);
 
-	/* definition and creation of commandToGNSS */
-	osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityHigh, 0, 512);
-	commandToGNSSHandle = osThreadCreate(osThread(commandToGNSS), NULL);
+  /* definition and creation of commandToGNSS */
+  osThreadDef(commandToGNSS, commandToGNSSTask, osPriorityHigh, 0, 512);
+  commandToGNSSHandle = osThreadCreate(osThread(commandToGNSS), NULL);
 
-	/* definition and creation of SenderLoRa */
-	osThreadDef(SenderLoRa, SenderLoRa_Task, osPriorityBelowNormal, 0, 2048);
-	SenderLoRaHandle = osThreadCreate(osThread(SenderLoRa), NULL);
+  /* definition and creation of SenderLoRa */
+  osThreadDef(SenderLoRa, SenderLoRa_Task, osPriorityBelowNormal, 0, 2048);
+  SenderLoRaHandle = osThreadCreate(osThread(SenderLoRa), NULL);
 
-	/* USER CODE BEGIN RTOS_THREADS */
+  /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
-	/* USER CODE END RTOS_THREADS */
+  /* USER CODE END RTOS_THREADS */
+
 }
 
 /* USER CODE BEGIN Header_StartInitTask */
@@ -268,7 +270,7 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartInitTask */
 void StartInitTask(void const * argument)
 {
-	/* USER CODE BEGIN StartInitTask */
+  /* USER CODE BEGIN StartInitTask */
 	const char startMessage[] = "\r\nStarting...\r\n";
 	const char initDoneMessage[] = "\r\nInit Done\r\n\n";
 
@@ -294,7 +296,7 @@ void StartInitTask(void const * argument)
 	osSignalSet(MatcherHandle, 0x01);
 	osThreadTerminate(InitTaskHandle);
 	//__HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
-	/* USER CODE END StartInitTask */
+  /* USER CODE END StartInitTask */
 }
 
 /* USER CODE BEGIN Header_ReceiverLoRA_Task */
@@ -304,10 +306,9 @@ void StartInitTask(void const * argument)
  * @retval None
  */
 /* USER CODE END Header_ReceiverLoRA_Task */
-
 void ReceiverLoRA_Task(void const * argument)
 {
-	/* USER CODE BEGIN ReceiverLoRA_Task */
+  /* USER CODE BEGIN ReceiverLoRA_Task */
 	/* Infinite loop */
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
@@ -322,7 +323,7 @@ void ReceiverLoRA_Task(void const * argument)
 			receivedLora();
 		}
 	}
-	/* USER CODE END ReceiverLoRA_Task */
+  /* USER CODE END ReceiverLoRA_Task */
 }
 
 /* USER CODE BEGIN Header_UARTbyte_to_GNSSMessage_Task */
@@ -334,7 +335,7 @@ void ReceiverLoRA_Task(void const * argument)
 /* USER CODE END Header_UARTbyte_to_GNSSMessage_Task */
 void UARTbyte_to_GNSSMessage_Task(void const * argument)
 {
-	/* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
+  /* USER CODE BEGIN UARTbyte_to_GNSSMessage_Task */
 	/* Infinite loop */
 	osEvent eventFromStart = osSignalWait(0x01, osWaitForever);
 	if (eventFromStart.status == osEventSignal){
@@ -344,7 +345,7 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 			//Surtout pas delay ici
 		}
 	}
-	/* USER CODE END UARTbyte_to_GNSSMessage_Task */
+  /* USER CODE END UARTbyte_to_GNSSMessage_Task */
 }
 
 /* USER CODE BEGIN Header_MatcherTask */
@@ -356,7 +357,7 @@ void UARTbyte_to_GNSSMessage_Task(void const * argument)
 /* USER CODE END Header_MatcherTask */
 void MatcherTask(void const * argument)
 {
-	/* USER CODE BEGIN MatcherTask */
+  /* USER CODE BEGIN MatcherTask */
 	/* Infinite loop */
 	osEvent event = osSignalWait(0x01, osWaitForever);
 	if (event.status==osEventSignal){
@@ -367,7 +368,7 @@ void MatcherTask(void const * argument)
 			matcher();
 		}
 	}
-	/* USER CODE END MatcherTask */
+  /* USER CODE END MatcherTask */
 }
 
 /* USER CODE BEGIN Header_Fake_SDuse_Task */
@@ -379,7 +380,7 @@ void MatcherTask(void const * argument)
 /* USER CODE END Header_Fake_SDuse_Task */
 void Fake_SDuse_Task(void const * argument)
 {
-	/* USER CODE BEGIN Fake_SDuse_Task */
+  /* USER CODE BEGIN Fake_SDuse_Task */
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
 	osEvent event = osSignalWait(0x01, osWaitForever);
@@ -388,11 +389,11 @@ void Fake_SDuse_Task(void const * argument)
 		/* Infinite loop */
 		for(;;)
 		{
-			//fakeuseSD();
+			fakeuseSD();
 			vTaskDelayUntil(&xLastWakeTime,1000);
 		}
 	}
-	/* USER CODE END Fake_SDuse_Task */
+  /* USER CODE END Fake_SDuse_Task */
 }
 
 /* USER CODE BEGIN Header_UartDebugTask */
@@ -404,14 +405,14 @@ void Fake_SDuse_Task(void const * argument)
 /* USER CODE END Header_UartDebugTask */
 void UartDebugTask(void const * argument)
 {
-	/* USER CODE BEGIN UartDebugTask */
+  /* USER CODE BEGIN UartDebugTask */
 	/* Infinite loop */
 	for(;;)
 	{
 		debug();
 
 	}
-	/* USER CODE END UartDebugTask */
+  /* USER CODE END UartDebugTask */
 }
 
 /* USER CODE BEGIN Header_commandToGNSSTask */
@@ -423,14 +424,14 @@ void UartDebugTask(void const * argument)
 /* USER CODE END Header_commandToGNSSTask */
 void commandToGNSSTask(void const * argument)
 {
-	/* USER CODE BEGIN commandToGNSSTask */
+  /* USER CODE BEGIN commandToGNSSTask */
 	/* Infinite loop */
 	for(;;)
 	{
 		commandToGNSS();
 	}
 
-	/* USER CODE END commandToGNSSTask */
+  /* USER CODE END commandToGNSSTask */
 }
 
 /* USER CODE BEGIN Header_SenderLoRa_Task */
@@ -442,13 +443,13 @@ void commandToGNSSTask(void const * argument)
 /* USER CODE END Header_SenderLoRa_Task */
 void SenderLoRa_Task(void const * argument)
 {
-	/* USER CODE BEGIN SenderLoRa_Task */
+  /* USER CODE BEGIN SenderLoRa_Task */
 	/* Infinite loop */
 	for(;;)
 	{
 		senderLoRA();
 	}
-	/* USER CODE END SenderLoRa_Task */
+  /* USER CODE END SenderLoRa_Task */
 }
 
 /* Private application code --------------------------------------------------*/

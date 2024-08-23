@@ -43,6 +43,8 @@ typedef struct {
     // Ajoutez d'autres paramètres de configuration si nécessaire
 } ModuleConfig_t;
 
+
+/* ------------ GNSS ------------ */
 typedef enum{
 	OK,
 	Error
@@ -63,7 +65,7 @@ typedef struct {
 	uint8_t CLASS;
 	uint8_t ID;
 	osSemaphoreId applicantSemaphore;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName; 				// DEBUG PURPOSE
 } GNSSRequestQ_t;
 
 typedef struct {
@@ -74,7 +76,7 @@ typedef struct {
 	uint8_t ID;
 	UBXMessage_parsed* UBXMessage;
 	DynamicBuffer * bufferReturn;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName; 				// DEBUG PURPOSE
 } GNSSReturnQ_t;
 
 typedef struct {
@@ -82,12 +84,14 @@ typedef struct {
 	char* color;
 }UARTdebugQ_t;
 
-typedef struct{ //Copie assumer de CommandnSize
+typedef struct{
 	const uint8_t *command;
 	size_t size;
-	char* applicantName; // DEBUG PURPOSE: Assuming pointer to string
+	char* applicantName; 				// DEBUG PURPOSE
 }GNSStoPollQ_t;
 
+
+/* ------------ LoRA------------ */
 typedef struct {
 	LORA_HeaderforSend* header;
 	DynamicBuffer* payload;
@@ -96,4 +100,6 @@ typedef struct {
 typedef struct {
 	LORA_MessageReception* LMR;
 }LoRAinReceptionQ_t;
+
+
 #endif /* INC_RTOS_SUBFUNCTIONS_RTOS_EXTERN_H_ */

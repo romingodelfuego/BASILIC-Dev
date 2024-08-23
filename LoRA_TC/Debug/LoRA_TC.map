@@ -245,28 +245,9 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/GNSSCom.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/GNSSCom.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/GNSSCom.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/GNSSCom.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/GNSSCom.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/GNSSCom.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/GNSSCom.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/GNSSCom.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/GNSSCom.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/GNSSCom.o
  .bss.hGNSSCom  0x00000000        0xc ./Core/Src/GNSS/GNSSCom.o
- .data.type     0x00000000        0x1 ./Core/Src/GNSS/GNSSCom.o
- .data.protocol
-                0x00000000        0x1 ./Core/Src/GNSS/GNSSCom.o
  .text.GNSSCom_Init
                 0x00000000       0x28 ./Core/Src/GNSS/GNSSCom.o
- .text.resizeBuffer
-                0x00000000       0x16 ./Core/Src/GNSS/GNSSCom.o
  .group         0x00000000        0xc ./Core/Src/GNSS/debug_formatter.o
  .group         0x00000000        0xc ./Core/Src/GNSS/debug_formatter.o
  .group         0x00000000        0xc ./Core/Src/GNSS/debug_formatter.o
@@ -364,20 +345,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/debug_formatter.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/debug_formatter.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/debug_formatter.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/debug_formatter.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/debug_formatter.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/debug_formatter.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/debug_formatter.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/debug_formatter.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/debug_formatter.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/debug_formatter.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/GNSS/debug_formatter.o
  .debug_macro   0x00000000       0x22 ./Core/Src/GNSS/debug_formatter.o
  .debug_macro   0x00000000       0x2a ./Core/Src/GNSS/debug_formatter.o
@@ -561,20 +528,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/debug_getter.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/debug_getter.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/debug_getter.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/debug_getter.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/debug_getter.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/debug_getter.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/debug_getter.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/debug_getter.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/debug_getter.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/debug_getter.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/GNSS/debug_getter.o
  .debug_macro   0x00000000       0x22 ./Core/Src/GNSS/debug_getter.o
  .debug_macro   0x00000000       0x5b ./Core/Src/GNSS/debug_getter.o
@@ -766,20 +719,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/debug_utils.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/debug_utils.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/debug_utils.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/debug_utils.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/debug_utils.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/debug_utils.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/debug_utils.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/debug_utils.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/debug_utils.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/debug_utils.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/GNSS/debug_utils.o
  .debug_macro   0x00000000       0x22 ./Core/Src/GNSS/debug_utils.o
  .debug_macro   0x00000000       0x5b ./Core/Src/GNSS/debug_utils.o
@@ -971,20 +910,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/traductor.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/traductor.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/traductor.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/traductor.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/traductor.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/traductor.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/traductor.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/traductor.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/traductor.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/traductor.o
  .data.poll_UBX_NAV_SIG
                 0x00000000        0x8 ./Core/Src/GNSS/traductor.o
  .data.poll_UBX_NAV_TIMEUTC
@@ -1180,20 +1105,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .data.poll_UBX_NAV_SIG
                 0x00000000        0x8 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .data.poll_UBX_NAV_TIMEUTC
@@ -1389,20 +1300,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .data          0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .bss           0x00000000        0x0 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .data.poll_UBX_NAV_SIG
                 0x00000000        0x8 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .data.poll_UBX_NAV_TIMEUTC
@@ -1755,20 +1652,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/LORA/RFM9x.o
  .data          0x00000000        0x0 ./Core/Src/LORA/RFM9x.o
  .bss           0x00000000        0x0 ./Core/Src/LORA/RFM9x.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/LORA/RFM9x.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/LORA/RFM9x.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/LORA/RFM9x.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/LORA/RFM9x.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/LORA/RFM9x.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/LORA/RFM9x.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/LORA/RFM9x.o
  .text.waitPacketSent
                 0x00000000        0xe ./Core/Src/LORA/RFM9x.o
  .text.setModeIdle
@@ -1967,20 +1850,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/debug.o
  .data          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/debug.o
  .bss           0x00000000        0x0 ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/RTOS_subfunctions/debug.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/RTOS_subfunctions/debug.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/RTOS_subfunctions/debug.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/RTOS_subfunctions/debug.o
  .debug_macro   0x00000000       0x22 ./Core/Src/RTOS_subfunctions/debug.o
  .debug_macro   0x00000000      0x189 ./Core/Src/RTOS_subfunctions/debug.o
@@ -2167,20 +2036,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .data          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .bss           0x00000000        0x0 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .debug_macro   0x00000000      0x189 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .debug_macro   0x00000000       0x22 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
@@ -2372,20 +2227,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .data          0x00000000        0x0 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .bss           0x00000000        0x0 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .debug_macro   0x00000000       0x22 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .debug_macro   0x00000000      0x189 ./Core/Src/RTOS_subfunctions/senderLoRA.o
@@ -2577,20 +2418,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/freertos.o
  .data          0x00000000        0x0 ./Core/Src/freertos.o
  .bss           0x00000000        0x0 ./Core/Src/freertos.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/freertos.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/freertos.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/freertos.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/freertos.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/freertos.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/freertos.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/freertos.o
  .data.poll_UBX_NAV_TIMEUTC
                 0x00000000        0x8 ./Core/Src/freertos.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/freertos.o
@@ -2861,20 +2688,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./Core/Src/main.o
  .data          0x00000000        0x0 ./Core/Src/main.o
  .bss           0x00000000        0x0 ./Core/Src/main.o
- .data.commandSetGNSS_Config
-                0x00000000       0x84 ./Core/Src/main.o
- .data.commandUart1Ouput
-                0x00000000       0x1b ./Core/Src/main.o
- .data.commandUBXTimeUTC
-                0x00000000        0xb ./Core/Src/main.o
- .data.pollUBXTimeUTC
-                0x00000000        0x8 ./Core/Src/main.o
- .data.commandSetTP1_atNVTRate
-                0x00000000       0x5d ./Core/Src/main.o
- .data.commandSetTP2
-                0x00000000       0x65 ./Core/Src/main.o
- .data.commandMeasureRate
-                0x00000000       0x1d ./Core/Src/main.o
  .debug_macro   0x00000000      0xab4 ./Core/Src/main.o
  .debug_macro   0x00000000      0x1ad ./Core/Src/main.o
  .debug_macro   0x00000000       0x2e ./Core/Src/main.o
@@ -7887,17 +7700,18 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x08000ee0       0x20 ./Core/Src/GNSS/GNSSCom.o
                 0x08000ee0                freeBuffer
  .text.GNSSCom_MessageAdapter
-                0x08000f00       0xb4 ./Core/Src/GNSS/GNSSCom.o
+                0x08000f00       0xb0 ./Core/Src/GNSS/GNSSCom.o
                 0x08000f00                GNSSCom_MessageAdapter
  .text.UBX_format
-                0x08000fb4      0x154 ./Core/Src/GNSS/debug_formatter.o
-                0x08000fb4                UBX_format
+                0x08000fb0      0x154 ./Core/Src/GNSS/debug_formatter.o
+                0x08000fb0                UBX_format
  .text.get_GNSSID
-                0x08001108       0xe8 ./Core/Src/GNSS/debug_getter.o
-                0x08001108                get_GNSSID
+                0x08001104       0xe8 ./Core/Src/GNSS/debug_getter.o
+                0x08001104                get_GNSSID
  .text.get_SVID
-                0x080011f0      0x190 ./Core/Src/GNSS/debug_getter.o
-                0x080011f0                get_SVID
+                0x080011ec      0x190 ./Core/Src/GNSS/debug_getter.o
+                0x080011ec                get_SVID
+ *fill*         0x0800137c        0x4 
  .text.get_PRES
                 0x08001380       0x54 ./Core/Src/GNSS/debug_getter.o
                 0x08001380                get_PRES
@@ -9399,537 +9213,537 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
 LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a
 
-.debug_info     0x00000000    0x21b08
- .debug_info    0x00000000      0xa99 ./Core/Src/GNSS/GNSSCom.o
- .debug_info    0x00000a99      0x48e ./Core/Src/GNSS/debug_formatter.o
- .debug_info    0x00000f27      0x3f2 ./Core/Src/GNSS/debug_getter.o
- .debug_info    0x00001319      0x406 ./Core/Src/GNSS/debug_utils.o
- .debug_info    0x0000171f      0x7f0 ./Core/Src/GNSS/traductor.o
- .debug_info    0x00001f0f      0x92c ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .debug_info    0x0000283b      0x72e ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .debug_info    0x00002f69      0x962 ./Core/Src/LORA/LORACom.o
- .debug_info    0x000038cb     0x10a6 ./Core/Src/LORA/RFM9x.o
- .debug_info    0x00004971      0xd9f ./Core/Src/RTOS_subfunctions/debug.o
- .debug_info    0x00005710      0x7f3 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .debug_info    0x00005f03      0x3cd ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .debug_info    0x000062d0     0x1dba ./Core/Src/freertos.o
- .debug_info    0x0000808a      0x6da ./Core/Src/gpio.o
- .debug_info    0x00008764      0xab1 ./Core/Src/main.o
- .debug_info    0x00009215      0x997 ./Core/Src/spi.o
- .debug_info    0x00009bac      0x50d ./Core/Src/stm32l4xx_hal_msp.o
- .debug_info    0x0000a0b9      0xc71 ./Core/Src/stm32l4xx_hal_timebase_tim.o
- .debug_info    0x0000ad2a      0xa63 ./Core/Src/stm32l4xx_it.o
- .debug_info    0x0000b78d      0x6a3 ./Core/Src/syscalls.o
- .debug_info    0x0000be30      0x168 ./Core/Src/sysmem.o
- .debug_info    0x0000bf98      0x5b1 ./Core/Src/system_stm32l4xx.o
- .debug_info    0x0000c549      0xd1b ./Core/Src/usart.o
- .debug_info    0x0000d264       0x30 ./Core/Startup/startup_stm32l476rgtx.o
- .debug_info    0x0000d294      0xc09 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_info    0x0000de9d      0xd4c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_info    0x0000ebe9      0x757 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_info    0x0000f340      0x99e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_info    0x0000fcde      0xc14 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_info    0x000108f2      0xe11 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_info    0x00011703     0x161a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_info    0x00012d1d     0x2a9a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
- .debug_info    0x000157b7     0x169e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
- .debug_info    0x00016e55     0x3b69 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_info    0x0001a9be     0x226a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_info    0x0001cc28      0x2af ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_info    0x0001ced7     0x1889 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_info    0x0001e760     0x29f5 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_info    0x00021155      0x4de ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
- .debug_info    0x00021633      0x4d5 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+.debug_info     0x00000000    0x20e73
+ .debug_info    0x00000000      0x923 ./Core/Src/GNSS/GNSSCom.o
+ .debug_info    0x00000923      0x399 ./Core/Src/GNSS/debug_formatter.o
+ .debug_info    0x00000cbc      0x312 ./Core/Src/GNSS/debug_getter.o
+ .debug_info    0x00000fce      0x315 ./Core/Src/GNSS/debug_utils.o
+ .debug_info    0x000012e3      0x712 ./Core/Src/GNSS/traductor.o
+ .debug_info    0x000019f5      0x84e ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+ .debug_info    0x00002243      0x650 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+ .debug_info    0x00002893      0x962 ./Core/Src/LORA/LORACom.o
+ .debug_info    0x000031f5      0xfaf ./Core/Src/LORA/RFM9x.o
+ .debug_info    0x000041a4      0xcac ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_info    0x00004e50      0x6f7 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+ .debug_info    0x00005547      0x2dc ./Core/Src/RTOS_subfunctions/senderLoRA.o
+ .debug_info    0x00005823     0x1cdc ./Core/Src/freertos.o
+ .debug_info    0x000074ff      0x6da ./Core/Src/gpio.o
+ .debug_info    0x00007bd9      0x9a7 ./Core/Src/main.o
+ .debug_info    0x00008580      0x997 ./Core/Src/spi.o
+ .debug_info    0x00008f17      0x50d ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_info    0x00009424      0xc71 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_info    0x0000a095      0xa63 ./Core/Src/stm32l4xx_it.o
+ .debug_info    0x0000aaf8      0x6a3 ./Core/Src/syscalls.o
+ .debug_info    0x0000b19b      0x168 ./Core/Src/sysmem.o
+ .debug_info    0x0000b303      0x5b1 ./Core/Src/system_stm32l4xx.o
+ .debug_info    0x0000b8b4      0xd1b ./Core/Src/usart.o
+ .debug_info    0x0000c5cf       0x30 ./Core/Startup/startup_stm32l476rgtx.o
+ .debug_info    0x0000c5ff      0xc09 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_info    0x0000d208      0xd4c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_info    0x0000df54      0x757 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_info    0x0000e6ab      0x99e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_info    0x0000f049      0xc14 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_info    0x0000fc5d      0xe11 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_info    0x00010a6e     0x161a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_info    0x00012088     0x2a9a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_info    0x00014b22     0x169e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_info    0x000161c0     0x3b69 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_info    0x00019d29     0x226a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_info    0x0001bf93      0x2af ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_info    0x0001c242     0x1889 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_info    0x0001dacb     0x29f5 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_info    0x000204c0      0x4de ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_info    0x0002099e      0x4d5 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_abbrev   0x00000000     0x53cc
- .debug_abbrev  0x00000000      0x25b ./Core/Src/GNSS/GNSSCom.o
- .debug_abbrev  0x0000025b      0x134 ./Core/Src/GNSS/debug_formatter.o
- .debug_abbrev  0x0000038f      0x142 ./Core/Src/GNSS/debug_getter.o
- .debug_abbrev  0x000004d1      0x174 ./Core/Src/GNSS/debug_utils.o
- .debug_abbrev  0x00000645      0x199 ./Core/Src/GNSS/traductor.o
- .debug_abbrev  0x000007de      0x212 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .debug_abbrev  0x000009f0      0x206 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .debug_abbrev  0x00000bf6      0x160 ./Core/Src/LORA/LORACom.o
- .debug_abbrev  0x00000d56      0x317 ./Core/Src/LORA/RFM9x.o
- .debug_abbrev  0x0000106d      0x2e2 ./Core/Src/RTOS_subfunctions/debug.o
- .debug_abbrev  0x0000134f      0x221 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .debug_abbrev  0x00001570      0x13f ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .debug_abbrev  0x000016af      0x323 ./Core/Src/freertos.o
- .debug_abbrev  0x000019d2      0x15b ./Core/Src/gpio.o
- .debug_abbrev  0x00001b2d      0x21e ./Core/Src/main.o
- .debug_abbrev  0x00001d4b      0x1f3 ./Core/Src/spi.o
- .debug_abbrev  0x00001f3e      0x107 ./Core/Src/stm32l4xx_hal_msp.o
- .debug_abbrev  0x00002045      0x1f4 ./Core/Src/stm32l4xx_hal_timebase_tim.o
- .debug_abbrev  0x00002239      0x1db ./Core/Src/stm32l4xx_it.o
- .debug_abbrev  0x00002414      0x1b6 ./Core/Src/syscalls.o
- .debug_abbrev  0x000025ca       0xbc ./Core/Src/sysmem.o
- .debug_abbrev  0x00002686      0x11a ./Core/Src/system_stm32l4xx.o
- .debug_abbrev  0x000027a0      0x1f5 ./Core/Src/usart.o
- .debug_abbrev  0x00002995       0x24 ./Core/Startup/startup_stm32l476rgtx.o
- .debug_abbrev  0x000029b9      0x243 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_abbrev  0x00002bfc      0x327 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_abbrev  0x00002f23      0x1cb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_abbrev  0x000030ee      0x1f9 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_abbrev  0x000032e7      0x2cb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_abbrev  0x000035b2      0x2a6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_abbrev  0x00003858      0x26a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_abbrev  0x00003ac2      0x278 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
- .debug_abbrev  0x00003d3a      0x283 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
- .debug_abbrev  0x00003fbd      0x2d0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_abbrev  0x0000428d      0x426 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_abbrev  0x000046b3       0xf5 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_abbrev  0x000047a8      0x3b5 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_abbrev  0x00004b5d      0x3f6 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_abbrev  0x00004f53      0x25c ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
- .debug_abbrev  0x000051af      0x21d ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+.debug_abbrev   0x00000000     0x5353
+ .debug_abbrev  0x00000000      0x21a ./Core/Src/GNSS/GNSSCom.o
+ .debug_abbrev  0x0000021a      0x135 ./Core/Src/GNSS/debug_formatter.o
+ .debug_abbrev  0x0000034f      0x12f ./Core/Src/GNSS/debug_getter.o
+ .debug_abbrev  0x0000047e      0x163 ./Core/Src/GNSS/debug_utils.o
+ .debug_abbrev  0x000005e1      0x199 ./Core/Src/GNSS/traductor.o
+ .debug_abbrev  0x0000077a      0x212 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+ .debug_abbrev  0x0000098c      0x206 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+ .debug_abbrev  0x00000b92      0x160 ./Core/Src/LORA/LORACom.o
+ .debug_abbrev  0x00000cf2      0x318 ./Core/Src/LORA/RFM9x.o
+ .debug_abbrev  0x0000100a      0x2e3 ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_abbrev  0x000012ed      0x219 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+ .debug_abbrev  0x00001506      0x12e ./Core/Src/RTOS_subfunctions/senderLoRA.o
+ .debug_abbrev  0x00001634      0x323 ./Core/Src/freertos.o
+ .debug_abbrev  0x00001957      0x15b ./Core/Src/gpio.o
+ .debug_abbrev  0x00001ab2      0x220 ./Core/Src/main.o
+ .debug_abbrev  0x00001cd2      0x1f3 ./Core/Src/spi.o
+ .debug_abbrev  0x00001ec5      0x107 ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_abbrev  0x00001fcc      0x1f4 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_abbrev  0x000021c0      0x1db ./Core/Src/stm32l4xx_it.o
+ .debug_abbrev  0x0000239b      0x1b6 ./Core/Src/syscalls.o
+ .debug_abbrev  0x00002551       0xbc ./Core/Src/sysmem.o
+ .debug_abbrev  0x0000260d      0x11a ./Core/Src/system_stm32l4xx.o
+ .debug_abbrev  0x00002727      0x1f5 ./Core/Src/usart.o
+ .debug_abbrev  0x0000291c       0x24 ./Core/Startup/startup_stm32l476rgtx.o
+ .debug_abbrev  0x00002940      0x243 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_abbrev  0x00002b83      0x327 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_abbrev  0x00002eaa      0x1cb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_abbrev  0x00003075      0x1f9 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_abbrev  0x0000326e      0x2cb ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_abbrev  0x00003539      0x2a6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_abbrev  0x000037df      0x26a ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_abbrev  0x00003a49      0x278 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_abbrev  0x00003cc1      0x283 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_abbrev  0x00003f44      0x2d0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_abbrev  0x00004214      0x426 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_abbrev  0x0000463a       0xf5 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_abbrev  0x0000472f      0x3b5 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_abbrev  0x00004ae4      0x3f6 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_abbrev  0x00004eda      0x25c ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_abbrev  0x00005136      0x21d ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_aranges  0x00000000     0x1a60
+.debug_aranges  0x00000000     0x1a58
  .debug_aranges
-                0x00000000       0x40 ./Core/Src/GNSS/GNSSCom.o
+                0x00000000       0x38 ./Core/Src/GNSS/GNSSCom.o
  .debug_aranges
-                0x00000040       0x20 ./Core/Src/GNSS/debug_formatter.o
+                0x00000038       0x20 ./Core/Src/GNSS/debug_formatter.o
  .debug_aranges
-                0x00000060       0x58 ./Core/Src/GNSS/debug_getter.o
+                0x00000058       0x58 ./Core/Src/GNSS/debug_getter.o
  .debug_aranges
-                0x000000b8       0x30 ./Core/Src/GNSS/debug_utils.o
+                0x000000b0       0x30 ./Core/Src/GNSS/debug_utils.o
  .debug_aranges
-                0x000000e8       0x20 ./Core/Src/GNSS/traductor.o
+                0x000000e0       0x20 ./Core/Src/GNSS/traductor.o
  .debug_aranges
-                0x00000108       0x30 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+                0x00000100       0x30 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .debug_aranges
-                0x00000138       0x30 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+                0x00000130       0x30 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .debug_aranges
-                0x00000168       0x20 ./Core/Src/LORA/LORACom.o
+                0x00000160       0x20 ./Core/Src/LORA/LORACom.o
  .debug_aranges
-                0x00000188       0x88 ./Core/Src/LORA/RFM9x.o
+                0x00000180       0x88 ./Core/Src/LORA/RFM9x.o
  .debug_aranges
-                0x00000210       0x50 ./Core/Src/RTOS_subfunctions/debug.o
+                0x00000208       0x50 ./Core/Src/RTOS_subfunctions/debug.o
  .debug_aranges
-                0x00000260       0x40 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+                0x00000258       0x40 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .debug_aranges
-                0x000002a0       0x20 ./Core/Src/RTOS_subfunctions/senderLoRA.o
+                0x00000298       0x20 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .debug_aranges
-                0x000002c0       0x58 ./Core/Src/freertos.o
+                0x000002b8       0x58 ./Core/Src/freertos.o
  .debug_aranges
-                0x00000318       0x20 ./Core/Src/gpio.o
+                0x00000310       0x20 ./Core/Src/gpio.o
  .debug_aranges
-                0x00000338       0x38 ./Core/Src/main.o
+                0x00000330       0x38 ./Core/Src/main.o
  .debug_aranges
-                0x00000370       0x30 ./Core/Src/spi.o
+                0x00000368       0x30 ./Core/Src/spi.o
  .debug_aranges
-                0x000003a0       0x20 ./Core/Src/stm32l4xx_hal_msp.o
+                0x00000398       0x20 ./Core/Src/stm32l4xx_hal_msp.o
  .debug_aranges
-                0x000003c0       0x30 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+                0x000003b8       0x30 ./Core/Src/stm32l4xx_hal_timebase_tim.o
  .debug_aranges
-                0x000003f0       0x58 ./Core/Src/stm32l4xx_it.o
+                0x000003e8       0x58 ./Core/Src/stm32l4xx_it.o
  .debug_aranges
-                0x00000448       0xa8 ./Core/Src/syscalls.o
+                0x00000440       0xa8 ./Core/Src/syscalls.o
  .debug_aranges
-                0x000004f0       0x20 ./Core/Src/sysmem.o
+                0x000004e8       0x20 ./Core/Src/sysmem.o
  .debug_aranges
-                0x00000510       0x28 ./Core/Src/system_stm32l4xx.o
+                0x00000508       0x28 ./Core/Src/system_stm32l4xx.o
  .debug_aranges
-                0x00000538       0x30 ./Core/Src/usart.o
+                0x00000530       0x30 ./Core/Src/usart.o
  .debug_aranges
-                0x00000568       0x28 ./Core/Startup/startup_stm32l476rgtx.o
+                0x00000560       0x28 ./Core/Startup/startup_stm32l476rgtx.o
  .debug_aranges
-                0x00000590      0x130 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+                0x00000588      0x130 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
  .debug_aranges
-                0x000006c0      0x118 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+                0x000006b8      0x118 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
  .debug_aranges
-                0x000007d8       0x58 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+                0x000007d0       0x58 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
  .debug_aranges
-                0x00000830      0x160 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+                0x00000828      0x160 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
  .debug_aranges
-                0x00000990       0x90 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+                0x00000988       0x90 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
  .debug_aranges
-                0x00000a20       0xc0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+                0x00000a18       0xc0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
  .debug_aranges
-                0x00000ae0      0x1d8 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+                0x00000ad8      0x1d8 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
  .debug_aranges
-                0x00000cb8      0x3e0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+                0x00000cb0      0x3e0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
  .debug_aranges
-                0x00001098      0x180 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+                0x00001090      0x180 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
  .debug_aranges
-                0x00001218      0x228 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+                0x00001210      0x228 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
  .debug_aranges
-                0x00001440      0x1d8 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+                0x00001438      0x1d8 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
  .debug_aranges
-                0x00001618       0x40 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+                0x00001610       0x40 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
  .debug_aranges
-                0x00001658      0x120 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+                0x00001650      0x120 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
  .debug_aranges
-                0x00001778      0x210 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+                0x00001770      0x210 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
  .debug_aranges
-                0x00001988       0x80 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+                0x00001980       0x80 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
  .debug_aranges
-                0x00001a08       0x58 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+                0x00001a00       0x58 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
 .debug_rnglists
-                0x00000000     0x1440
+                0x00000000     0x143a
  .debug_rnglists
-                0x00000000       0x2c ./Core/Src/GNSS/GNSSCom.o
+                0x00000000       0x26 ./Core/Src/GNSS/GNSSCom.o
  .debug_rnglists
-                0x0000002c       0x14 ./Core/Src/GNSS/debug_formatter.o
+                0x00000026       0x14 ./Core/Src/GNSS/debug_formatter.o
  .debug_rnglists
-                0x00000040       0x44 ./Core/Src/GNSS/debug_getter.o
+                0x0000003a       0x44 ./Core/Src/GNSS/debug_getter.o
  .debug_rnglists
-                0x00000084       0x22 ./Core/Src/GNSS/debug_utils.o
+                0x0000007e       0x22 ./Core/Src/GNSS/debug_utils.o
  .debug_rnglists
-                0x000000a6       0x14 ./Core/Src/GNSS/traductor.o
+                0x000000a0       0x14 ./Core/Src/GNSS/traductor.o
  .debug_rnglists
-                0x000000ba       0x21 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+                0x000000b4       0x21 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
  .debug_rnglists
-                0x000000db       0x21 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+                0x000000d5       0x21 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
  .debug_rnglists
-                0x000000fc       0x13 ./Core/Src/LORA/LORACom.o
+                0x000000f6       0x13 ./Core/Src/LORA/LORACom.o
  .debug_rnglists
-                0x0000010f       0x64 ./Core/Src/LORA/RFM9x.o
+                0x00000109       0x64 ./Core/Src/LORA/RFM9x.o
  .debug_rnglists
-                0x00000173       0x3a ./Core/Src/RTOS_subfunctions/debug.o
+                0x0000016d       0x3a ./Core/Src/RTOS_subfunctions/debug.o
  .debug_rnglists
-                0x000001ad       0x2f ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+                0x000001a7       0x2f ./Core/Src/RTOS_subfunctions/receiverLoRA.o
  .debug_rnglists
-                0x000001dc       0x14 ./Core/Src/RTOS_subfunctions/senderLoRA.o
+                0x000001d6       0x14 ./Core/Src/RTOS_subfunctions/senderLoRA.o
  .debug_rnglists
-                0x000001f0       0x40 ./Core/Src/freertos.o
+                0x000001ea       0x40 ./Core/Src/freertos.o
  .debug_rnglists
-                0x00000230       0x14 ./Core/Src/gpio.o
+                0x0000022a       0x14 ./Core/Src/gpio.o
  .debug_rnglists
-                0x00000244       0x26 ./Core/Src/main.o
+                0x0000023e       0x26 ./Core/Src/main.o
  .debug_rnglists
-                0x0000026a       0x20 ./Core/Src/spi.o
+                0x00000264       0x20 ./Core/Src/spi.o
  .debug_rnglists
-                0x0000028a       0x13 ./Core/Src/stm32l4xx_hal_msp.o
+                0x00000284       0x13 ./Core/Src/stm32l4xx_hal_msp.o
  .debug_rnglists
-                0x0000029d       0x20 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+                0x00000297       0x20 ./Core/Src/stm32l4xx_hal_timebase_tim.o
  .debug_rnglists
-                0x000002bd       0x3e ./Core/Src/stm32l4xx_it.o
+                0x000002b7       0x3e ./Core/Src/stm32l4xx_it.o
  .debug_rnglists
-                0x000002fb       0x79 ./Core/Src/syscalls.o
+                0x000002f5       0x79 ./Core/Src/syscalls.o
  .debug_rnglists
-                0x00000374       0x13 ./Core/Src/sysmem.o
+                0x0000036e       0x13 ./Core/Src/sysmem.o
  .debug_rnglists
-                0x00000387       0x1a ./Core/Src/system_stm32l4xx.o
+                0x00000381       0x1a ./Core/Src/system_stm32l4xx.o
  .debug_rnglists
-                0x000003a1       0x20 ./Core/Src/usart.o
+                0x0000039b       0x20 ./Core/Src/usart.o
  .debug_rnglists
-                0x000003c1       0x19 ./Core/Startup/startup_stm32l476rgtx.o
+                0x000003bb       0x19 ./Core/Startup/startup_stm32l476rgtx.o
  .debug_rnglists
-                0x000003da       0xdf ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+                0x000003d4       0xdf ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
  .debug_rnglists
-                0x000004b9       0xce ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+                0x000004b3       0xce ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
  .debug_rnglists
-                0x00000587       0x3f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+                0x00000581       0x3f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
  .debug_rnglists
-                0x000005c6      0x109 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+                0x000005c0      0x109 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
  .debug_rnglists
-                0x000006cf       0x6d ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+                0x000006c9       0x6d ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
  .debug_rnglists
-                0x0000073c       0x95 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+                0x00000736       0x95 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
  .debug_rnglists
-                0x000007d1      0x178 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+                0x000007cb      0x178 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
  .debug_rnglists
-                0x00000949      0x328 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+                0x00000943      0x328 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
  .debug_rnglists
-                0x00000c71      0x139 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+                0x00000c6b      0x139 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
  .debug_rnglists
-                0x00000daa      0x1db ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+                0x00000da4      0x1db ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
  .debug_rnglists
-                0x00000f85      0x16a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+                0x00000f7f      0x16a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
  .debug_rnglists
-                0x000010ef       0x2b ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+                0x000010e9       0x2b ./Middlewares/Third_Party/FreeRTOS/Source/list.o
  .debug_rnglists
-                0x0000111a       0xdf ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+                0x00001114       0xdf ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
  .debug_rnglists
-                0x000011f9      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+                0x000011f3      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
  .debug_rnglists
-                0x000013a1       0x5d ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+                0x0000139b       0x5d ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
  .debug_rnglists
-                0x000013fe       0x42 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+                0x000013f8       0x42 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_macro    0x00000000    0x2eff9
- .debug_macro   0x00000000      0x4f1 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000004f1      0xab4 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00000fa5      0x1ad ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001152       0x2e ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001180       0x28 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000011a8       0x22 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000011ca       0x8e ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001258       0x51 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000012a9      0x103 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000013ac       0x6a ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001416      0x1df ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000015f5       0x1c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001611       0x22 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00001633       0xfb ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0000172e     0x1011 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0000273f      0x11f ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0000285e    0x1a17a ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0001c9d8       0x6d ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0001ca45     0x38e6 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002032b      0x189 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000204b4       0x5c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00020510     0x159e ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00021aae      0x5a5 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022053      0x1b9 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002220c      0x18b ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022397      0x26b ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022602      0x23d ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002283f      0x241 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022a80      0x37c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022dfc       0xd6 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022ed2      0x122 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00022ff4      0x3ef ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000233e3      0x2fe ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000236e1      0xa98 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024179      0x1e6 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002435f      0x5cf ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002492e       0x44 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024972      0x330 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024ca2       0xb2 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024d54       0x61 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024db5       0x2a ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024ddf       0x43 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024e22       0x34 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024e56       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024e6c       0x35 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00024ea1      0x369 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002520a       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002521a       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025230       0x43 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025273       0x34 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000252a7       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000252b7       0x58 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002530f       0x8e ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002539d       0x1c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000253b9      0x177 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025530       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025546       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002555c      0x146 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000256a2       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000256b8       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000256ce       0x29 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000256f7       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002570d       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002571d       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002572d       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002573d       0x1c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025759       0x52 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000257ab       0x22 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000257cd       0x10 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000257dd       0x52 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002582f       0xc1 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000258f0       0x1c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002590c       0x3d ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025949       0x35 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002597e       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025994       0x20 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000259b4       0x3a ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000259ee      0x469 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025e57      0x112 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00025f69      0x15a ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000260c3       0xde ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000261a1       0x1c ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000261bd       0x26 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000261e3       0x16 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000261f9      0x4e2 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000266db       0xb5 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00026790       0xaa ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002683a       0x22 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002685c       0x91 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000268ed       0x8d ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x0002697a       0x7e ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x000269f8       0xf2 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00026aea       0x34 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00026b1e       0x22 ./Core/Src/GNSS/GNSSCom.o
- .debug_macro   0x00026b40      0x543 ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x00027083       0x5b ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x000270de       0x94 ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x00027172       0x57 ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x000271c9       0x9e ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x00027267      0x10b ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x00027372       0x4c ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x000273be      0x112 ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x000274d0       0x56 ./Core/Src/GNSS/debug_formatter.o
- .debug_macro   0x00027526      0x50d ./Core/Src/GNSS/debug_getter.o
- .debug_macro   0x00027a33      0x547 ./Core/Src/GNSS/debug_utils.o
- .debug_macro   0x00027f7a      0x551 ./Core/Src/GNSS/traductor.o
- .debug_macro   0x000284cb      0x54d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .debug_macro   0x00028a18      0x54d ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .debug_macro   0x00028f65      0x401 ./Core/Src/LORA/LORACom.o
- .debug_macro   0x00029366       0x34 ./Core/Src/LORA/LORACom.o
- .debug_macro   0x0002939a      0x50f ./Core/Src/LORA/RFM9x.o
- .debug_macro   0x000298a9      0x4ee ./Core/Src/RTOS_subfunctions/debug.o
- .debug_macro   0x00029d97       0x10 ./Core/Src/RTOS_subfunctions/debug.o
- .debug_macro   0x00029da7       0x1c ./Core/Src/RTOS_subfunctions/debug.o
- .debug_macro   0x00029dc3       0x1c ./Core/Src/RTOS_subfunctions/debug.o
- .debug_macro   0x00029ddf      0x578 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .debug_macro   0x0002a357      0x564 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .debug_macro   0x0002a8bb      0x590 ./Core/Src/freertos.o
- .debug_macro   0x0002ae4b      0x1ee ./Core/Src/gpio.o
- .debug_macro   0x0002b039      0x500 ./Core/Src/main.o
- .debug_macro   0x0002b539      0x1ee ./Core/Src/spi.o
- .debug_macro   0x0002b727      0x1e4 ./Core/Src/stm32l4xx_hal_msp.o
- .debug_macro   0x0002b90b      0x1d5 ./Core/Src/stm32l4xx_hal_timebase_tim.o
- .debug_macro   0x0002bae0      0x340 ./Core/Src/stm32l4xx_it.o
- .debug_macro   0x0002be20      0x274 ./Core/Src/syscalls.o
- .debug_macro   0x0002c094       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x0002c0a4       0xcf ./Core/Src/syscalls.o
- .debug_macro   0x0002c173      0x12c ./Core/Src/syscalls.o
- .debug_macro   0x0002c29f       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x0002c2af      0x242 ./Core/Src/syscalls.o
- .debug_macro   0x0002c4f1       0x10 ./Core/Src/syscalls.o
- .debug_macro   0x0002c501      0x18a ./Core/Src/syscalls.o
- .debug_macro   0x0002c68b       0x16 ./Core/Src/syscalls.o
- .debug_macro   0x0002c6a1       0xce ./Core/Src/syscalls.o
- .debug_macro   0x0002c76f       0xff ./Core/Src/sysmem.o
- .debug_macro   0x0002c86e      0x23c ./Core/Src/sysmem.o
- .debug_macro   0x0002caaa      0x1d5 ./Core/Src/system_stm32l4xx.o
- .debug_macro   0x0002cc7f      0x1ee ./Core/Src/usart.o
- .debug_macro   0x0002ce6d      0x223 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_macro   0x0002d090      0x1d5 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_macro   0x0002d265      0x1dc ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_macro   0x0002d441      0x1f9 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_macro   0x0002d63a      0x217 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_macro   0x0002d851      0x20b ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_macro   0x0002da5c      0x1dd ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_macro   0x0002dc39      0x1d6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
- .debug_macro   0x0002de0f      0x1d5 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
- .debug_macro   0x0002dfe4      0x200 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_macro   0x0002e1e4      0x212 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_macro   0x0002e3f6       0x10 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_macro   0x0002e406       0xe9 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_macro   0x0002e4ef      0x199 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_macro   0x0002e688      0x228 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_macro   0x0002e8b0       0x87 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_macro   0x0002e937      0x2bf ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_macro   0x0002ebf6       0x10 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_macro   0x0002ec06      0x233 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
- .debug_macro   0x0002ee39      0x1c0 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+.debug_macro    0x00000000    0x2ef77
+ .debug_macro   0x00000000      0x4e7 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000004e7      0xab4 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00000f9b      0x1ad ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00001148       0x2e ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00001176       0x28 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0000119e       0x22 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000011c0       0x8e ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0000124e       0x51 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0000129f      0x103 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000013a2       0x6a ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0000140c      0x1df ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000015eb       0x1c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00001607       0x22 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00001629       0xfb ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00001724     0x1011 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00002735      0x11f ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00002854    0x1a17a ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0001c9ce       0x6d ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0001ca3b     0x38e6 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00020321      0x189 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000204aa       0x5c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00020506     0x159e ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00021aa4      0x5a5 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022049      0x1b9 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022202      0x18b ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002238d      0x26b ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000225f8      0x23d ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022835      0x241 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022a76      0x37c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022df2       0xd6 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022ec8      0x122 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00022fea      0x3ef ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000233d9      0x2fe ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000236d7      0xa98 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002416f      0x1e6 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024355      0x5cf ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024924       0x44 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024968      0x330 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024c98       0xb2 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024d4a       0x61 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024dab       0x2a ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024dd5       0x43 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024e18       0x34 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024e4c       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024e62       0x35 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00024e97      0x369 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025200       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025210       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025226       0x43 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025269       0x34 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002529d       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000252ad       0x58 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025305       0x8e ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025393       0x1c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000253af      0x177 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025526       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002553c       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025552      0x146 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025698       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000256ae       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000256c4       0x29 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000256ed       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025703       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025713       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025723       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025733       0x1c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002574f       0x52 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000257a1       0x22 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000257c3       0x10 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000257d3       0x52 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025825       0xc1 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000258e6       0x1c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025902       0x3d ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002593f       0x35 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025974       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x0002598a       0x20 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000259aa       0x3a ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000259e4      0x469 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025e4d      0x112 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00025f5f      0x15a ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000260b9       0xde ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026197       0x1c ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000261b3       0x26 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000261d9       0x16 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000261ef      0x4e2 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000266d1       0xb5 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026786       0xaa ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026830       0x22 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026852       0x91 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000268e3       0x8d ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026970       0x7e ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x000269ee       0xf2 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026ae0       0x34 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026b14       0x22 ./Core/Src/GNSS/GNSSCom.o
+ .debug_macro   0x00026b36      0x539 ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x0002706f       0x5b ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x000270ca       0x94 ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x0002715e       0x57 ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x000271b5       0x9e ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x00027253      0x10b ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x0002735e       0x4c ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x000273aa      0x112 ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x000274bc       0x56 ./Core/Src/GNSS/debug_formatter.o
+ .debug_macro   0x00027512      0x503 ./Core/Src/GNSS/debug_getter.o
+ .debug_macro   0x00027a15      0x53d ./Core/Src/GNSS/debug_utils.o
+ .debug_macro   0x00027f52      0x547 ./Core/Src/GNSS/traductor.o
+ .debug_macro   0x00028499      0x543 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+ .debug_macro   0x000289dc      0x543 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+ .debug_macro   0x00028f1f      0x401 ./Core/Src/LORA/LORACom.o
+ .debug_macro   0x00029320       0x34 ./Core/Src/LORA/LORACom.o
+ .debug_macro   0x00029354      0x505 ./Core/Src/LORA/RFM9x.o
+ .debug_macro   0x00029859      0x4e4 ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_macro   0x00029d3d       0x10 ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_macro   0x00029d4d       0x1c ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_macro   0x00029d69       0x1c ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_macro   0x00029d85      0x56e ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+ .debug_macro   0x0002a2f3      0x55a ./Core/Src/RTOS_subfunctions/senderLoRA.o
+ .debug_macro   0x0002a84d      0x586 ./Core/Src/freertos.o
+ .debug_macro   0x0002add3      0x1ee ./Core/Src/gpio.o
+ .debug_macro   0x0002afc1      0x4f6 ./Core/Src/main.o
+ .debug_macro   0x0002b4b7      0x1ee ./Core/Src/spi.o
+ .debug_macro   0x0002b6a5      0x1e4 ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_macro   0x0002b889      0x1d5 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_macro   0x0002ba5e      0x340 ./Core/Src/stm32l4xx_it.o
+ .debug_macro   0x0002bd9e      0x274 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c012       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c022       0xcf ./Core/Src/syscalls.o
+ .debug_macro   0x0002c0f1      0x12c ./Core/Src/syscalls.o
+ .debug_macro   0x0002c21d       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c22d      0x242 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c46f       0x10 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c47f      0x18a ./Core/Src/syscalls.o
+ .debug_macro   0x0002c609       0x16 ./Core/Src/syscalls.o
+ .debug_macro   0x0002c61f       0xce ./Core/Src/syscalls.o
+ .debug_macro   0x0002c6ed       0xff ./Core/Src/sysmem.o
+ .debug_macro   0x0002c7ec      0x23c ./Core/Src/sysmem.o
+ .debug_macro   0x0002ca28      0x1d5 ./Core/Src/system_stm32l4xx.o
+ .debug_macro   0x0002cbfd      0x1ee ./Core/Src/usart.o
+ .debug_macro   0x0002cdeb      0x223 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_macro   0x0002d00e      0x1d5 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_macro   0x0002d1e3      0x1dc ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_macro   0x0002d3bf      0x1f9 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_macro   0x0002d5b8      0x217 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_macro   0x0002d7cf      0x20b ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_macro   0x0002d9da      0x1dd ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_macro   0x0002dbb7      0x1d6 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_macro   0x0002dd8d      0x1d5 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_macro   0x0002df62      0x200 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_macro   0x0002e162      0x212 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_macro   0x0002e374       0x10 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_macro   0x0002e384       0xe9 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_macro   0x0002e46d      0x199 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_macro   0x0002e606      0x228 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_macro   0x0002e82e       0x87 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_macro   0x0002e8b5      0x2bf ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_macro   0x0002eb74       0x10 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_macro   0x0002eb84      0x233 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_macro   0x0002edb7      0x1c0 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_line     0x00000000    0x27010
- .debug_line    0x00000000      0xce5 ./Core/Src/GNSS/GNSSCom.o
- .debug_line    0x00000ce5      0xcfc ./Core/Src/GNSS/debug_formatter.o
- .debug_line    0x000019e1      0xf5b ./Core/Src/GNSS/debug_getter.o
- .debug_line    0x0000293c      0xd54 ./Core/Src/GNSS/debug_utils.o
- .debug_line    0x00003690      0xcb2 ./Core/Src/GNSS/traductor.o
- .debug_line    0x00004342     0x1244 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .debug_line    0x00005586      0xdd4 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .debug_line    0x0000635a      0xa14 ./Core/Src/LORA/LORACom.o
- .debug_line    0x00006d6e      0xedc ./Core/Src/LORA/RFM9x.o
- .debug_line    0x00007c4a      0xd64 ./Core/Src/RTOS_subfunctions/debug.o
- .debug_line    0x000089ae      0xf06 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .debug_line    0x000098b4      0xcfb ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .debug_line    0x0000a5af      0xe23 ./Core/Src/freertos.o
- .debug_line    0x0000b3d2      0x7bf ./Core/Src/gpio.o
- .debug_line    0x0000bb91      0xc8f ./Core/Src/main.o
- .debug_line    0x0000c820      0x80b ./Core/Src/spi.o
- .debug_line    0x0000d02b      0x781 ./Core/Src/stm32l4xx_hal_msp.o
- .debug_line    0x0000d7ac      0x7ed ./Core/Src/stm32l4xx_hal_timebase_tim.o
- .debug_line    0x0000df99      0xb0f ./Core/Src/stm32l4xx_it.o
- .debug_line    0x0000eaa8      0x8b2 ./Core/Src/syscalls.o
- .debug_line    0x0000f35a      0x583 ./Core/Src/sysmem.o
- .debug_line    0x0000f8dd      0x81b ./Core/Src/system_stm32l4xx.o
- .debug_line    0x000100f8      0x802 ./Core/Src/usart.o
- .debug_line    0x000108fa       0x7a ./Core/Startup/startup_stm32l476rgtx.o
- .debug_line    0x00010974      0xb77 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_line    0x000114eb      0xd15 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_line    0x00012200      0xc02 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_line    0x00012e02      0xd68 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_line    0x00013b6a      0xfed ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_line    0x00014b57     0x1561 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_line    0x000160b8     0x2028 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_line    0x000180e0     0x3e6e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
- .debug_line    0x0001bf4e     0x1c7f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
- .debug_line    0x0001dbcd     0x3260 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_line    0x00020e2d     0x1291 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_line    0x000220be      0x7a1 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_line    0x0002285f     0x156d ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_line    0x00023dcc     0x1f0e ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_line    0x00025cda      0x96a ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
- .debug_line    0x00026644      0x9cc ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+.debug_line     0x00000000    0x26f52
+ .debug_line    0x00000000      0xcc3 ./Core/Src/GNSS/GNSSCom.o
+ .debug_line    0x00000cc3      0xcef ./Core/Src/GNSS/debug_formatter.o
+ .debug_line    0x000019b2      0xf4e ./Core/Src/GNSS/debug_getter.o
+ .debug_line    0x00002900      0xd47 ./Core/Src/GNSS/debug_utils.o
+ .debug_line    0x00003647      0xca5 ./Core/Src/GNSS/traductor.o
+ .debug_line    0x000042ec     0x1237 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+ .debug_line    0x00005523      0xdc7 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+ .debug_line    0x000062ea      0xa14 ./Core/Src/LORA/LORACom.o
+ .debug_line    0x00006cfe      0xecf ./Core/Src/LORA/RFM9x.o
+ .debug_line    0x00007bcd      0xd57 ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_line    0x00008924      0xef9 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+ .debug_line    0x0000981d      0xcee ./Core/Src/RTOS_subfunctions/senderLoRA.o
+ .debug_line    0x0000a50b      0xe16 ./Core/Src/freertos.o
+ .debug_line    0x0000b321      0x7bf ./Core/Src/gpio.o
+ .debug_line    0x0000bae0      0xc82 ./Core/Src/main.o
+ .debug_line    0x0000c762      0x80b ./Core/Src/spi.o
+ .debug_line    0x0000cf6d      0x781 ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_line    0x0000d6ee      0x7ed ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_line    0x0000dedb      0xb0f ./Core/Src/stm32l4xx_it.o
+ .debug_line    0x0000e9ea      0x8b2 ./Core/Src/syscalls.o
+ .debug_line    0x0000f29c      0x583 ./Core/Src/sysmem.o
+ .debug_line    0x0000f81f      0x81b ./Core/Src/system_stm32l4xx.o
+ .debug_line    0x0001003a      0x802 ./Core/Src/usart.o
+ .debug_line    0x0001083c       0x7a ./Core/Startup/startup_stm32l476rgtx.o
+ .debug_line    0x000108b6      0xb77 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_line    0x0001142d      0xd15 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_line    0x00012142      0xc02 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_line    0x00012d44      0xd68 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_line    0x00013aac      0xfed ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_line    0x00014a99     0x1561 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_line    0x00015ffa     0x2028 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_line    0x00018022     0x3e6e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_line    0x0001be90     0x1c7f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_line    0x0001db0f     0x3260 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_line    0x00020d6f     0x1291 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_line    0x00022000      0x7a1 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_line    0x000227a1     0x156d ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_line    0x00023d0e     0x1f0e ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_line    0x00025c1c      0x96a ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_line    0x00026586      0x9cc ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_str      0x00000000   0x101e73
- .debug_str     0x00000000    0xf7854 ./Core/Src/GNSS/GNSSCom.o
-                              0xf7bac (size before relaxing)
- .debug_str     0x000f7854      0x2a7 ./Core/Src/GNSS/debug_formatter.o
-                              0xf65e8 (size before relaxing)
- .debug_str     0x000f7afb       0xdf ./Core/Src/GNSS/debug_getter.o
-                              0xf6558 (size before relaxing)
- .debug_str     0x000f7bda       0x84 ./Core/Src/GNSS/debug_utils.o
-                              0xf6625 (size before relaxing)
- .debug_str     0x000f7c5e      0x273 ./Core/Src/GNSS/traductor.o
-                              0xf6854 (size before relaxing)
- .debug_str     0x000f7ed1       0xe2 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
-                              0xf6925 (size before relaxing)
- .debug_str     0x000f7fb3       0x2b ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
-                              0xf681c (size before relaxing)
- .debug_str     0x000f7fde      0x1e5 ./Core/Src/LORA/LORACom.o
+.debug_str      0x00000000   0x101db2
+ .debug_str     0x00000000    0xf7793 ./Core/Src/GNSS/GNSSCom.o
+                              0xf7ae6 (size before relaxing)
+ .debug_str     0x000f7793      0x2a7 ./Core/Src/GNSS/debug_formatter.o
+                              0xf6556 (size before relaxing)
+ .debug_str     0x000f7a3a       0xdf ./Core/Src/GNSS/debug_getter.o
+                              0xf64c6 (size before relaxing)
+ .debug_str     0x000f7b19       0x84 ./Core/Src/GNSS/debug_utils.o
+                              0xf6593 (size before relaxing)
+ .debug_str     0x000f7b9d      0x273 ./Core/Src/GNSS/traductor.o
+                              0xf67c2 (size before relaxing)
+ .debug_str     0x000f7e10       0xe2 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+                              0xf6893 (size before relaxing)
+ .debug_str     0x000f7ef2       0x2b ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+                              0xf678a (size before relaxing)
+ .debug_str     0x000f7f1d      0x1e5 ./Core/Src/LORA/LORACom.o
                               0xf1adb (size before relaxing)
- .debug_str     0x000f81c3      0x29b ./Core/Src/LORA/RFM9x.o
-                              0xf7ee7 (size before relaxing)
- .debug_str     0x000f845e      0x224 ./Core/Src/RTOS_subfunctions/debug.o
-                              0xf6b10 (size before relaxing)
- .debug_str     0x000f8682      0x1b3 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
-                              0xf7c65 (size before relaxing)
- .debug_str     0x000f8835       0x99 ./Core/Src/RTOS_subfunctions/senderLoRA.o
-                              0xf7940 (size before relaxing)
- .debug_str     0x000f88ce      0xa32 ./Core/Src/freertos.o
-                              0xf8b3e (size before relaxing)
- .debug_str     0x000f9300      0x5e3 ./Core/Src/gpio.o
+ .debug_str     0x000f8102      0x29b ./Core/Src/LORA/RFM9x.o
+                              0xf7e55 (size before relaxing)
+ .debug_str     0x000f839d      0x224 ./Core/Src/RTOS_subfunctions/debug.o
+                              0xf6a7e (size before relaxing)
+ .debug_str     0x000f85c1      0x1b3 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+                              0xf7bd3 (size before relaxing)
+ .debug_str     0x000f8774       0x99 ./Core/Src/RTOS_subfunctions/senderLoRA.o
+                              0xf78ae (size before relaxing)
+ .debug_str     0x000f880d      0xa32 ./Core/Src/freertos.o
+                              0xf8aac (size before relaxing)
+ .debug_str     0x000f923f      0x5e3 ./Core/Src/gpio.o
                               0xec5f4 (size before relaxing)
- .debug_str     0x000f98e3      0x4c5 ./Core/Src/main.o
-                              0xf6bc1 (size before relaxing)
- .debug_str     0x000f9da8       0x5b ./Core/Src/spi.o
+ .debug_str     0x000f9822      0x4c5 ./Core/Src/main.o
+                              0xf6b1d (size before relaxing)
+ .debug_str     0x000f9ce7       0x5b ./Core/Src/spi.o
                               0xec50d (size before relaxing)
- .debug_str     0x000f9e03       0x2c ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_str     0x000f9d42       0x2c ./Core/Src/stm32l4xx_hal_msp.o
                               0xec511 (size before relaxing)
- .debug_str     0x000f9e2f       0xf7 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_str     0x000f9d6e       0xf7 ./Core/Src/stm32l4xx_hal_timebase_tim.o
                               0xec8be (size before relaxing)
- .debug_str     0x000f9f26      0x1c3 ./Core/Src/stm32l4xx_it.o
+ .debug_str     0x000f9e65      0x1c3 ./Core/Src/stm32l4xx_it.o
                               0xf4143 (size before relaxing)
- .debug_str     0x000fa0e9     0x13fa ./Core/Src/syscalls.o
+ .debug_str     0x000fa028     0x13fa ./Core/Src/syscalls.o
                                0x98b9 (size before relaxing)
- .debug_str     0x000fb4e3       0x6b ./Core/Src/sysmem.o
+ .debug_str     0x000fb422       0x6b ./Core/Src/sysmem.o
                                0x60d1 (size before relaxing)
- .debug_str     0x000fb54e       0xf2 ./Core/Src/system_stm32l4xx.o
+ .debug_str     0x000fb48d       0xf2 ./Core/Src/system_stm32l4xx.o
                               0xebe1e (size before relaxing)
- .debug_str     0x000fb640      0x2c5 ./Core/Src/usart.o
+ .debug_str     0x000fb57f      0x2c5 ./Core/Src/usart.o
                               0xec80b (size before relaxing)
- .debug_str     0x000fb905       0x44 ./Core/Startup/startup_stm32l476rgtx.o
+ .debug_str     0x000fb844       0x44 ./Core/Startup/startup_stm32l476rgtx.o
                                  0x84 (size before relaxing)
- .debug_str     0x000fb949      0x652 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_str     0x000fb888      0x652 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
                               0xeca1d (size before relaxing)
- .debug_str     0x000fbf9b      0x31e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_str     0x000fbeda      0x31e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
                               0xec665 (size before relaxing)
- .debug_str     0x000fc2b9       0xb0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_str     0x000fc1f8       0xb0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
                               0xebf97 (size before relaxing)
- .debug_str     0x000fc369      0x4e3 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_str     0x000fc2a8      0x4e3 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
                               0xec379 (size before relaxing)
- .debug_str     0x000fc84c      0x30f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_str     0x000fc78b      0x30f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
                               0xec464 (size before relaxing)
- .debug_str     0x000fcb5b      0x3bf ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_str     0x000fca9a      0x3bf ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
                               0xec5dd (size before relaxing)
- .debug_str     0x000fcf1a      0x58f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_str     0x000fce59      0x58f ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
                               0xec63f (size before relaxing)
- .debug_str     0x000fd4a9      0xe7e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_str     0x000fd3e8      0xe7e ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
                               0xed15e (size before relaxing)
- .debug_str     0x000fe327      0x60d ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_str     0x000fe266      0x60d ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
                               0xeca72 (size before relaxing)
- .debug_str     0x000fe934      0x881 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_str     0x000fe873      0x881 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
                               0xecb76 (size before relaxing)
- .debug_str     0x000ff1b5      0x7b1 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_str     0x000ff0f4      0x7b1 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
                                0xeb13 (size before relaxing)
- .debug_str     0x000ff966      0x12d ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_str     0x000ff8a5      0x12d ./Middlewares/Third_Party/FreeRTOS/Source/list.o
                                0xab71 (size before relaxing)
- .debug_str     0x000ffa93      0x822 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_str     0x000ff9d2      0x822 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
                                0xc563 (size before relaxing)
- .debug_str     0x001002b5     0x11f1 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_str     0x001001f4     0x11f1 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
                                0xdbb3 (size before relaxing)
- .debug_str     0x001014a6      0x783 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_str     0x001013e5      0x783 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
                                0xa325 (size before relaxing)
- .debug_str     0x00101c29      0x24a ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_str     0x00101b68      0x24a ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
                                0xb4b3 (size before relaxing)
 
 .comment        0x00000000       0x43
@@ -9974,104 +9788,104 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x00000043       0x44 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
  .comment       0x00000043       0x44 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_frame    0x00000000     0x7e18
- .debug_frame   0x00000000       0xd0 ./Core/Src/GNSS/GNSSCom.o
- .debug_frame   0x000000d0       0x48 ./Core/Src/GNSS/debug_formatter.o
- .debug_frame   0x00000118      0x140 ./Core/Src/GNSS/debug_getter.o
- .debug_frame   0x00000258       0x94 ./Core/Src/GNSS/debug_utils.o
- .debug_frame   0x000002ec       0x34 ./Core/Src/GNSS/traductor.o
- .debug_frame   0x00000320       0x88 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
- .debug_frame   0x000003a8       0x8c ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
- .debug_frame   0x00000434       0x38 ./Core/Src/LORA/LORACom.o
- .debug_frame   0x0000046c      0x1fc ./Core/Src/LORA/RFM9x.o
- .debug_frame   0x00000668      0x110 ./Core/Src/RTOS_subfunctions/debug.o
- .debug_frame   0x00000778       0xd4 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
- .debug_frame   0x0000084c       0x34 ./Core/Src/RTOS_subfunctions/senderLoRA.o
- .debug_frame   0x00000880      0x134 ./Core/Src/freertos.o
- .debug_frame   0x000009b4       0x34 ./Core/Src/gpio.o
- .debug_frame   0x000009e8       0x90 ./Core/Src/main.o
- .debug_frame   0x00000a78       0x74 ./Core/Src/spi.o
- .debug_frame   0x00000aec       0x34 ./Core/Src/stm32l4xx_hal_msp.o
- .debug_frame   0x00000b20       0x74 ./Core/Src/stm32l4xx_hal_timebase_tim.o
- .debug_frame   0x00000b94       0xec ./Core/Src/stm32l4xx_it.o
- .debug_frame   0x00000c80      0x2ac ./Core/Src/syscalls.o
- .debug_frame   0x00000f2c       0x34 ./Core/Src/sysmem.o
- .debug_frame   0x00000f60       0x58 ./Core/Src/system_stm32l4xx.o
- .debug_frame   0x00000fb8       0x78 ./Core/Src/usart.o
- .debug_frame   0x00001030      0x498 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
- .debug_frame   0x000014c8      0x498 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- .debug_frame   0x00001960      0x14c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- .debug_frame   0x00001aac      0x584 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- .debug_frame   0x00002030      0x21c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .debug_frame   0x0000224c      0x2fc ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- .debug_frame   0x00002548      0x860 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .debug_frame   0x00002da8     0x1218 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
- .debug_frame   0x00003fc0      0x6b0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
- .debug_frame   0x00004670      0x9f4 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- .debug_frame   0x00005064      0x804 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_frame   0x00005868       0xd8 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_frame   0x00005940      0x4e4 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_frame   0x00005e24      0x914 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_frame   0x00006738      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
- .debug_frame   0x000068e0      0x12c ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
- .debug_frame   0x00006a0c       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-itoa.o)
- .debug_frame   0x00006a44       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-utoa.o)
- .debug_frame   0x00006a8c       0x90 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
- .debug_frame   0x00006b1c       0x60 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_i.o)
- .debug_frame   0x00006b7c      0x144 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
- .debug_frame   0x00006cc0       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fwalk.o)
- .debug_frame   0x00006cf4       0x6c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-printf.o)
- .debug_frame   0x00006d60       0x7c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-snprintf.o)
- .debug_frame   0x00006ddc       0x6c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sprintf.o)
- .debug_frame   0x00006e48       0x88 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-stdio.o)
- .debug_frame   0x00006ed0       0x4c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-vsnprintf.o)
- .debug_frame   0x00006f1c       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
- .debug_frame   0x00006f3c       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strncpy.o)
- .debug_frame   0x00006f64       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-localeconv.o)
- .debug_frame   0x00006fa4       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-closer.o)
- .debug_frame   0x00006fd0       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-reent.o)
- .debug_frame   0x00007008       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lseekr.o)
- .debug_frame   0x00007034       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-readr.o)
- .debug_frame   0x00007060       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-writer.o)
- .debug_frame   0x0000708c       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-errno.o)
- .debug_frame   0x000070ac       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
- .debug_frame   0x000070d8       0xb0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lock.o)
- .debug_frame   0x00007188       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strcpy.o)
- .debug_frame   0x000071a8       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
- .debug_frame   0x000071d0       0x70 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-dtoa.o)
- .debug_frame   0x00007240       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
- .debug_frame   0x00007278       0x30 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-malloc.o)
- .debug_frame   0x000072a8       0x50 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mallocr.o)
- .debug_frame   0x000072f8       0x30 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mlock.o)
- .debug_frame   0x00007328      0x260 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
- .debug_frame   0x00007588       0x90 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-svfprintf.o)
- .debug_frame   0x00007618       0xa8 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf.o)
- .debug_frame   0x000076c0       0x5c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fflush.o)
- .debug_frame   0x0000771c       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wbuf.o)
- .debug_frame   0x0000775c       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wsetup.o)
- .debug_frame   0x00007788       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memmove.o)
- .debug_frame   0x000077b0       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
- .debug_frame   0x000077f8       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sbrkr.o)
- .debug_frame   0x00007824       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-assert.o)
- .debug_frame   0x00007864       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-callocr.o)
- .debug_frame   0x00007890       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mbtowc_r.o)
- .debug_frame   0x000078d8       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-reallocr.o)
- .debug_frame   0x00007914       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wctomb_r.o)
- .debug_frame   0x00007950       0x64 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fprintf.o)
- .debug_frame   0x000079b4       0x58 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-makebuf.o)
- .debug_frame   0x00007a0c       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fstatr.o)
- .debug_frame   0x00007a38       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-isattyr.o)
- .debug_frame   0x00007a64       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-abort.o)
- .debug_frame   0x00007a8c       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-msizer.o)
- .debug_frame   0x00007aac       0xcc C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-signal.o)
- .debug_frame   0x00007b78       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-signalr.o)
- .debug_frame   0x00007bb4       0xac C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x00007c60       0x50 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
- .debug_frame   0x00007cb0       0xc4 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_cmpdf2.o)
- .debug_frame   0x00007d74       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_unorddf2.o)
- .debug_frame   0x00007d94       0x24 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixdfsi.o)
- .debug_frame   0x00007db8       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x00007de4       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
+.debug_frame    0x00000000     0x7df0
+ .debug_frame   0x00000000       0xa8 ./Core/Src/GNSS/GNSSCom.o
+ .debug_frame   0x000000a8       0x48 ./Core/Src/GNSS/debug_formatter.o
+ .debug_frame   0x000000f0      0x140 ./Core/Src/GNSS/debug_getter.o
+ .debug_frame   0x00000230       0x94 ./Core/Src/GNSS/debug_utils.o
+ .debug_frame   0x000002c4       0x34 ./Core/Src/GNSS/traductor.o
+ .debug_frame   0x000002f8       0x88 ./Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o
+ .debug_frame   0x00000380       0x8c ./Core/Src/GNSS/UBX_NAV/UBX_NAV_TIMEUTC.o
+ .debug_frame   0x0000040c       0x38 ./Core/Src/LORA/LORACom.o
+ .debug_frame   0x00000444      0x1fc ./Core/Src/LORA/RFM9x.o
+ .debug_frame   0x00000640      0x110 ./Core/Src/RTOS_subfunctions/debug.o
+ .debug_frame   0x00000750       0xd4 ./Core/Src/RTOS_subfunctions/receiverLoRA.o
+ .debug_frame   0x00000824       0x34 ./Core/Src/RTOS_subfunctions/senderLoRA.o
+ .debug_frame   0x00000858      0x134 ./Core/Src/freertos.o
+ .debug_frame   0x0000098c       0x34 ./Core/Src/gpio.o
+ .debug_frame   0x000009c0       0x90 ./Core/Src/main.o
+ .debug_frame   0x00000a50       0x74 ./Core/Src/spi.o
+ .debug_frame   0x00000ac4       0x34 ./Core/Src/stm32l4xx_hal_msp.o
+ .debug_frame   0x00000af8       0x74 ./Core/Src/stm32l4xx_hal_timebase_tim.o
+ .debug_frame   0x00000b6c       0xec ./Core/Src/stm32l4xx_it.o
+ .debug_frame   0x00000c58      0x2ac ./Core/Src/syscalls.o
+ .debug_frame   0x00000f04       0x34 ./Core/Src/sysmem.o
+ .debug_frame   0x00000f38       0x58 ./Core/Src/system_stm32l4xx.o
+ .debug_frame   0x00000f90       0x78 ./Core/Src/usart.o
+ .debug_frame   0x00001008      0x498 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o
+ .debug_frame   0x000014a0      0x498 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ .debug_frame   0x00001938      0x14c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ .debug_frame   0x00001a84      0x584 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ .debug_frame   0x00002008      0x21c ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .debug_frame   0x00002224      0x2fc ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ .debug_frame   0x00002520      0x860 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .debug_frame   0x00002d80     0x1218 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.o
+ .debug_frame   0x00003f98      0x6b0 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.o
+ .debug_frame   0x00004648      0x9f4 ./Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ .debug_frame   0x0000503c      0x804 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_frame   0x00005840       0xd8 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_frame   0x00005918      0x4e4 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_frame   0x00005dfc      0x914 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_frame   0x00006710      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
+ .debug_frame   0x000068b8      0x12c ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_frame   0x000069e4       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-itoa.o)
+ .debug_frame   0x00006a1c       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-utoa.o)
+ .debug_frame   0x00006a64       0x90 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
+ .debug_frame   0x00006af4       0x60 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_i.o)
+ .debug_frame   0x00006b54      0x144 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
+ .debug_frame   0x00006c98       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fwalk.o)
+ .debug_frame   0x00006ccc       0x6c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-printf.o)
+ .debug_frame   0x00006d38       0x7c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-snprintf.o)
+ .debug_frame   0x00006db4       0x6c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sprintf.o)
+ .debug_frame   0x00006e20       0x88 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-stdio.o)
+ .debug_frame   0x00006ea8       0x4c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-vsnprintf.o)
+ .debug_frame   0x00006ef4       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memset.o)
+ .debug_frame   0x00006f14       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strncpy.o)
+ .debug_frame   0x00006f3c       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-localeconv.o)
+ .debug_frame   0x00006f7c       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-closer.o)
+ .debug_frame   0x00006fa8       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-reent.o)
+ .debug_frame   0x00006fe0       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lseekr.o)
+ .debug_frame   0x0000700c       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-readr.o)
+ .debug_frame   0x00007038       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-writer.o)
+ .debug_frame   0x00007064       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-errno.o)
+ .debug_frame   0x00007084       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-init.o)
+ .debug_frame   0x000070b0       0xb0 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-lock.o)
+ .debug_frame   0x00007160       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strcpy.o)
+ .debug_frame   0x00007180       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .debug_frame   0x000071a8       0x70 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-dtoa.o)
+ .debug_frame   0x00007218       0x38 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-freer.o)
+ .debug_frame   0x00007250       0x30 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-malloc.o)
+ .debug_frame   0x00007280       0x50 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mallocr.o)
+ .debug_frame   0x000072d0       0x30 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mlock.o)
+ .debug_frame   0x00007300      0x260 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+ .debug_frame   0x00007560       0x90 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-svfprintf.o)
+ .debug_frame   0x000075f0       0xa8 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf.o)
+ .debug_frame   0x00007698       0x5c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fflush.o)
+ .debug_frame   0x000076f4       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wbuf.o)
+ .debug_frame   0x00007734       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wsetup.o)
+ .debug_frame   0x00007760       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-memmove.o)
+ .debug_frame   0x00007788       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
+ .debug_frame   0x000077d0       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-sbrkr.o)
+ .debug_frame   0x000077fc       0x40 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-assert.o)
+ .debug_frame   0x0000783c       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-callocr.o)
+ .debug_frame   0x00007868       0x48 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mbtowc_r.o)
+ .debug_frame   0x000078b0       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-reallocr.o)
+ .debug_frame   0x000078ec       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-wctomb_r.o)
+ .debug_frame   0x00007928       0x64 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fprintf.o)
+ .debug_frame   0x0000798c       0x58 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-makebuf.o)
+ .debug_frame   0x000079e4       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-fstatr.o)
+ .debug_frame   0x00007a10       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-isattyr.o)
+ .debug_frame   0x00007a3c       0x28 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-abort.o)
+ .debug_frame   0x00007a64       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-msizer.o)
+ .debug_frame   0x00007a84       0xcc C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-signal.o)
+ .debug_frame   0x00007b50       0x3c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-signalr.o)
+ .debug_frame   0x00007b8c       0xac C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x00007c38       0x50 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_muldivdf3.o)
+ .debug_frame   0x00007c88       0xc4 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_cmpdf2.o)
+ .debug_frame   0x00007d4c       0x20 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_unorddf2.o)
+ .debug_frame   0x00007d6c       0x24 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_arm_fixdfsi.o)
+ .debug_frame   0x00007d90       0x2c C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x00007dbc       0x34 C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.100.202403111256/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
 
 .debug_line_str
                 0x00000000       0x68

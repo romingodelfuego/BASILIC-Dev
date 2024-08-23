@@ -50,7 +50,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/gpio.h ../Core/Inc/RTOS_subfunctions/RTOS_extern.h \
  ../Core/Inc/RTOS_subfunctions/debug.h \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h ../Core/Inc/shared.h \
- ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/GNSS/command.h
+ ../Core/Inc/GNSS/GNSSCom.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -108,4 +108,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/RTOS_subfunctions/RTOS_extern.h:
 ../Core/Inc/shared.h:
 ../Core/Inc/GNSS/GNSSCom.h:
-../Core/Inc/GNSS/command.h:

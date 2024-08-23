@@ -1,5 +1,4 @@
-../Core/Src/GNSS/GNSSCom.c:18:6:GNSSCom_Init	16	static
-../Core/Src/GNSS/GNSSCom.c:25:16:initializeBuffer	24	static
-../Core/Src/GNSS/GNSSCom.c:40:6:resizeBuffer	16	static
-../Core/Src/GNSS/GNSSCom.c:47:6:freeBuffer	16	static
-../Core/Src/GNSS/GNSSCom.c:52:6:GNSSCom_MessageAdapter	48	static
+../Core/Src/GNSS/GNSSCom.c:16:6:GNSSCom_Init	16	static
+../Core/Src/GNSS/GNSSCom.c:21:16:initializeBuffer	24	static
+../Core/Src/GNSS/GNSSCom.c:37:6:freeBuffer	16	static
+../Core/Src/GNSS/GNSSCom.c:42:6:GNSSCom_MessageAdapter	48	static

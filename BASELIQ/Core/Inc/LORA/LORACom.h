@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <stdint.h> // Incluez les bibliothèques standard nécessaires
+#include <stdint.h>
 #include "spi.h"
 #include "usart.h"
 #include "shared.h"
@@ -23,12 +23,10 @@
 //WHO AM I
 #define MODULE_SOURCE_ADDRESS 0x02
 #define MODULE_BROADCAST_ADDRESS 0xFF
-// PAQUE TYPE
-#define PACKET_TYPE_DATA 0x01
-#define PACKET_TYPE_ACK  0x02
-#define PACKET_TYPE_POLL 0x03
-
-#define MAX_SPI_SIZE 300
+// PAQUET TYPE
+#define PACKET_TYPE_DATA 0x01 //Unuse
+#define PACKET_TYPE_ACK  0x02 //Unuse
+#define PACKET_TYPE_POLL 0x03 // only one use
 
 typedef struct {
 	SPI_HandleTypeDef* hspi;

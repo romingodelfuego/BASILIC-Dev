@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00010298  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00021b08  00000000  00000000  000102c8  2**0
+ 12 .debug_info   00020e73  00000000  00000000  000102c8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 000053cc  00000000  00000000  00031dd0  2**0
+ 13 .debug_abbrev 00005353  00000000  00000000  0003113b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00001a60  00000000  00000000  000371a0  2**3
+ 14 .debug_aranges 00001a58  00000000  00000000  00036490  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00001440  00000000  00000000  00038c00  2**0
+ 15 .debug_rnglists 0000143a  00000000  00000000  00037ee8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0002eff9  00000000  00000000  0003a040  2**0
+ 16 .debug_macro  0002ef77  00000000  00000000  00039322  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00027010  00000000  00000000  00069039  2**0
+ 17 .debug_line   00026f52  00000000  00000000  00068299  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00101e73  00000000  00000000  00090049  2**0
+ 18 .debug_str    00101db2  00000000  00000000  0008f1eb  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00191ebc  2**0
+ 19 .comment      00000043  00000000  00000000  00190f9d  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00007e18  00000000  00000000  00191f00  2**2
+ 20 .debug_frame  00007df0  00000000  00000000  00190fe0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000068  00000000  00000000  00199d18  2**0
+ 21 .debug_line_str 00000068  00000000  00000000  00198dd0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1201,11 +1201,11 @@ Disassembly of section .text:
  8000e96:	bf00      	nop
 
 08000e98 <initializeBuffer>:
+void GNSSCom_Init(UART_HandleTypeDef* huart,UART_HandleTypeDef* huartDebug){
+	hGNSSCom.huart = huart;
 	hGNSSCom.huartDebug = huartDebug;
-
-	//hGNSSCom.Rx = initializeBuffer(UART_RX_BUFFER_SIZE);
-
 }
+
 DynamicBuffer* initializeBuffer(size_t initialSize) {
  8000e98:	b580      	push	{r7, lr}
  8000e9a:	b084      	sub	sp, #16
@@ -1256,11 +1256,7 @@ DynamicBuffer* initializeBuffer(size_t initialSize) {
  8000ede:	bd80      	pop	{r7, pc}
 
 08000ee0 <freeBuffer>:
-	if (newData != NULL) {
-		bufferDynamic->buffer = newData;
-		bufferDynamic->size = newSize;
-	}*/
-}
+
 void freeBuffer(DynamicBuffer *bufferDynamic) {
  8000ee0:	b580      	push	{r7, lr}
  8000ee2:	b082      	sub	sp, #8
@@ -1293,14 +1289,14 @@ void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* generi
  8000f0c:	68fb      	ldr	r3, [r7, #12]
  8000f0e:	781b      	ldrb	r3, [r3, #0]
  8000f10:	2bb5      	cmp	r3, #181	@ 0xb5
- 8000f12:	d13d      	bne.n	8000f90 <GNSSCom_MessageAdapter+0x90>
+ 8000f12:	d13b      	bne.n	8000f8c <GNSSCom_MessageAdapter+0x8c>
 				buffer[1] == HEADER_UBX_2 ){
  8000f14:	68fb      	ldr	r3, [r7, #12]
  8000f16:	3301      	adds	r3, #1
  8000f18:	781b      	ldrb	r3, [r3, #0]
 		if (buffer[0] == HEADER_UBX_1 &&
  8000f1a:	2b62      	cmp	r3, #98	@ 0x62
- 8000f1c:	d138      	bne.n	8000f90 <GNSSCom_MessageAdapter+0x90>
+ 8000f1c:	d136      	bne.n	8000f8c <GNSSCom_MessageAdapter+0x8c>
 			genericMessage->typeMessage=UBX;
  8000f1e:	687b      	ldr	r3, [r7, #4]
  8000f20:	2202      	movs	r2, #2
@@ -1342,7 +1338,6 @@ void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* generi
  8000f60:	685b      	ldr	r3, [r3, #4]
  8000f62:	b292      	uxth	r2, r2
  8000f64:	805a      	strh	r2, [r3, #2]
-			//genericMessage->Message.UBXMessage->brute = (DynamicBuffer*)initializeBuffer(genericMessage->Message.UBXMessage->len_payload +8);
 			genericMessage->Message.UBXMessage->brute = (DynamicBuffer*)pvPortMalloc(sizeof(DynamicBuffer));
  8000f66:	687b      	ldr	r3, [r7, #4]
  8000f68:	685c      	ldr	r4, [r3, #4]
@@ -1361,582 +1356,580 @@ void GNSSCom_MessageAdapter(uint8_t* buffer,size_t* size, GenericMessage* generi
  8000f82:	605a      	str	r2, [r3, #4]
 			updateMemoryUsage();
  8000f84:	f001 ff8a 	bl	8002e9c <updateMemoryUsage>
-			//memcpy(genericMessage->Message.UBXMessage->brute->buffer, buffer , genericMessage->Message.UBXMessage->len_payload +8);
-			updateMemoryUsage();
- 8000f88:	f001 ff88 	bl	8002e9c <updateMemoryUsage>
 				buffer[1] == HEADER_UBX_2 ){
- 8000f8c:	bf00      	nop
+ 8000f88:	bf00      	nop
 		else if(buffer[0] == HEADER_NMEA) {
 			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) pvPortMalloc(sizeof(NMEAMessage_parsed));
 			genericMessage->typeMessage= NMEA;
 			genericMessage->Message.NMEAMessage = NMEAMessage;
 		}
 }
- 8000f8e:	e00d      	b.n	8000fac <GNSSCom_MessageAdapter+0xac>
+ 8000f8a:	e00d      	b.n	8000fa8 <GNSSCom_MessageAdapter+0xa8>
 		else if(buffer[0] == HEADER_NMEA) {
- 8000f90:	68fb      	ldr	r3, [r7, #12]
- 8000f92:	781b      	ldrb	r3, [r3, #0]
- 8000f94:	2b24      	cmp	r3, #36	@ 0x24
- 8000f96:	d109      	bne.n	8000fac <GNSSCom_MessageAdapter+0xac>
+ 8000f8c:	68fb      	ldr	r3, [r7, #12]
+ 8000f8e:	781b      	ldrb	r3, [r3, #0]
+ 8000f90:	2b24      	cmp	r3, #36	@ 0x24
+ 8000f92:	d109      	bne.n	8000fa8 <GNSSCom_MessageAdapter+0xa8>
 			NMEAMessage_parsed* NMEAMessage =(NMEAMessage_parsed*) pvPortMalloc(sizeof(NMEAMessage_parsed));
- 8000f98:	2004      	movs	r0, #4
- 8000f9a:	f009 fb5f 	bl	800a65c <pvPortMalloc>
- 8000f9e:	61f8      	str	r0, [r7, #28]
+ 8000f94:	2004      	movs	r0, #4
+ 8000f96:	f009 fb61 	bl	800a65c <pvPortMalloc>
+ 8000f9a:	61f8      	str	r0, [r7, #28]
 			genericMessage->typeMessage= NMEA;
- 8000fa0:	687b      	ldr	r3, [r7, #4]
- 8000fa2:	2201      	movs	r2, #1
- 8000fa4:	701a      	strb	r2, [r3, #0]
+ 8000f9c:	687b      	ldr	r3, [r7, #4]
+ 8000f9e:	2201      	movs	r2, #1
+ 8000fa0:	701a      	strb	r2, [r3, #0]
 			genericMessage->Message.NMEAMessage = NMEAMessage;
- 8000fa6:	687b      	ldr	r3, [r7, #4]
- 8000fa8:	69fa      	ldr	r2, [r7, #28]
- 8000faa:	605a      	str	r2, [r3, #4]
+ 8000fa2:	687b      	ldr	r3, [r7, #4]
+ 8000fa4:	69fa      	ldr	r2, [r7, #28]
+ 8000fa6:	605a      	str	r2, [r3, #4]
 }
- 8000fac:	bf00      	nop
- 8000fae:	3724      	adds	r7, #36	@ 0x24
- 8000fb0:	46bd      	mov	sp, r7
- 8000fb2:	bd90      	pop	{r4, r7, pc}
+ 8000fa8:	bf00      	nop
+ 8000faa:	3724      	adds	r7, #36	@ 0x24
+ 8000fac:	46bd      	mov	sp, r7
+ 8000fae:	bd90      	pop	{r4, r7, pc}
 
-08000fb4 <UBX_format>:
+08000fb0 <UBX_format>:
  *  Created on: May 28, 2024
  *      Author: romain.pace
  */
 #include <GNSS/debug_formatter.h>
 
 char* UBX_format(void* fieldToDebug, DataType type, char* (*funcSpe)(void*),...){
- 8000fb4:	b40c      	push	{r2, r3}
- 8000fb6:	b580      	push	{r7, lr}
- 8000fb8:	b08a      	sub	sp, #40	@ 0x28
- 8000fba:	af00      	add	r7, sp, #0
- 8000fbc:	6078      	str	r0, [r7, #4]
- 8000fbe:	460b      	mov	r3, r1
- 8000fc0:	70fb      	strb	r3, [r7, #3]
+ 8000fb0:	b40c      	push	{r2, r3}
+ 8000fb2:	b580      	push	{r7, lr}
+ 8000fb4:	b08a      	sub	sp, #40	@ 0x28
+ 8000fb6:	af00      	add	r7, sp, #0
+ 8000fb8:	6078      	str	r0, [r7, #4]
+ 8000fba:	460b      	mov	r3, r1
+ 8000fbc:	70fb      	strb	r3, [r7, #3]
 	switch (type) {
- 8000fc2:	78fb      	ldrb	r3, [r7, #3]
- 8000fc4:	2b09      	cmp	r3, #9
- 8000fc6:	f200 8090 	bhi.w	80010ea <UBX_format+0x136>
- 8000fca:	a201      	add	r2, pc, #4	@ (adr r2, 8000fd0 <UBX_format+0x1c>)
- 8000fcc:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
- 8000fd0:	08000ff9 	.word	0x08000ff9
- 8000fd4:	0800101f 	.word	0x0800101f
- 8000fd8:	08001085 	.word	0x08001085
- 8000fdc:	080010ef 	.word	0x080010ef
- 8000fe0:	08001041 	.word	0x08001041
- 8000fe4:	080010a7 	.word	0x080010a7
- 8000fe8:	080010ef 	.word	0x080010ef
- 8000fec:	08001063 	.word	0x08001063
- 8000ff0:	080010c9 	.word	0x080010c9
- 8000ff4:	080010ef 	.word	0x080010ef
+ 8000fbe:	78fb      	ldrb	r3, [r7, #3]
+ 8000fc0:	2b09      	cmp	r3, #9
+ 8000fc2:	f200 8090 	bhi.w	80010e6 <UBX_format+0x136>
+ 8000fc6:	a201      	add	r2, pc, #4	@ (adr r2, 8000fcc <UBX_format+0x1c>)
+ 8000fc8:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 8000fcc:	08000ff5 	.word	0x08000ff5
+ 8000fd0:	0800101b 	.word	0x0800101b
+ 8000fd4:	08001081 	.word	0x08001081
+ 8000fd8:	080010eb 	.word	0x080010eb
+ 8000fdc:	0800103d 	.word	0x0800103d
+ 8000fe0:	080010a3 	.word	0x080010a3
+ 8000fe4:	080010eb 	.word	0x080010eb
+ 8000fe8:	0800105f 	.word	0x0800105f
+ 8000fec:	080010c5 	.word	0x080010c5
+ 8000ff0:	080010eb 	.word	0x080010eb
 	case TYPE_BITFIELD:
 	{
 		uint8_t* fieldCasted = (uint8_t*)fieldToDebug;
- 8000ff8:	687b      	ldr	r3, [r7, #4]
- 8000ffa:	60fb      	str	r3, [r7, #12]
+ 8000ff4:	687b      	ldr	r3, [r7, #4]
+ 8000ff6:	60fb      	str	r3, [r7, #12]
 		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted,1);
- 8000ffc:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8000ffe:	2b00      	cmp	r3, #0
- 8001000:	d106      	bne.n	8001010 <UBX_format+0x5c>
- 8001002:	68fb      	ldr	r3, [r7, #12]
- 8001004:	2101      	movs	r1, #1
- 8001006:	4618      	mov	r0, r3
- 8001008:	f000 fca8 	bl	800195c <uint8ArrayToString>
- 800100c:	4603      	mov	r3, r0
- 800100e:	e070      	b.n	80010f2 <UBX_format+0x13e>
+ 8000ff8:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8000ffa:	2b00      	cmp	r3, #0
+ 8000ffc:	d106      	bne.n	800100c <UBX_format+0x5c>
+ 8000ffe:	68fb      	ldr	r3, [r7, #12]
+ 8001000:	2101      	movs	r1, #1
+ 8001002:	4618      	mov	r0, r3
+ 8001004:	f000 fcaa 	bl	800195c <uint8ArrayToString>
+ 8001008:	4603      	mov	r3, r0
+ 800100a:	e070      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(&fieldCasted);
- 8001010:	f107 020c 	add.w	r2, r7, #12
- 8001014:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8001016:	4610      	mov	r0, r2
- 8001018:	4798      	blx	r3
- 800101a:	4603      	mov	r3, r0
- 800101c:	e069      	b.n	80010f2 <UBX_format+0x13e>
+ 800100c:	f107 020c 	add.w	r2, r7, #12
+ 8001010:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001012:	4610      	mov	r0, r2
+ 8001014:	4798      	blx	r3
+ 8001016:	4603      	mov	r3, r0
+ 8001018:	e069      	b.n	80010ee <UBX_format+0x13e>
 	}
 	case TYPE_U1:
 	{
 		U1* fieldCasted = (U1*)fieldToDebug;
- 800101e:	687b      	ldr	r3, [r7, #4]
- 8001020:	613b      	str	r3, [r7, #16]
+ 800101a:	687b      	ldr	r3, [r7, #4]
+ 800101c:	613b      	str	r3, [r7, #16]
 		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 8001022:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8001024:	2b00      	cmp	r3, #0
- 8001026:	d106      	bne.n	8001036 <UBX_format+0x82>
- 8001028:	693b      	ldr	r3, [r7, #16]
- 800102a:	2101      	movs	r1, #1
- 800102c:	4618      	mov	r0, r3
- 800102e:	f000 fc95 	bl	800195c <uint8ArrayToString>
- 8001032:	4603      	mov	r3, r0
- 8001034:	e05d      	b.n	80010f2 <UBX_format+0x13e>
+ 800101e:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001020:	2b00      	cmp	r3, #0
+ 8001022:	d106      	bne.n	8001032 <UBX_format+0x82>
+ 8001024:	693b      	ldr	r3, [r7, #16]
+ 8001026:	2101      	movs	r1, #1
+ 8001028:	4618      	mov	r0, r3
+ 800102a:	f000 fc97 	bl	800195c <uint8ArrayToString>
+ 800102e:	4603      	mov	r3, r0
+ 8001030:	e05d      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 8001036:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8001038:	6938      	ldr	r0, [r7, #16]
- 800103a:	4798      	blx	r3
- 800103c:	4603      	mov	r3, r0
- 800103e:	e058      	b.n	80010f2 <UBX_format+0x13e>
+ 8001032:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001034:	6938      	ldr	r0, [r7, #16]
+ 8001036:	4798      	blx	r3
+ 8001038:	4603      	mov	r3, r0
+ 800103a:	e058      	b.n	80010ee <UBX_format+0x13e>
 	}
 	break;
 	case TYPE_U2:
 	{
 		U2* fieldCasted = (U2*)fieldToDebug;
- 8001040:	687b      	ldr	r3, [r7, #4]
- 8001042:	61bb      	str	r3, [r7, #24]
+ 800103c:	687b      	ldr	r3, [r7, #4]
+ 800103e:	61bb      	str	r3, [r7, #24]
 		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 8001044:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8001046:	2b00      	cmp	r3, #0
- 8001048:	d106      	bne.n	8001058 <UBX_format+0xa4>
- 800104a:	69bb      	ldr	r3, [r7, #24]
- 800104c:	2102      	movs	r1, #2
- 800104e:	4618      	mov	r0, r3
- 8001050:	f000 fc84 	bl	800195c <uint8ArrayToString>
- 8001054:	4603      	mov	r3, r0
- 8001056:	e04c      	b.n	80010f2 <UBX_format+0x13e>
+ 8001040:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001042:	2b00      	cmp	r3, #0
+ 8001044:	d106      	bne.n	8001054 <UBX_format+0xa4>
+ 8001046:	69bb      	ldr	r3, [r7, #24]
+ 8001048:	2102      	movs	r1, #2
+ 800104a:	4618      	mov	r0, r3
+ 800104c:	f000 fc86 	bl	800195c <uint8ArrayToString>
+ 8001050:	4603      	mov	r3, r0
+ 8001052:	e04c      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 8001058:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 800105a:	69b8      	ldr	r0, [r7, #24]
- 800105c:	4798      	blx	r3
- 800105e:	4603      	mov	r3, r0
- 8001060:	e047      	b.n	80010f2 <UBX_format+0x13e>
+ 8001054:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001056:	69b8      	ldr	r0, [r7, #24]
+ 8001058:	4798      	blx	r3
+ 800105a:	4603      	mov	r3, r0
+ 800105c:	e047      	b.n	80010ee <UBX_format+0x13e>
 	}
 	break;
 	case TYPE_U4:
 	{
 		U4* fieldCasted = (U4*)fieldToDebug;
- 8001062:	687b      	ldr	r3, [r7, #4]
- 8001064:	623b      	str	r3, [r7, #32]
+ 800105e:	687b      	ldr	r3, [r7, #4]
+ 8001060:	623b      	str	r3, [r7, #32]
 		if (funcSpe == NULL) return uint8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 8001066:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 8001068:	2b00      	cmp	r3, #0
- 800106a:	d106      	bne.n	800107a <UBX_format+0xc6>
- 800106c:	6a3b      	ldr	r3, [r7, #32]
- 800106e:	2104      	movs	r1, #4
- 8001070:	4618      	mov	r0, r3
- 8001072:	f000 fc73 	bl	800195c <uint8ArrayToString>
- 8001076:	4603      	mov	r3, r0
- 8001078:	e03b      	b.n	80010f2 <UBX_format+0x13e>
+ 8001062:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001064:	2b00      	cmp	r3, #0
+ 8001066:	d106      	bne.n	8001076 <UBX_format+0xc6>
+ 8001068:	6a3b      	ldr	r3, [r7, #32]
+ 800106a:	2104      	movs	r1, #4
+ 800106c:	4618      	mov	r0, r3
+ 800106e:	f000 fc75 	bl	800195c <uint8ArrayToString>
+ 8001072:	4603      	mov	r3, r0
+ 8001074:	e03b      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 800107a:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 800107c:	6a38      	ldr	r0, [r7, #32]
- 800107e:	4798      	blx	r3
- 8001080:	4603      	mov	r3, r0
- 8001082:	e036      	b.n	80010f2 <UBX_format+0x13e>
+ 8001076:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001078:	6a38      	ldr	r0, [r7, #32]
+ 800107a:	4798      	blx	r3
+ 800107c:	4603      	mov	r3, r0
+ 800107e:	e036      	b.n	80010ee <UBX_format+0x13e>
 	}
 	break;
 	case TYPE_I1:
 	{
 		I1* fieldCasted = (I1*)fieldToDebug;
- 8001084:	687b      	ldr	r3, [r7, #4]
- 8001086:	617b      	str	r3, [r7, #20]
+ 8001080:	687b      	ldr	r3, [r7, #4]
+ 8001082:	617b      	str	r3, [r7, #20]
 		if (funcSpe == NULL) return int8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 8001088:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 800108a:	2b00      	cmp	r3, #0
- 800108c:	d106      	bne.n	800109c <UBX_format+0xe8>
- 800108e:	697b      	ldr	r3, [r7, #20]
- 8001090:	2101      	movs	r1, #1
- 8001092:	4618      	mov	r0, r3
- 8001094:	f000 fca8 	bl	80019e8 <int8ArrayToString>
- 8001098:	4603      	mov	r3, r0
- 800109a:	e02a      	b.n	80010f2 <UBX_format+0x13e>
+ 8001084:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 8001086:	2b00      	cmp	r3, #0
+ 8001088:	d106      	bne.n	8001098 <UBX_format+0xe8>
+ 800108a:	697b      	ldr	r3, [r7, #20]
+ 800108c:	2101      	movs	r1, #1
+ 800108e:	4618      	mov	r0, r3
+ 8001090:	f000 fcaa 	bl	80019e8 <int8ArrayToString>
+ 8001094:	4603      	mov	r3, r0
+ 8001096:	e02a      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 800109c:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 800109e:	6978      	ldr	r0, [r7, #20]
- 80010a0:	4798      	blx	r3
- 80010a2:	4603      	mov	r3, r0
- 80010a4:	e025      	b.n	80010f2 <UBX_format+0x13e>
+ 8001098:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 800109a:	6978      	ldr	r0, [r7, #20]
+ 800109c:	4798      	blx	r3
+ 800109e:	4603      	mov	r3, r0
+ 80010a0:	e025      	b.n	80010ee <UBX_format+0x13e>
 	}
 	break;
 	case TYPE_I2:
 	{
 		I2* fieldCasted = (I2*)fieldToDebug;
- 80010a6:	687b      	ldr	r3, [r7, #4]
- 80010a8:	61fb      	str	r3, [r7, #28]
+ 80010a2:	687b      	ldr	r3, [r7, #4]
+ 80010a4:	61fb      	str	r3, [r7, #28]
 		if (funcSpe == NULL) return int8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 80010aa:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 80010ac:	2b00      	cmp	r3, #0
- 80010ae:	d106      	bne.n	80010be <UBX_format+0x10a>
- 80010b0:	69fb      	ldr	r3, [r7, #28]
- 80010b2:	2102      	movs	r1, #2
- 80010b4:	4618      	mov	r0, r3
- 80010b6:	f000 fc97 	bl	80019e8 <int8ArrayToString>
- 80010ba:	4603      	mov	r3, r0
- 80010bc:	e019      	b.n	80010f2 <UBX_format+0x13e>
+ 80010a6:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 80010a8:	2b00      	cmp	r3, #0
+ 80010aa:	d106      	bne.n	80010ba <UBX_format+0x10a>
+ 80010ac:	69fb      	ldr	r3, [r7, #28]
+ 80010ae:	2102      	movs	r1, #2
+ 80010b0:	4618      	mov	r0, r3
+ 80010b2:	f000 fc99 	bl	80019e8 <int8ArrayToString>
+ 80010b6:	4603      	mov	r3, r0
+ 80010b8:	e019      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 80010be:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 80010c0:	69f8      	ldr	r0, [r7, #28]
- 80010c2:	4798      	blx	r3
- 80010c4:	4603      	mov	r3, r0
- 80010c6:	e014      	b.n	80010f2 <UBX_format+0x13e>
+ 80010ba:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 80010bc:	69f8      	ldr	r0, [r7, #28]
+ 80010be:	4798      	blx	r3
+ 80010c0:	4603      	mov	r3, r0
+ 80010c2:	e014      	b.n	80010ee <UBX_format+0x13e>
 	}
 	break;
 	case TYPE_I4:
 	{
 		I4* fieldCasted = (I4*)fieldToDebug;
- 80010c8:	687b      	ldr	r3, [r7, #4]
- 80010ca:	627b      	str	r3, [r7, #36]	@ 0x24
+ 80010c4:	687b      	ldr	r3, [r7, #4]
+ 80010c6:	627b      	str	r3, [r7, #36]	@ 0x24
 		if (funcSpe == NULL) return int8ArrayToString(fieldCasted->bytes,sizeof(fieldCasted->bytes));
- 80010cc:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 80010ce:	2b00      	cmp	r3, #0
- 80010d0:	d106      	bne.n	80010e0 <UBX_format+0x12c>
- 80010d2:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
- 80010d4:	2104      	movs	r1, #4
- 80010d6:	4618      	mov	r0, r3
- 80010d8:	f000 fc86 	bl	80019e8 <int8ArrayToString>
- 80010dc:	4603      	mov	r3, r0
- 80010de:	e008      	b.n	80010f2 <UBX_format+0x13e>
+ 80010c8:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 80010ca:	2b00      	cmp	r3, #0
+ 80010cc:	d106      	bne.n	80010dc <UBX_format+0x12c>
+ 80010ce:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
+ 80010d0:	2104      	movs	r1, #4
+ 80010d2:	4618      	mov	r0, r3
+ 80010d4:	f000 fc88 	bl	80019e8 <int8ArrayToString>
+ 80010d8:	4603      	mov	r3, r0
+ 80010da:	e008      	b.n	80010ee <UBX_format+0x13e>
 		else return funcSpe(fieldCasted);
- 80010e0:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
- 80010e2:	6a78      	ldr	r0, [r7, #36]	@ 0x24
- 80010e4:	4798      	blx	r3
- 80010e6:	4603      	mov	r3, r0
- 80010e8:	e003      	b.n	80010f2 <UBX_format+0x13e>
+ 80010dc:	6b3b      	ldr	r3, [r7, #48]	@ 0x30
+ 80010de:	6a78      	ldr	r0, [r7, #36]	@ 0x24
+ 80010e0:	4798      	blx	r3
+ 80010e2:	4603      	mov	r3, r0
+ 80010e4:	e003      	b.n	80010ee <UBX_format+0x13e>
 	case TYPE_X4:
 		break;
 
 
 	default:
 		return("Unknown type");
- 80010ea:	4b05      	ldr	r3, [pc, #20]	@ (8001100 <UBX_format+0x14c>)
- 80010ec:	e001      	b.n	80010f2 <UBX_format+0x13e>
+ 80010e6:	4b05      	ldr	r3, [pc, #20]	@ (80010fc <UBX_format+0x14c>)
+ 80010e8:	e001      	b.n	80010ee <UBX_format+0x13e>
 		break;
- 80010ee:	bf00      	nop
+ 80010ea:	bf00      	nop
 		break;
 	}
 	return "Error";
- 80010f0:	4b04      	ldr	r3, [pc, #16]	@ (8001104 <UBX_format+0x150>)
+ 80010ec:	4b04      	ldr	r3, [pc, #16]	@ (8001100 <UBX_format+0x150>)
 }
- 80010f2:	4618      	mov	r0, r3
- 80010f4:	3728      	adds	r7, #40	@ 0x28
- 80010f6:	46bd      	mov	sp, r7
- 80010f8:	e8bd 4080 	ldmia.w	sp!, {r7, lr}
- 80010fc:	b002      	add	sp, #8
- 80010fe:	4770      	bx	lr
- 8001100:	0800da38 	.word	0x0800da38
- 8001104:	0800da48 	.word	0x0800da48
+ 80010ee:	4618      	mov	r0, r3
+ 80010f0:	3728      	adds	r7, #40	@ 0x28
+ 80010f2:	46bd      	mov	sp, r7
+ 80010f4:	e8bd 4080 	ldmia.w	sp!, {r7, lr}
+ 80010f8:	b002      	add	sp, #8
+ 80010fa:	4770      	bx	lr
+ 80010fc:	0800da38 	.word	0x0800da38
+ 8001100:	0800da48 	.word	0x0800da48
 
-08001108 <get_GNSSID>:
+08001104 <get_GNSSID>:
  *  Created on: Jul 23, 2024
  *      Author: romain.pace
  */
 #include <GNSS/debug_getter.h>
 
 char* get_GNSSID(U1* gnssID) {
- 8001108:	b580      	push	{r7, lr}
- 800110a:	b084      	sub	sp, #16
- 800110c:	af00      	add	r7, sp, #0
- 800110e:	6078      	str	r0, [r7, #4]
+ 8001104:	b580      	push	{r7, lr}
+ 8001106:	b084      	sub	sp, #16
+ 8001108:	af00      	add	r7, sp, #0
+ 800110a:	6078      	str	r0, [r7, #4]
 	char* str = (char*)pvPortMalloc(21 * sizeof(char));
- 8001110:	2015      	movs	r0, #21
- 8001112:	f009 faa3 	bl	800a65c <pvPortMalloc>
- 8001116:	60f8      	str	r0, [r7, #12]
+ 800110c:	2015      	movs	r0, #21
+ 800110e:	f009 faa5 	bl	800a65c <pvPortMalloc>
+ 8001112:	60f8      	str	r0, [r7, #12]
 	if (str == NULL) Error_Handler();
- 8001118:	68fb      	ldr	r3, [r7, #12]
- 800111a:	2b00      	cmp	r3, #0
- 800111c:	d101      	bne.n	8001122 <get_GNSSID+0x1a>
- 800111e:	f002 fc4d 	bl	80039bc <Error_Handler>
+ 8001114:	68fb      	ldr	r3, [r7, #12]
+ 8001116:	2b00      	cmp	r3, #0
+ 8001118:	d101      	bne.n	800111e <get_GNSSID+0x1a>
+ 800111a:	f002 fc4f 	bl	80039bc <Error_Handler>
 	switch (gnssID->bytes[0]) {
- 8001122:	687b      	ldr	r3, [r7, #4]
- 8001124:	781b      	ldrb	r3, [r3, #0]
- 8001126:	2b07      	cmp	r3, #7
- 8001128:	d842      	bhi.n	80011b0 <get_GNSSID+0xa8>
- 800112a:	a201      	add	r2, pc, #4	@ (adr r2, 8001130 <get_GNSSID+0x28>)
- 800112c:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
- 8001130:	08001151 	.word	0x08001151
- 8001134:	0800115b 	.word	0x0800115b
- 8001138:	08001169 	.word	0x08001169
- 800113c:	08001173 	.word	0x08001173
- 8001140:	0800117d 	.word	0x0800117d
- 8001144:	0800118b 	.word	0x0800118b
- 8001148:	08001199 	.word	0x08001199
- 800114c:	080011a3 	.word	0x080011a3
+ 800111e:	687b      	ldr	r3, [r7, #4]
+ 8001120:	781b      	ldrb	r3, [r3, #0]
+ 8001122:	2b07      	cmp	r3, #7
+ 8001124:	d842      	bhi.n	80011ac <get_GNSSID+0xa8>
+ 8001126:	a201      	add	r2, pc, #4	@ (adr r2, 800112c <get_GNSSID+0x28>)
+ 8001128:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 800112c:	0800114d 	.word	0x0800114d
+ 8001130:	08001157 	.word	0x08001157
+ 8001134:	08001165 	.word	0x08001165
+ 8001138:	0800116f 	.word	0x0800116f
+ 800113c:	08001179 	.word	0x08001179
+ 8001140:	08001187 	.word	0x08001187
+ 8001144:	08001195 	.word	0x08001195
+ 8001148:	0800119f 	.word	0x0800119f
 	case 0: {strcpy(str,"GPS");}break;
- 8001150:	68fb      	ldr	r3, [r7, #12]
- 8001152:	4a1e      	ldr	r2, [pc, #120]	@ (80011cc <get_GNSSID+0xc4>)
- 8001154:	6810      	ldr	r0, [r2, #0]
- 8001156:	6018      	str	r0, [r3, #0]
- 8001158:	e032      	b.n	80011c0 <get_GNSSID+0xb8>
+ 800114c:	68fb      	ldr	r3, [r7, #12]
+ 800114e:	4a1e      	ldr	r2, [pc, #120]	@ (80011c8 <get_GNSSID+0xc4>)
+ 8001150:	6810      	ldr	r0, [r2, #0]
+ 8001152:	6018      	str	r0, [r3, #0]
+ 8001154:	e032      	b.n	80011bc <get_GNSSID+0xb8>
 	case 1: {strcpy(str,"SBAS");}break;
- 800115a:	68fb      	ldr	r3, [r7, #12]
- 800115c:	4a1c      	ldr	r2, [pc, #112]	@ (80011d0 <get_GNSSID+0xc8>)
- 800115e:	6810      	ldr	r0, [r2, #0]
- 8001160:	6018      	str	r0, [r3, #0]
- 8001162:	7912      	ldrb	r2, [r2, #4]
- 8001164:	711a      	strb	r2, [r3, #4]
- 8001166:	e02b      	b.n	80011c0 <get_GNSSID+0xb8>
+ 8001156:	68fb      	ldr	r3, [r7, #12]
+ 8001158:	4a1c      	ldr	r2, [pc, #112]	@ (80011cc <get_GNSSID+0xc8>)
+ 800115a:	6810      	ldr	r0, [r2, #0]
+ 800115c:	6018      	str	r0, [r3, #0]
+ 800115e:	7912      	ldrb	r2, [r2, #4]
+ 8001160:	711a      	strb	r2, [r3, #4]
+ 8001162:	e02b      	b.n	80011bc <get_GNSSID+0xb8>
 	case 2: {strcpy(str,"GAL");}break;
- 8001168:	68fb      	ldr	r3, [r7, #12]
- 800116a:	4a1a      	ldr	r2, [pc, #104]	@ (80011d4 <get_GNSSID+0xcc>)
- 800116c:	6810      	ldr	r0, [r2, #0]
- 800116e:	6018      	str	r0, [r3, #0]
- 8001170:	e026      	b.n	80011c0 <get_GNSSID+0xb8>
+ 8001164:	68fb      	ldr	r3, [r7, #12]
+ 8001166:	4a1a      	ldr	r2, [pc, #104]	@ (80011d0 <get_GNSSID+0xcc>)
+ 8001168:	6810      	ldr	r0, [r2, #0]
+ 800116a:	6018      	str	r0, [r3, #0]
+ 800116c:	e026      	b.n	80011bc <get_GNSSID+0xb8>
 	case 3: {strcpy(str,"BDS");}break;
- 8001172:	68fb      	ldr	r3, [r7, #12]
- 8001174:	4a18      	ldr	r2, [pc, #96]	@ (80011d8 <get_GNSSID+0xd0>)
- 8001176:	6810      	ldr	r0, [r2, #0]
- 8001178:	6018      	str	r0, [r3, #0]
- 800117a:	e021      	b.n	80011c0 <get_GNSSID+0xb8>
+ 800116e:	68fb      	ldr	r3, [r7, #12]
+ 8001170:	4a18      	ldr	r2, [pc, #96]	@ (80011d4 <get_GNSSID+0xd0>)
+ 8001172:	6810      	ldr	r0, [r2, #0]
+ 8001174:	6018      	str	r0, [r3, #0]
+ 8001176:	e021      	b.n	80011bc <get_GNSSID+0xb8>
 	case 4: {strcpy(str,"IMES");}break;
- 800117c:	68fb      	ldr	r3, [r7, #12]
- 800117e:	4a17      	ldr	r2, [pc, #92]	@ (80011dc <get_GNSSID+0xd4>)
- 8001180:	6810      	ldr	r0, [r2, #0]
- 8001182:	6018      	str	r0, [r3, #0]
- 8001184:	7912      	ldrb	r2, [r2, #4]
- 8001186:	711a      	strb	r2, [r3, #4]
- 8001188:	e01a      	b.n	80011c0 <get_GNSSID+0xb8>
+ 8001178:	68fb      	ldr	r3, [r7, #12]
+ 800117a:	4a17      	ldr	r2, [pc, #92]	@ (80011d8 <get_GNSSID+0xd4>)
+ 800117c:	6810      	ldr	r0, [r2, #0]
+ 800117e:	6018      	str	r0, [r3, #0]
+ 8001180:	7912      	ldrb	r2, [r2, #4]
+ 8001182:	711a      	strb	r2, [r3, #4]
+ 8001184:	e01a      	b.n	80011bc <get_GNSSID+0xb8>
 	case 5: {strcpy(str,"QZSS");}break;
- 800118a:	68fb      	ldr	r3, [r7, #12]
- 800118c:	4a14      	ldr	r2, [pc, #80]	@ (80011e0 <get_GNSSID+0xd8>)
- 800118e:	6810      	ldr	r0, [r2, #0]
- 8001190:	6018      	str	r0, [r3, #0]
- 8001192:	7912      	ldrb	r2, [r2, #4]
- 8001194:	711a      	strb	r2, [r3, #4]
- 8001196:	e013      	b.n	80011c0 <get_GNSSID+0xb8>
+ 8001186:	68fb      	ldr	r3, [r7, #12]
+ 8001188:	4a14      	ldr	r2, [pc, #80]	@ (80011dc <get_GNSSID+0xd8>)
+ 800118a:	6810      	ldr	r0, [r2, #0]
+ 800118c:	6018      	str	r0, [r3, #0]
+ 800118e:	7912      	ldrb	r2, [r2, #4]
+ 8001190:	711a      	strb	r2, [r3, #4]
+ 8001192:	e013      	b.n	80011bc <get_GNSSID+0xb8>
 	case 6: {strcpy(str,"GLO");}break;
- 8001198:	68fb      	ldr	r3, [r7, #12]
- 800119a:	4a12      	ldr	r2, [pc, #72]	@ (80011e4 <get_GNSSID+0xdc>)
- 800119c:	6810      	ldr	r0, [r2, #0]
- 800119e:	6018      	str	r0, [r3, #0]
- 80011a0:	e00e      	b.n	80011c0 <get_GNSSID+0xb8>
+ 8001194:	68fb      	ldr	r3, [r7, #12]
+ 8001196:	4a12      	ldr	r2, [pc, #72]	@ (80011e0 <get_GNSSID+0xdc>)
+ 8001198:	6810      	ldr	r0, [r2, #0]
+ 800119a:	6018      	str	r0, [r3, #0]
+ 800119c:	e00e      	b.n	80011bc <get_GNSSID+0xb8>
 	case 7: {strcpy(str,"NavIC");}break;
- 80011a2:	68fb      	ldr	r3, [r7, #12]
- 80011a4:	4a10      	ldr	r2, [pc, #64]	@ (80011e8 <get_GNSSID+0xe0>)
- 80011a6:	6810      	ldr	r0, [r2, #0]
- 80011a8:	6018      	str	r0, [r3, #0]
- 80011aa:	8892      	ldrh	r2, [r2, #4]
- 80011ac:	809a      	strh	r2, [r3, #4]
- 80011ae:	e007      	b.n	80011c0 <get_GNSSID+0xb8>
+ 800119e:	68fb      	ldr	r3, [r7, #12]
+ 80011a0:	4a10      	ldr	r2, [pc, #64]	@ (80011e4 <get_GNSSID+0xe0>)
+ 80011a2:	6810      	ldr	r0, [r2, #0]
+ 80011a4:	6018      	str	r0, [r3, #0]
+ 80011a6:	8892      	ldrh	r2, [r2, #4]
+ 80011a8:	809a      	strh	r2, [r3, #4]
+ 80011aa:	e007      	b.n	80011bc <get_GNSSID+0xb8>
 	default:{strcpy(str,"Unknown");}break;
- 80011b0:	68fb      	ldr	r3, [r7, #12]
- 80011b2:	490e      	ldr	r1, [pc, #56]	@ (80011ec <get_GNSSID+0xe4>)
- 80011b4:	461a      	mov	r2, r3
- 80011b6:	460b      	mov	r3, r1
- 80011b8:	cb03      	ldmia	r3!, {r0, r1}
- 80011ba:	6010      	str	r0, [r2, #0]
- 80011bc:	6051      	str	r1, [r2, #4]
- 80011be:	bf00      	nop
+ 80011ac:	68fb      	ldr	r3, [r7, #12]
+ 80011ae:	490e      	ldr	r1, [pc, #56]	@ (80011e8 <get_GNSSID+0xe4>)
+ 80011b0:	461a      	mov	r2, r3
+ 80011b2:	460b      	mov	r3, r1
+ 80011b4:	cb03      	ldmia	r3!, {r0, r1}
+ 80011b6:	6010      	str	r0, [r2, #0]
+ 80011b8:	6051      	str	r1, [r2, #4]
+ 80011ba:	bf00      	nop
 	}
 	return str;
- 80011c0:	68fb      	ldr	r3, [r7, #12]
+ 80011bc:	68fb      	ldr	r3, [r7, #12]
 }
- 80011c2:	4618      	mov	r0, r3
- 80011c4:	3710      	adds	r7, #16
- 80011c6:	46bd      	mov	sp, r7
- 80011c8:	bd80      	pop	{r7, pc}
- 80011ca:	bf00      	nop
- 80011cc:	0800da50 	.word	0x0800da50
- 80011d0:	0800da54 	.word	0x0800da54
- 80011d4:	0800da5c 	.word	0x0800da5c
- 80011d8:	0800da60 	.word	0x0800da60
- 80011dc:	0800da64 	.word	0x0800da64
- 80011e0:	0800da6c 	.word	0x0800da6c
- 80011e4:	0800da74 	.word	0x0800da74
- 80011e8:	0800da78 	.word	0x0800da78
- 80011ec:	0800da80 	.word	0x0800da80
+ 80011be:	4618      	mov	r0, r3
+ 80011c0:	3710      	adds	r7, #16
+ 80011c2:	46bd      	mov	sp, r7
+ 80011c4:	bd80      	pop	{r7, pc}
+ 80011c6:	bf00      	nop
+ 80011c8:	0800da50 	.word	0x0800da50
+ 80011cc:	0800da54 	.word	0x0800da54
+ 80011d0:	0800da5c 	.word	0x0800da5c
+ 80011d4:	0800da60 	.word	0x0800da60
+ 80011d8:	0800da64 	.word	0x0800da64
+ 80011dc:	0800da6c 	.word	0x0800da6c
+ 80011e0:	0800da74 	.word	0x0800da74
+ 80011e4:	0800da78 	.word	0x0800da78
+ 80011e8:	0800da80 	.word	0x0800da80
 
-080011f0 <get_SVID>:
+080011ec <get_SVID>:
 char* get_SVID(U1* svID) {
- 80011f0:	b580      	push	{r7, lr}
- 80011f2:	b084      	sub	sp, #16
- 80011f4:	af00      	add	r7, sp, #0
- 80011f6:	6078      	str	r0, [r7, #4]
+ 80011ec:	b580      	push	{r7, lr}
+ 80011ee:	b084      	sub	sp, #16
+ 80011f0:	af00      	add	r7, sp, #0
+ 80011f2:	6078      	str	r0, [r7, #4]
 	char* str = (char*)pvPortMalloc(8* sizeof(char));
- 80011f8:	2008      	movs	r0, #8
- 80011fa:	f009 fa2f 	bl	800a65c <pvPortMalloc>
- 80011fe:	60f8      	str	r0, [r7, #12]
+ 80011f4:	2008      	movs	r0, #8
+ 80011f6:	f009 fa31 	bl	800a65c <pvPortMalloc>
+ 80011fa:	60f8      	str	r0, [r7, #12]
 	if (str == NULL) Error_Handler();
- 8001200:	68fb      	ldr	r3, [r7, #12]
- 8001202:	2b00      	cmp	r3, #0
- 8001204:	d101      	bne.n	800120a <get_SVID+0x1a>
- 8001206:	f002 fbd9 	bl	80039bc <Error_Handler>
+ 80011fc:	68fb      	ldr	r3, [r7, #12]
+ 80011fe:	2b00      	cmp	r3, #0
+ 8001200:	d101      	bne.n	8001206 <get_SVID+0x1a>
+ 8001202:	f002 fbdb 	bl	80039bc <Error_Handler>
 
 	if (1 < svID->bytes[0] && svID->bytes[0] < 32) {
- 800120a:	687b      	ldr	r3, [r7, #4]
- 800120c:	781b      	ldrb	r3, [r3, #0]
- 800120e:	2b01      	cmp	r3, #1
- 8001210:	d90b      	bls.n	800122a <get_SVID+0x3a>
- 8001212:	687b      	ldr	r3, [r7, #4]
- 8001214:	781b      	ldrb	r3, [r3, #0]
- 8001216:	2b1f      	cmp	r3, #31
- 8001218:	d807      	bhi.n	800122a <get_SVID+0x3a>
+ 8001206:	687b      	ldr	r3, [r7, #4]
+ 8001208:	781b      	ldrb	r3, [r3, #0]
+ 800120a:	2b01      	cmp	r3, #1
+ 800120c:	d90b      	bls.n	8001226 <get_SVID+0x3a>
+ 800120e:	687b      	ldr	r3, [r7, #4]
+ 8001210:	781b      	ldrb	r3, [r3, #0]
+ 8001212:	2b1f      	cmp	r3, #31
+ 8001214:	d807      	bhi.n	8001226 <get_SVID+0x3a>
 		sprintf(str, "G%i", svID->bytes[0]);
- 800121a:	687b      	ldr	r3, [r7, #4]
- 800121c:	781b      	ldrb	r3, [r3, #0]
- 800121e:	461a      	mov	r2, r3
- 8001220:	494e      	ldr	r1, [pc, #312]	@ (800135c <get_SVID+0x16c>)
- 8001222:	68f8      	ldr	r0, [r7, #12]
- 8001224:	f00a fa22 	bl	800b66c <siprintf>
- 8001228:	e093      	b.n	8001352 <get_SVID+0x162>
+ 8001216:	687b      	ldr	r3, [r7, #4]
+ 8001218:	781b      	ldrb	r3, [r3, #0]
+ 800121a:	461a      	mov	r2, r3
+ 800121c:	494e      	ldr	r1, [pc, #312]	@ (8001358 <get_SVID+0x16c>)
+ 800121e:	68f8      	ldr	r0, [r7, #12]
+ 8001220:	f00a fa24 	bl	800b66c <siprintf>
+ 8001224:	e093      	b.n	800134e <get_SVID+0x162>
 	} else if (120 < svID->bytes[0] && svID->bytes[0] < 158) {
- 800122a:	687b      	ldr	r3, [r7, #4]
- 800122c:	781b      	ldrb	r3, [r3, #0]
- 800122e:	2b78      	cmp	r3, #120	@ 0x78
- 8001230:	d90b      	bls.n	800124a <get_SVID+0x5a>
- 8001232:	687b      	ldr	r3, [r7, #4]
- 8001234:	781b      	ldrb	r3, [r3, #0]
- 8001236:	2b9d      	cmp	r3, #157	@ 0x9d
- 8001238:	d807      	bhi.n	800124a <get_SVID+0x5a>
+ 8001226:	687b      	ldr	r3, [r7, #4]
+ 8001228:	781b      	ldrb	r3, [r3, #0]
+ 800122a:	2b78      	cmp	r3, #120	@ 0x78
+ 800122c:	d90b      	bls.n	8001246 <get_SVID+0x5a>
+ 800122e:	687b      	ldr	r3, [r7, #4]
+ 8001230:	781b      	ldrb	r3, [r3, #0]
+ 8001232:	2b9d      	cmp	r3, #157	@ 0x9d
+ 8001234:	d807      	bhi.n	8001246 <get_SVID+0x5a>
 		sprintf(str, "S%i", svID->bytes[0]);
- 800123a:	687b      	ldr	r3, [r7, #4]
- 800123c:	781b      	ldrb	r3, [r3, #0]
- 800123e:	461a      	mov	r2, r3
- 8001240:	4947      	ldr	r1, [pc, #284]	@ (8001360 <get_SVID+0x170>)
- 8001242:	68f8      	ldr	r0, [r7, #12]
- 8001244:	f00a fa12 	bl	800b66c <siprintf>
- 8001248:	e083      	b.n	8001352 <get_SVID+0x162>
+ 8001236:	687b      	ldr	r3, [r7, #4]
+ 8001238:	781b      	ldrb	r3, [r3, #0]
+ 800123a:	461a      	mov	r2, r3
+ 800123c:	4947      	ldr	r1, [pc, #284]	@ (800135c <get_SVID+0x170>)
+ 800123e:	68f8      	ldr	r0, [r7, #12]
+ 8001240:	f00a fa14 	bl	800b66c <siprintf>
+ 8001244:	e083      	b.n	800134e <get_SVID+0x162>
 	} else if (211 < svID->bytes[0] && svID->bytes[0] < 246) {
- 800124a:	687b      	ldr	r3, [r7, #4]
- 800124c:	781b      	ldrb	r3, [r3, #0]
- 800124e:	2bd3      	cmp	r3, #211	@ 0xd3
- 8001250:	d90c      	bls.n	800126c <get_SVID+0x7c>
- 8001252:	687b      	ldr	r3, [r7, #4]
- 8001254:	781b      	ldrb	r3, [r3, #0]
- 8001256:	2bf5      	cmp	r3, #245	@ 0xf5
- 8001258:	d808      	bhi.n	800126c <get_SVID+0x7c>
+ 8001246:	687b      	ldr	r3, [r7, #4]
+ 8001248:	781b      	ldrb	r3, [r3, #0]
+ 800124a:	2bd3      	cmp	r3, #211	@ 0xd3
+ 800124c:	d90c      	bls.n	8001268 <get_SVID+0x7c>
+ 800124e:	687b      	ldr	r3, [r7, #4]
+ 8001250:	781b      	ldrb	r3, [r3, #0]
+ 8001252:	2bf5      	cmp	r3, #245	@ 0xf5
+ 8001254:	d808      	bhi.n	8001268 <get_SVID+0x7c>
 		sprintf(str, "E%i", svID->bytes[0] - 210);
- 800125a:	687b      	ldr	r3, [r7, #4]
- 800125c:	781b      	ldrb	r3, [r3, #0]
- 800125e:	3bd2      	subs	r3, #210	@ 0xd2
- 8001260:	461a      	mov	r2, r3
- 8001262:	4940      	ldr	r1, [pc, #256]	@ (8001364 <get_SVID+0x174>)
- 8001264:	68f8      	ldr	r0, [r7, #12]
- 8001266:	f00a fa01 	bl	800b66c <siprintf>
- 800126a:	e072      	b.n	8001352 <get_SVID+0x162>
+ 8001256:	687b      	ldr	r3, [r7, #4]
+ 8001258:	781b      	ldrb	r3, [r3, #0]
+ 800125a:	3bd2      	subs	r3, #210	@ 0xd2
+ 800125c:	461a      	mov	r2, r3
+ 800125e:	4940      	ldr	r1, [pc, #256]	@ (8001360 <get_SVID+0x174>)
+ 8001260:	68f8      	ldr	r0, [r7, #12]
+ 8001262:	f00a fa03 	bl	800b66c <siprintf>
+ 8001266:	e072      	b.n	800134e <get_SVID+0x162>
 	} else if (159 < svID->bytes[0] && svID->bytes[0] < 163) {
- 800126c:	687b      	ldr	r3, [r7, #4]
- 800126e:	781b      	ldrb	r3, [r3, #0]
- 8001270:	2b9f      	cmp	r3, #159	@ 0x9f
- 8001272:	d90c      	bls.n	800128e <get_SVID+0x9e>
- 8001274:	687b      	ldr	r3, [r7, #4]
- 8001276:	781b      	ldrb	r3, [r3, #0]
- 8001278:	2ba2      	cmp	r3, #162	@ 0xa2
- 800127a:	d808      	bhi.n	800128e <get_SVID+0x9e>
+ 8001268:	687b      	ldr	r3, [r7, #4]
+ 800126a:	781b      	ldrb	r3, [r3, #0]
+ 800126c:	2b9f      	cmp	r3, #159	@ 0x9f
+ 800126e:	d90c      	bls.n	800128a <get_SVID+0x9e>
+ 8001270:	687b      	ldr	r3, [r7, #4]
+ 8001272:	781b      	ldrb	r3, [r3, #0]
+ 8001274:	2ba2      	cmp	r3, #162	@ 0xa2
+ 8001276:	d808      	bhi.n	800128a <get_SVID+0x9e>
 		sprintf(str, "B%i", svID->bytes[0] - 158);
- 800127c:	687b      	ldr	r3, [r7, #4]
- 800127e:	781b      	ldrb	r3, [r3, #0]
- 8001280:	3b9e      	subs	r3, #158	@ 0x9e
- 8001282:	461a      	mov	r2, r3
- 8001284:	4938      	ldr	r1, [pc, #224]	@ (8001368 <get_SVID+0x178>)
- 8001286:	68f8      	ldr	r0, [r7, #12]
- 8001288:	f00a f9f0 	bl	800b66c <siprintf>
- 800128c:	e061      	b.n	8001352 <get_SVID+0x162>
+ 8001278:	687b      	ldr	r3, [r7, #4]
+ 800127a:	781b      	ldrb	r3, [r3, #0]
+ 800127c:	3b9e      	subs	r3, #158	@ 0x9e
+ 800127e:	461a      	mov	r2, r3
+ 8001280:	4938      	ldr	r1, [pc, #224]	@ (8001364 <get_SVID+0x178>)
+ 8001282:	68f8      	ldr	r0, [r7, #12]
+ 8001284:	f00a f9f2 	bl	800b66c <siprintf>
+ 8001288:	e061      	b.n	800134e <get_SVID+0x162>
 	} else if (33 < svID->bytes[0] && svID->bytes[0] < 64) {
- 800128e:	687b      	ldr	r3, [r7, #4]
- 8001290:	781b      	ldrb	r3, [r3, #0]
- 8001292:	2b21      	cmp	r3, #33	@ 0x21
- 8001294:	d90c      	bls.n	80012b0 <get_SVID+0xc0>
- 8001296:	687b      	ldr	r3, [r7, #4]
- 8001298:	781b      	ldrb	r3, [r3, #0]
- 800129a:	2b3f      	cmp	r3, #63	@ 0x3f
- 800129c:	d808      	bhi.n	80012b0 <get_SVID+0xc0>
+ 800128a:	687b      	ldr	r3, [r7, #4]
+ 800128c:	781b      	ldrb	r3, [r3, #0]
+ 800128e:	2b21      	cmp	r3, #33	@ 0x21
+ 8001290:	d90c      	bls.n	80012ac <get_SVID+0xc0>
+ 8001292:	687b      	ldr	r3, [r7, #4]
+ 8001294:	781b      	ldrb	r3, [r3, #0]
+ 8001296:	2b3f      	cmp	r3, #63	@ 0x3f
+ 8001298:	d808      	bhi.n	80012ac <get_SVID+0xc0>
 		sprintf(str, "B%i", svID->bytes[0] - 27);
- 800129e:	687b      	ldr	r3, [r7, #4]
- 80012a0:	781b      	ldrb	r3, [r3, #0]
- 80012a2:	3b1b      	subs	r3, #27
- 80012a4:	461a      	mov	r2, r3
- 80012a6:	4930      	ldr	r1, [pc, #192]	@ (8001368 <get_SVID+0x178>)
- 80012a8:	68f8      	ldr	r0, [r7, #12]
- 80012aa:	f00a f9df 	bl	800b66c <siprintf>
- 80012ae:	e050      	b.n	8001352 <get_SVID+0x162>
+ 800129a:	687b      	ldr	r3, [r7, #4]
+ 800129c:	781b      	ldrb	r3, [r3, #0]
+ 800129e:	3b1b      	subs	r3, #27
+ 80012a0:	461a      	mov	r2, r3
+ 80012a2:	4930      	ldr	r1, [pc, #192]	@ (8001364 <get_SVID+0x178>)
+ 80012a4:	68f8      	ldr	r0, [r7, #12]
+ 80012a6:	f00a f9e1 	bl	800b66c <siprintf>
+ 80012aa:	e050      	b.n	800134e <get_SVID+0x162>
 	} else if (173 < svID->bytes[0] && svID->bytes[0] < 182) {
- 80012b0:	687b      	ldr	r3, [r7, #4]
- 80012b2:	781b      	ldrb	r3, [r3, #0]
- 80012b4:	2bad      	cmp	r3, #173	@ 0xad
- 80012b6:	d90c      	bls.n	80012d2 <get_SVID+0xe2>
- 80012b8:	687b      	ldr	r3, [r7, #4]
- 80012ba:	781b      	ldrb	r3, [r3, #0]
- 80012bc:	2bb5      	cmp	r3, #181	@ 0xb5
- 80012be:	d808      	bhi.n	80012d2 <get_SVID+0xe2>
+ 80012ac:	687b      	ldr	r3, [r7, #4]
+ 80012ae:	781b      	ldrb	r3, [r3, #0]
+ 80012b0:	2bad      	cmp	r3, #173	@ 0xad
+ 80012b2:	d90c      	bls.n	80012ce <get_SVID+0xe2>
+ 80012b4:	687b      	ldr	r3, [r7, #4]
+ 80012b6:	781b      	ldrb	r3, [r3, #0]
+ 80012b8:	2bb5      	cmp	r3, #181	@ 0xb5
+ 80012ba:	d808      	bhi.n	80012ce <get_SVID+0xe2>
 		sprintf(str, "I%i", svID->bytes[0] - 172);
- 80012c0:	687b      	ldr	r3, [r7, #4]
- 80012c2:	781b      	ldrb	r3, [r3, #0]
- 80012c4:	3bac      	subs	r3, #172	@ 0xac
- 80012c6:	461a      	mov	r2, r3
- 80012c8:	4928      	ldr	r1, [pc, #160]	@ (800136c <get_SVID+0x17c>)
- 80012ca:	68f8      	ldr	r0, [r7, #12]
- 80012cc:	f00a f9ce 	bl	800b66c <siprintf>
- 80012d0:	e03f      	b.n	8001352 <get_SVID+0x162>
+ 80012bc:	687b      	ldr	r3, [r7, #4]
+ 80012be:	781b      	ldrb	r3, [r3, #0]
+ 80012c0:	3bac      	subs	r3, #172	@ 0xac
+ 80012c2:	461a      	mov	r2, r3
+ 80012c4:	4928      	ldr	r1, [pc, #160]	@ (8001368 <get_SVID+0x17c>)
+ 80012c6:	68f8      	ldr	r0, [r7, #12]
+ 80012c8:	f00a f9d0 	bl	800b66c <siprintf>
+ 80012cc:	e03f      	b.n	800134e <get_SVID+0x162>
 	} else if (193 < svID->bytes[0] && svID->bytes[0] < 202) {
- 80012d2:	687b      	ldr	r3, [r7, #4]
- 80012d4:	781b      	ldrb	r3, [r3, #0]
- 80012d6:	2bc1      	cmp	r3, #193	@ 0xc1
- 80012d8:	d90c      	bls.n	80012f4 <get_SVID+0x104>
- 80012da:	687b      	ldr	r3, [r7, #4]
- 80012dc:	781b      	ldrb	r3, [r3, #0]
- 80012de:	2bc9      	cmp	r3, #201	@ 0xc9
- 80012e0:	d808      	bhi.n	80012f4 <get_SVID+0x104>
+ 80012ce:	687b      	ldr	r3, [r7, #4]
+ 80012d0:	781b      	ldrb	r3, [r3, #0]
+ 80012d2:	2bc1      	cmp	r3, #193	@ 0xc1
+ 80012d4:	d90c      	bls.n	80012f0 <get_SVID+0x104>
+ 80012d6:	687b      	ldr	r3, [r7, #4]
+ 80012d8:	781b      	ldrb	r3, [r3, #0]
+ 80012da:	2bc9      	cmp	r3, #201	@ 0xc9
+ 80012dc:	d808      	bhi.n	80012f0 <get_SVID+0x104>
 		sprintf(str, "Q%i", svID->bytes[0] - 192);
- 80012e2:	687b      	ldr	r3, [r7, #4]
- 80012e4:	781b      	ldrb	r3, [r3, #0]
- 80012e6:	3bc0      	subs	r3, #192	@ 0xc0
- 80012e8:	461a      	mov	r2, r3
- 80012ea:	4921      	ldr	r1, [pc, #132]	@ (8001370 <get_SVID+0x180>)
- 80012ec:	68f8      	ldr	r0, [r7, #12]
- 80012ee:	f00a f9bd 	bl	800b66c <siprintf>
- 80012f2:	e02e      	b.n	8001352 <get_SVID+0x162>
+ 80012de:	687b      	ldr	r3, [r7, #4]
+ 80012e0:	781b      	ldrb	r3, [r3, #0]
+ 80012e2:	3bc0      	subs	r3, #192	@ 0xc0
+ 80012e4:	461a      	mov	r2, r3
+ 80012e6:	4921      	ldr	r1, [pc, #132]	@ (800136c <get_SVID+0x180>)
+ 80012e8:	68f8      	ldr	r0, [r7, #12]
+ 80012ea:	f00a f9bf 	bl	800b66c <siprintf>
+ 80012ee:	e02e      	b.n	800134e <get_SVID+0x162>
 	} else if (65 < svID->bytes[0] && svID->bytes[0] < 96) {
- 80012f4:	687b      	ldr	r3, [r7, #4]
- 80012f6:	781b      	ldrb	r3, [r3, #0]
- 80012f8:	2b41      	cmp	r3, #65	@ 0x41
- 80012fa:	d90c      	bls.n	8001316 <get_SVID+0x126>
- 80012fc:	687b      	ldr	r3, [r7, #4]
- 80012fe:	781b      	ldrb	r3, [r3, #0]
- 8001300:	2b5f      	cmp	r3, #95	@ 0x5f
- 8001302:	d808      	bhi.n	8001316 <get_SVID+0x126>
+ 80012f0:	687b      	ldr	r3, [r7, #4]
+ 80012f2:	781b      	ldrb	r3, [r3, #0]
+ 80012f4:	2b41      	cmp	r3, #65	@ 0x41
+ 80012f6:	d90c      	bls.n	8001312 <get_SVID+0x126>
+ 80012f8:	687b      	ldr	r3, [r7, #4]
+ 80012fa:	781b      	ldrb	r3, [r3, #0]
+ 80012fc:	2b5f      	cmp	r3, #95	@ 0x5f
+ 80012fe:	d808      	bhi.n	8001312 <get_SVID+0x126>
 		sprintf(str, "R%i", svID->bytes[0] - 64);
- 8001304:	687b      	ldr	r3, [r7, #4]
- 8001306:	781b      	ldrb	r3, [r3, #0]
- 8001308:	3b40      	subs	r3, #64	@ 0x40
- 800130a:	461a      	mov	r2, r3
- 800130c:	4919      	ldr	r1, [pc, #100]	@ (8001374 <get_SVID+0x184>)
- 800130e:	68f8      	ldr	r0, [r7, #12]
- 8001310:	f00a f9ac 	bl	800b66c <siprintf>
- 8001314:	e01d      	b.n	8001352 <get_SVID+0x162>
+ 8001300:	687b      	ldr	r3, [r7, #4]
+ 8001302:	781b      	ldrb	r3, [r3, #0]
+ 8001304:	3b40      	subs	r3, #64	@ 0x40
+ 8001306:	461a      	mov	r2, r3
+ 8001308:	4919      	ldr	r1, [pc, #100]	@ (8001370 <get_SVID+0x184>)
+ 800130a:	68f8      	ldr	r0, [r7, #12]
+ 800130c:	f00a f9ae 	bl	800b66c <siprintf>
+ 8001310:	e01d      	b.n	800134e <get_SVID+0x162>
 	} else if (svID->bytes[0] == 255) {
- 8001316:	687b      	ldr	r3, [r7, #4]
- 8001318:	781b      	ldrb	r3, [r3, #0]
- 800131a:	2bff      	cmp	r3, #255	@ 0xff
- 800131c:	d104      	bne.n	8001328 <get_SVID+0x138>
+ 8001312:	687b      	ldr	r3, [r7, #4]
+ 8001314:	781b      	ldrb	r3, [r3, #0]
+ 8001316:	2bff      	cmp	r3, #255	@ 0xff
+ 8001318:	d104      	bne.n	8001324 <get_SVID+0x138>
 		sprintf(str, "R?");
- 800131e:	4916      	ldr	r1, [pc, #88]	@ (8001378 <get_SVID+0x188>)
- 8001320:	68f8      	ldr	r0, [r7, #12]
- 8001322:	f00a f9a3 	bl	800b66c <siprintf>
- 8001326:	e014      	b.n	8001352 <get_SVID+0x162>
+ 800131a:	4916      	ldr	r1, [pc, #88]	@ (8001374 <get_SVID+0x188>)
+ 800131c:	68f8      	ldr	r0, [r7, #12]
+ 800131e:	f00a f9a5 	bl	800b66c <siprintf>
+ 8001322:	e014      	b.n	800134e <get_SVID+0x162>
 	} else if (247 < svID->bytes[0] && svID->bytes[0] < 253) {
- 8001328:	687b      	ldr	r3, [r7, #4]
- 800132a:	781b      	ldrb	r3, [r3, #0]
- 800132c:	2bf7      	cmp	r3, #247	@ 0xf7
- 800132e:	d90c      	bls.n	800134a <get_SVID+0x15a>
- 8001330:	687b      	ldr	r3, [r7, #4]
- 8001332:	781b      	ldrb	r3, [r3, #0]
- 8001334:	2bfc      	cmp	r3, #252	@ 0xfc
- 8001336:	d808      	bhi.n	800134a <get_SVID+0x15a>
+ 8001324:	687b      	ldr	r3, [r7, #4]
+ 8001326:	781b      	ldrb	r3, [r3, #0]
+ 8001328:	2bf7      	cmp	r3, #247	@ 0xf7
+ 800132a:	d90c      	bls.n	8001346 <get_SVID+0x15a>
+ 800132c:	687b      	ldr	r3, [r7, #4]
+ 800132e:	781b      	ldrb	r3, [r3, #0]
+ 8001330:	2bfc      	cmp	r3, #252	@ 0xfc
+ 8001332:	d808      	bhi.n	8001346 <get_SVID+0x15a>
 		sprintf(str, "R%i", svID->bytes[0] - 246);
- 8001338:	687b      	ldr	r3, [r7, #4]
- 800133a:	781b      	ldrb	r3, [r3, #0]
- 800133c:	3bf6      	subs	r3, #246	@ 0xf6
- 800133e:	461a      	mov	r2, r3
- 8001340:	490c      	ldr	r1, [pc, #48]	@ (8001374 <get_SVID+0x184>)
- 8001342:	68f8      	ldr	r0, [r7, #12]
- 8001344:	f00a f992 	bl	800b66c <siprintf>
- 8001348:	e003      	b.n	8001352 <get_SVID+0x162>
+ 8001334:	687b      	ldr	r3, [r7, #4]
+ 8001336:	781b      	ldrb	r3, [r3, #0]
+ 8001338:	3bf6      	subs	r3, #246	@ 0xf6
+ 800133a:	461a      	mov	r2, r3
+ 800133c:	490c      	ldr	r1, [pc, #48]	@ (8001370 <get_SVID+0x184>)
+ 800133e:	68f8      	ldr	r0, [r7, #12]
+ 8001340:	f00a f994 	bl	800b66c <siprintf>
+ 8001344:	e003      	b.n	800134e <get_SVID+0x162>
 	} else {
 		// Cas par défaut si aucune des conditions n'est remplie
 		sprintf(str, "Unknown");
- 800134a:	490c      	ldr	r1, [pc, #48]	@ (800137c <get_SVID+0x18c>)
- 800134c:	68f8      	ldr	r0, [r7, #12]
- 800134e:	f00a f98d 	bl	800b66c <siprintf>
+ 8001346:	490c      	ldr	r1, [pc, #48]	@ (8001378 <get_SVID+0x18c>)
+ 8001348:	68f8      	ldr	r0, [r7, #12]
+ 800134a:	f00a f98f 	bl	800b66c <siprintf>
 	}
 	return str;
- 8001352:	68fb      	ldr	r3, [r7, #12]
+ 800134e:	68fb      	ldr	r3, [r7, #12]
 }
- 8001354:	4618      	mov	r0, r3
- 8001356:	3710      	adds	r7, #16
- 8001358:	46bd      	mov	sp, r7
- 800135a:	bd80      	pop	{r7, pc}
- 800135c:	0800da88 	.word	0x0800da88
- 8001360:	0800da8c 	.word	0x0800da8c
- 8001364:	0800da90 	.word	0x0800da90
- 8001368:	0800da94 	.word	0x0800da94
- 800136c:	0800da98 	.word	0x0800da98
- 8001370:	0800da9c 	.word	0x0800da9c
- 8001374:	0800daa0 	.word	0x0800daa0
- 8001378:	0800daa4 	.word	0x0800daa4
- 800137c:	0800da80 	.word	0x0800da80
+ 8001350:	4618      	mov	r0, r3
+ 8001352:	3710      	adds	r7, #16
+ 8001354:	46bd      	mov	sp, r7
+ 8001356:	bd80      	pop	{r7, pc}
+ 8001358:	0800da88 	.word	0x0800da88
+ 800135c:	0800da8c 	.word	0x0800da8c
+ 8001360:	0800da90 	.word	0x0800da90
+ 8001364:	0800da94 	.word	0x0800da94
+ 8001368:	0800da98 	.word	0x0800da98
+ 800136c:	0800da9c 	.word	0x0800da9c
+ 8001370:	0800daa0 	.word	0x0800daa0
+ 8001374:	0800daa4 	.word	0x0800daa4
+ 8001378:	0800da80 	.word	0x0800da80
+ 800137c:	00000000 	.word	0x00000000
 
 08001380 <get_PRES>:
 char* get_PRES(I2* prRes){
@@ -3283,7 +3276,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001de6:	4ab1      	ldr	r2, [pc, #708]	@ (80020ac <debug_UBX_NAV_SIG+0x4d0>)
  8001de8:	2101      	movs	r1, #1
  8001dea:	4618      	mov	r0, r3
- 8001dec:	f7ff f8e2 	bl	8000fb4 <UBX_format>
+ 8001dec:	f7ff f8e0 	bl	8000fb0 <UBX_format>
  8001df0:	6778      	str	r0, [r7, #116]	@ 0x74
  8001df2:	4bac      	ldr	r3, [pc, #688]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001df4:	689a      	ldr	r2, [r3, #8]
@@ -3302,7 +3295,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001e0e:	4aa8      	ldr	r2, [pc, #672]	@ (80020b0 <debug_UBX_NAV_SIG+0x4d4>)
  8001e10:	2101      	movs	r1, #1
  8001e12:	4618      	mov	r0, r3
- 8001e14:	f7ff f8ce 	bl	8000fb4 <UBX_format>
+ 8001e14:	f7ff f8cc 	bl	8000fb0 <UBX_format>
  8001e18:	66f8      	str	r0, [r7, #108]	@ 0x6c
  8001e1a:	4ba2      	ldr	r3, [pc, #648]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001e1c:	68d9      	ldr	r1, [r3, #12]
@@ -3321,7 +3314,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001e36:	2200      	movs	r2, #0
  8001e38:	2101      	movs	r1, #1
  8001e3a:	4618      	mov	r0, r3
- 8001e3c:	f7ff f8ba 	bl	8000fb4 <UBX_format>
+ 8001e3c:	f7ff f8b8 	bl	8000fb0 <UBX_format>
  8001e40:	6678      	str	r0, [r7, #100]	@ 0x64
  8001e42:	4b98      	ldr	r3, [pc, #608]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001e44:	691d      	ldr	r5, [r3, #16]
@@ -3340,7 +3333,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001e5e:	2200      	movs	r2, #0
  8001e60:	2101      	movs	r1, #1
  8001e62:	4618      	mov	r0, r3
- 8001e64:	f7ff f8a6 	bl	8000fb4 <UBX_format>
+ 8001e64:	f7ff f8a4 	bl	8000fb0 <UBX_format>
  8001e68:	65f8      	str	r0, [r7, #92]	@ 0x5c
  8001e6a:	4b8e      	ldr	r3, [pc, #568]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001e6c:	695e      	ldr	r6, [r3, #20]
@@ -3359,7 +3352,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001e86:	4a8b      	ldr	r2, [pc, #556]	@ (80020b4 <debug_UBX_NAV_SIG+0x4d8>)
  8001e88:	2105      	movs	r1, #5
  8001e8a:	4618      	mov	r0, r3
- 8001e8c:	f7ff f892 	bl	8000fb4 <UBX_format>
+ 8001e8c:	f7ff f890 	bl	8000fb0 <UBX_format>
  8001e90:	6578      	str	r0, [r7, #84]	@ 0x54
  8001e92:	4b84      	ldr	r3, [pc, #528]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001e94:	6999      	ldr	r1, [r3, #24]
@@ -3378,7 +3371,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001eae:	2200      	movs	r2, #0
  8001eb0:	2101      	movs	r1, #1
  8001eb2:	4618      	mov	r0, r3
- 8001eb4:	f7ff f87e 	bl	8000fb4 <UBX_format>
+ 8001eb4:	f7ff f87c 	bl	8000fb0 <UBX_format>
  8001eb8:	64f8      	str	r0, [r7, #76]	@ 0x4c
  8001eba:	4b7a      	ldr	r3, [pc, #488]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001ebc:	69db      	ldr	r3, [r3, #28]
@@ -3397,7 +3390,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001ed6:	4a78      	ldr	r2, [pc, #480]	@ (80020b8 <debug_UBX_NAV_SIG+0x4dc>)
  8001ed8:	2101      	movs	r1, #1
  8001eda:	4618      	mov	r0, r3
- 8001edc:	f7ff f86a 	bl	8000fb4 <UBX_format>
+ 8001edc:	f7ff f868 	bl	8000fb0 <UBX_format>
  8001ee0:	6478      	str	r0, [r7, #68]	@ 0x44
  8001ee2:	4b70      	ldr	r3, [pc, #448]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001ee4:	6a1a      	ldr	r2, [r3, #32]
@@ -3416,7 +3409,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001efe:	4a6f      	ldr	r2, [pc, #444]	@ (80020bc <debug_UBX_NAV_SIG+0x4e0>)
  8001f00:	2101      	movs	r1, #1
  8001f02:	4618      	mov	r0, r3
- 8001f04:	f7ff f856 	bl	8000fb4 <UBX_format>
+ 8001f04:	f7ff f854 	bl	8000fb0 <UBX_format>
  8001f08:	63f8      	str	r0, [r7, #60]	@ 0x3c
  8001f0a:	4b66      	ldr	r3, [pc, #408]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001f0c:	6a59      	ldr	r1, [r3, #36]	@ 0x24
@@ -3435,7 +3428,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001f26:	4a66      	ldr	r2, [pc, #408]	@ (80020c0 <debug_UBX_NAV_SIG+0x4e4>)
  8001f28:	2101      	movs	r1, #1
  8001f2a:	4618      	mov	r0, r3
- 8001f2c:	f7ff f842 	bl	8000fb4 <UBX_format>
+ 8001f2c:	f7ff f840 	bl	8000fb0 <UBX_format>
  8001f30:	6378      	str	r0, [r7, #52]	@ 0x34
  8001f32:	4b5c      	ldr	r3, [pc, #368]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001f34:	6a9d      	ldr	r5, [r3, #40]	@ 0x28
@@ -3457,7 +3450,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001f54:	4a5b      	ldr	r2, [pc, #364]	@ (80020c4 <debug_UBX_NAV_SIG+0x4e8>)
  8001f56:	2100      	movs	r1, #0
  8001f58:	4618      	mov	r0, r3
- 8001f5a:	f7ff f82b 	bl	8000fb4 <UBX_format>
+ 8001f5a:	f7ff f829 	bl	8000fb0 <UBX_format>
  8001f5e:	62f8      	str	r0, [r7, #44]	@ 0x2c
  8001f60:	4b50      	ldr	r3, [pc, #320]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001f62:	6ade      	ldr	r6, [r3, #44]	@ 0x2c
@@ -3478,7 +3471,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001f82:	2200      	movs	r2, #0
  8001f84:	2100      	movs	r1, #0
  8001f86:	4618      	mov	r0, r3
- 8001f88:	f7ff f814 	bl	8000fb4 <UBX_format>
+ 8001f88:	f7ff f812 	bl	8000fb0 <UBX_format>
  8001f8c:	6278      	str	r0, [r7, #36]	@ 0x24
  8001f8e:	4b45      	ldr	r3, [pc, #276]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001f90:	6b19      	ldr	r1, [r3, #48]	@ 0x30
@@ -3499,7 +3492,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001fb0:	2200      	movs	r2, #0
  8001fb2:	2100      	movs	r1, #0
  8001fb4:	4618      	mov	r0, r3
- 8001fb6:	f7fe fffd 	bl	8000fb4 <UBX_format>
+ 8001fb6:	f7fe fffb 	bl	8000fb0 <UBX_format>
  8001fba:	61f8      	str	r0, [r7, #28]
  8001fbc:	4b39      	ldr	r3, [pc, #228]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001fbe:	6b5b      	ldr	r3, [r3, #52]	@ 0x34
@@ -3520,7 +3513,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8001fde:	2200      	movs	r2, #0
  8001fe0:	2100      	movs	r1, #0
  8001fe2:	4618      	mov	r0, r3
- 8001fe4:	f7fe ffe6 	bl	8000fb4 <UBX_format>
+ 8001fe4:	f7fe ffe4 	bl	8000fb0 <UBX_format>
  8001fe8:	6178      	str	r0, [r7, #20]
  8001fea:	4b2e      	ldr	r3, [pc, #184]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8001fec:	6b9a      	ldr	r2, [r3, #56]	@ 0x38
@@ -3541,7 +3534,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  800200c:	2200      	movs	r2, #0
  800200e:	2100      	movs	r1, #0
  8002010:	4618      	mov	r0, r3
- 8002012:	f7fe ffcf 	bl	8000fb4 <UBX_format>
+ 8002012:	f7fe ffcd 	bl	8000fb0 <UBX_format>
  8002016:	60f8      	str	r0, [r7, #12]
  8002018:	4b22      	ldr	r3, [pc, #136]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  800201a:	6bd9      	ldr	r1, [r3, #60]	@ 0x3c
@@ -3562,7 +3555,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  800203a:	2200      	movs	r2, #0
  800203c:	2100      	movs	r1, #0
  800203e:	4618      	mov	r0, r3
- 8002040:	f7fe ffb8 	bl	8000fb4 <UBX_format>
+ 8002040:	f7fe ffb6 	bl	8000fb0 <UBX_format>
  8002044:	6078      	str	r0, [r7, #4]
  8002046:	4b17      	ldr	r3, [pc, #92]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8002048:	6c1e      	ldr	r6, [r3, #64]	@ 0x40
@@ -3582,7 +3575,7 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8002066:	2200      	movs	r2, #0
  8002068:	2100      	movs	r1, #0
  800206a:	4618      	mov	r0, r3
- 800206c:	f7fe ffa2 	bl	8000fb4 <UBX_format>
+ 800206c:	f7fe ffa0 	bl	8000fb0 <UBX_format>
  8002070:	4605      	mov	r5, r0
  8002072:	4b0c      	ldr	r3, [pc, #48]	@ (80020a4 <debug_UBX_NAV_SIG+0x4c8>)
  8002074:	6c5c      	ldr	r4, [r3, #68]	@ 0x44
@@ -3602,14 +3595,14 @@ void debug_UBX_NAV_SIG(UBX_NAV_SIG *structAssociate){
  8002092:	2200      	movs	r2, #0
  8002094:	2100      	movs	r1, #0
  8002096:	4618      	mov	r0, r3
- 8002098:	f7fe ff8c 	bl	8000fb4 <UBX_format>
+ 8002098:	f7fe ff8a 	bl	8000fb0 <UBX_format>
  800209c:	4603      	mov	r3, r0
  800209e:	f507 7124 	add.w	r1, r7, #656	@ 0x290
  80020a2:	e011      	b.n	80020c8 <debug_UBX_NAV_SIG+0x4ec>
  80020a4:	20000028 	.word	0x20000028
  80020a8:	0800de20 	.word	0x0800de20
- 80020ac:	08001109 	.word	0x08001109
- 80020b0:	080011f1 	.word	0x080011f1
+ 80020ac:	08001105 	.word	0x08001105
+ 80020b0:	080011ed 	.word	0x080011ed
  80020b4:	08001381 	.word	0x08001381
  80020b8:	080013d5 	.word	0x080013d5
  80020bc:	080014dd 	.word	0x080014dd
@@ -4133,7 +4126,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  8002482:	2200      	movs	r2, #0
  8002484:	2107      	movs	r1, #7
  8002486:	4618      	mov	r0, r3
- 8002488:	f7fe fd94 	bl	8000fb4 <UBX_format>
+ 8002488:	f7fe fd92 	bl	8000fb0 <UBX_format>
  800248c:	6238      	str	r0, [r7, #32]
 			UBX_format(&(structAssociate->tAcc),TYPE_U4,NULL),
  800248e:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4144,7 +4137,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  800249a:	2200      	movs	r2, #0
  800249c:	2107      	movs	r1, #7
  800249e:	4618      	mov	r0, r3
- 80024a0:	f7fe fd88 	bl	8000fb4 <UBX_format>
+ 80024a0:	f7fe fd86 	bl	8000fb0 <UBX_format>
  80024a4:	61f8      	str	r0, [r7, #28]
 			UBX_format(&(structAssociate->nano),TYPE_I4,NULL),
  80024a6:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4155,7 +4148,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  80024b2:	2200      	movs	r2, #0
  80024b4:	2108      	movs	r1, #8
  80024b6:	4618      	mov	r0, r3
- 80024b8:	f7fe fd7c 	bl	8000fb4 <UBX_format>
+ 80024b8:	f7fe fd7a 	bl	8000fb0 <UBX_format>
  80024bc:	61b8      	str	r0, [r7, #24]
 			UBX_format(&(structAssociate->year),TYPE_U2,NULL),
  80024be:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4166,7 +4159,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  80024ca:	2200      	movs	r2, #0
  80024cc:	2104      	movs	r1, #4
  80024ce:	4618      	mov	r0, r3
- 80024d0:	f7fe fd70 	bl	8000fb4 <UBX_format>
+ 80024d0:	f7fe fd6e 	bl	8000fb0 <UBX_format>
  80024d4:	6178      	str	r0, [r7, #20]
 			UBX_format(&(structAssociate->month),TYPE_U1,NULL),
  80024d6:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4177,7 +4170,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  80024e2:	2200      	movs	r2, #0
  80024e4:	2101      	movs	r1, #1
  80024e6:	4618      	mov	r0, r3
- 80024e8:	f7fe fd64 	bl	8000fb4 <UBX_format>
+ 80024e8:	f7fe fd62 	bl	8000fb0 <UBX_format>
  80024ec:	6138      	str	r0, [r7, #16]
 			UBX_format(&(structAssociate->day),TYPE_U1,NULL),
  80024ee:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4188,7 +4181,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  80024fa:	2200      	movs	r2, #0
  80024fc:	2101      	movs	r1, #1
  80024fe:	4618      	mov	r0, r3
- 8002500:	f7fe fd58 	bl	8000fb4 <UBX_format>
+ 8002500:	f7fe fd56 	bl	8000fb0 <UBX_format>
  8002504:	60f8      	str	r0, [r7, #12]
 			UBX_format(&(structAssociate->hour),TYPE_U1,NULL),
  8002506:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4199,7 +4192,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  8002512:	2200      	movs	r2, #0
  8002514:	2101      	movs	r1, #1
  8002516:	4618      	mov	r0, r3
- 8002518:	f7fe fd4c 	bl	8000fb4 <UBX_format>
+ 8002518:	f7fe fd4a 	bl	8000fb0 <UBX_format>
  800251c:	60b8      	str	r0, [r7, #8]
 			UBX_format(&(structAssociate->min),TYPE_U1,NULL),
  800251e:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4210,7 +4203,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  800252a:	2200      	movs	r2, #0
  800252c:	2101      	movs	r1, #1
  800252e:	4618      	mov	r0, r3
- 8002530:	f7fe fd40 	bl	8000fb4 <UBX_format>
+ 8002530:	f7fe fd3e 	bl	8000fb0 <UBX_format>
  8002534:	6078      	str	r0, [r7, #4]
 			UBX_format(&(structAssociate->sec),TYPE_U1,NULL),
  8002536:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4221,7 +4214,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  8002542:	2200      	movs	r2, #0
  8002544:	2101      	movs	r1, #1
  8002546:	4618      	mov	r0, r3
- 8002548:	f7fe fd34 	bl	8000fb4 <UBX_format>
+ 8002548:	f7fe fd32 	bl	8000fb0 <UBX_format>
  800254c:	6038      	str	r0, [r7, #0]
 
 			UBX_format(structAssociate->valid.validTOW,TYPE_BITFIELD,NULL),
@@ -4235,7 +4228,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  8002560:	2200      	movs	r2, #0
  8002562:	2100      	movs	r1, #0
  8002564:	4618      	mov	r0, r3
- 8002566:	f7fe fd25 	bl	8000fb4 <UBX_format>
+ 8002566:	f7fe fd23 	bl	8000fb0 <UBX_format>
  800256a:	4606      	mov	r6, r0
 			UBX_format(structAssociate->valid.validWKN,TYPE_BITFIELD,NULL),
  800256c:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4248,7 +4241,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  800257e:	2200      	movs	r2, #0
  8002580:	2100      	movs	r1, #0
  8002582:	4618      	mov	r0, r3
- 8002584:	f7fe fd16 	bl	8000fb4 <UBX_format>
+ 8002584:	f7fe fd14 	bl	8000fb0 <UBX_format>
  8002588:	4605      	mov	r5, r0
 			UBX_format(structAssociate->valid.validUTC,TYPE_BITFIELD,NULL),
  800258a:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4261,7 +4254,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  800259c:	2200      	movs	r2, #0
  800259e:	2100      	movs	r1, #0
  80025a0:	4618      	mov	r0, r3
- 80025a2:	f7fe fd07 	bl	8000fb4 <UBX_format>
+ 80025a2:	f7fe fd05 	bl	8000fb0 <UBX_format>
  80025a6:	4604      	mov	r4, r0
 			UBX_format(structAssociate->valid.utcStandard,TYPE_BITFIELD,(char*(*)(void*))get_UTCSTANDARD)
  80025a8:	f507 730e 	add.w	r3, r7, #568	@ 0x238
@@ -4274,7 +4267,7 @@ void debug_UBX_NAV_TIMEUTC(UBX_NAV_TIMEUTC *structAssociate){
  80025ba:	4a38      	ldr	r2, [pc, #224]	@ (800269c <debug_UBX_NAV_TIMEUTC+0x23c>)
  80025bc:	2100      	movs	r1, #0
  80025be:	4618      	mov	r0, r3
- 80025c0:	f7fe fcf8 	bl	8000fb4 <UBX_format>
+ 80025c0:	f7fe fcf6 	bl	8000fb0 <UBX_format>
  80025c4:	4603      	mov	r3, r0
  80025c6:	f507 710c 	add.w	r1, r7, #560	@ 0x230
  80025ca:	f107 0030 	add.w	r0, r7, #48	@ 0x30
@@ -4581,9 +4574,9 @@ void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug)
  80027f0:	200002d4 	.word	0x200002d4
 
 080027f4 <RFM9x_Init>:
-/* Private function prototypes -----------------------------------------------*/
-/* User code -----------------------------------------------------------------*/
-
+#include "task.h"
+#include "main.h"
+#include "cmsis_os.h"
 
 void RFM9x_Init( void )
 {

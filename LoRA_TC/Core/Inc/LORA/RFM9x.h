@@ -1,11 +1,12 @@
 // RFM9x.h
 //
 // Definitions for HopeRF RFM9x LoRa radios
-//
-// Portions adapted from RadioHead RH_RF95.h
-// Author: Mike McCauley (mikem@airspayce.com)
-// Copyright (C) 2014 Mike McCauley
-// $Id: RH_RF95.h,v 1.22 2019/07/14 00:18:48 mikem Exp $
+/*							DISCLAIMER
+ *	This file is based on the work of jvegger, which you can find as it was before I worked on it
+ *	at the following GitHub repositorie :
+ *	https://github.com/jvedder/nucleo_F030R8_rfm96/tree/master
+ *
+ */
 //
 
 #ifndef RFM9x_h

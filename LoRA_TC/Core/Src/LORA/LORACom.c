@@ -16,7 +16,3 @@ void LORACom_Init(SPI_HandleTypeDef* hspi,UART_HandleTypeDef* huartDebug)
 	hLORACom.hspi = hspi;
 	hLORACom.huartDebug = huartDebug;
 }
-
-
-
-

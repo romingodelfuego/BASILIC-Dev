@@ -51,9 +51,8 @@ Core/Src/RTOS_subfunctions/receiverLoRA.o: \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h \
  ../Core/Inc/RTOS_subfunctions/debug.h ../Core/Inc/shared.h \
  ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h \
- ../Core/Inc/GNSS/command.h ../Core/Inc/LORA/LORACom.h ../Core/Inc/spi.h \
- ../Core/Inc/LORA/RFM9x.h ../Core/Inc/GNSS/traductor.h \
- ../Core/Inc/GNSS/debug_formatter.h \
+ ../Core/Inc/LORA/LORACom.h ../Core/Inc/spi.h ../Core/Inc/LORA/RFM9x.h \
+ ../Core/Inc/GNSS/traductor.h ../Core/Inc/GNSS/debug_formatter.h \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h \
  ../Core/Inc/GNSS/debug_getter.h ../Core/Inc/GNSS/UBX_messageStructure.h \
  ../Core/Inc/GNSS/UBX_types.h ../Core/Inc/GNSS/debug_utils.h
@@ -112,7 +111,6 @@ Core/Src/RTOS_subfunctions/receiverLoRA.o: \
 ../Core/Inc/GNSS/GNSSCom.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
-../Core/Inc/GNSS/command.h:
 ../Core/Inc/LORA/LORACom.h:
 ../Core/Inc/spi.h:
 ../Core/Inc/LORA/RFM9x.h:

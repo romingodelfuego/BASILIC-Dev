@@ -52,9 +52,8 @@ Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o: \
  ../Core/Inc/RTOS_subfunctions/debug.h \
  ../Core/Inc/RTOS_subfunctions/RTOS_extern.h ../Core/Inc/shared.h \
  ../Core/Inc/GNSS/GNSSCom.h ../Core/Inc/usart.h ../Core/Inc/main.h \
- ../Core/Inc/GNSS/command.h ../Core/Inc/GNSS/debug_getter.h \
- ../Core/Inc/GNSS/UBX_messageStructure.h ../Core/Inc/GNSS/UBX_types.h \
- ../Core/Inc/GNSS/debug_utils.h
+ ../Core/Inc/GNSS/debug_getter.h ../Core/Inc/GNSS/UBX_messageStructure.h \
+ ../Core/Inc/GNSS/UBX_types.h ../Core/Inc/GNSS/debug_utils.h
 ../Core/Inc/GNSS/UBX_NAV.h:
 ../Core/Inc/GNSS/traductor.h:
 ../Core/Inc/GNSS/debug_formatter.h:
@@ -113,7 +112,6 @@ Core/Src/GNSS/UBX_NAV/UBX_NAV_SIG.o: \
 ../Core/Inc/GNSS/GNSSCom.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:
-../Core/Inc/GNSS/command.h:
 ../Core/Inc/GNSS/debug_getter.h:
 ../Core/Inc/GNSS/UBX_messageStructure.h:
 ../Core/Inc/GNSS/UBX_types.h:

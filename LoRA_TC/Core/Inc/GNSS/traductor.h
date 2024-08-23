@@ -14,8 +14,6 @@
 #include <stdint.h>
 #include "shared.h"
 
-extern OutputProtocol protocol;
-
 typedef struct {
     uint8_t CLASS;
     uint8_t ID;

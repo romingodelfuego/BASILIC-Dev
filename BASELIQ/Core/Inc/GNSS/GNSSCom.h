@@ -22,13 +22,6 @@ typedef struct {
     size_t size;
 } CommandnSize;
 
-typedef enum {
-    RAW,
-    HEX,
-    ASCII
-} OutputType;
-extern OutputType type;
-
 typedef struct {
 	UART_HandleTypeDef* huart;
 	UART_HandleTypeDef* huartDebug;
